@@ -1,0 +1,19 @@
+nav.navbar {
+    #navbar-spotify-icon {
+        width: 40px;
+        margin-right: 1em;
+    }
+}
+
+.navbar-light .navbar-toggler {
+    svg#hamburger-menu-icon {
+        width: 25px;
+        height: 25px;
+        fill: #ffffff;
+        border: none !important;
+    }
+}
+
+.nav-item:hover {
+    background-color: $brown;
+}
