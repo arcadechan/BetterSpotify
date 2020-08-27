@@ -168,7 +168,7 @@ $small-font-size: 80%;
 $text-muted: $gray-600;
 $blockquote-small-color: $gray-600;
 $blockquote-font-size: ($font-size-base * 1.25);
-$hr-border-color: rgba($black, 0.1);
+$hr-border-color: rgba($text-color, 0.25);
 $hr-border-width: $border-width;
 $mark-padding: 0.2em;
 $dt-font-weight: $font-weight-bold;
@@ -177,6 +177,7 @@ $nested-kbd-font-weight: $font-weight-bold;
 $list-inline-padding: 5px;
 $mark-bg: #fcf8e3;
 
-
+$spotify-green: #1DB954;
+$brown: #a76d47;
 
 

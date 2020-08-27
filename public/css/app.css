@@ -475,7 +475,7 @@ hr {
   margin-top: 1rem;
   margin-bottom: 1rem;
   border: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 254, 223, 0.25);
 }
 
 small,
@@ -11130,6 +11130,20 @@ footer a {
   color: #cf9c2c;
 }
 
+.btn.btn-spotify {
+  background-color: #1DB954;
+  color: #fff;
+  font-size: 2em;
+  border-radius: 50px;
+  padding: 0.25rem 2rem;
+  transition: background-color 0.25s ease-in-out;
+}
+
+.btn.btn-spotify:hover {
+  background-color: #2bde6a;
+  transition: background-color 0.25s ease-in-out;
+}
+
 .intro {
   padding-top: 160px;
   padding-bottom: 160px;
@@ -11271,6 +11285,7 @@ nav.navbar #navbar-spotify-icon {
   width: 25px;
   height: 25px;
   fill: #ffffff;
+  border: none !important;
 }
 
 .nav-item:hover {
