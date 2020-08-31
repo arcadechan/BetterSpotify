@@ -6,6 +6,7 @@
         <h1 class="text-center">better release radar</h1>
             @if(Cookie::get('spotify_access_code') !== null)
                 <p>Access Code now stored in cookies.</p>
+                <playlist-generator></playlist-generator>
             @else
                 <div id="pre-authentication" class="d-flex flex-column align-items-center px-5">
                     <div class="d-inline-block mb-4">
