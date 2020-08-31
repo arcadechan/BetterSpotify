@@ -1914,9 +1914,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {};
+    return {
+      generation: 'pending',
+      artists: {}
+    };
+  },
+  methods: {
+    generatePlaylist: function generatePlaylist() {
+      var self = this;
+      this.generation = 'gettingArtists';
+      axios.get('/api/spotify/get_artists').then(function (response) {
+        self.generation = 'artistsRetrieved';
+        self.artists = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
   }
 });
 
@@ -33084,16 +33107,51 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _vm.generation == "pending"
+      ? _c("p", [
+          _vm._v(
+            'The first step is to get all the artists you follow. Click the "Get Artists" button when you\'re ready!'
+          )
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.generation == "gettingArtists"
+      ? _c("p", [_vm._v("Getting followed artists...")])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.generation == "artistsRetrieved"
+      ? _c("p", [
+          _vm._v(
+            "Artists retrieved! Double check your list and if the list of artists looks ok, press the button to generate and create the Better Release Radar straight into your account."
+          )
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.generation == "generatingPlaylist"
+      ? _c("p", [_vm._v("Generating Playlist...")])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.generation == "pending" || _vm.generation == "artistsRetrieved"
+      ? _c(
+          "button",
+          {
+            staticClass: "btn btn-spotify m-1",
+            on: { click: _vm.generatePlaylist }
+          },
+          [
+            _vm.generation == "pending" ? [_vm._v("Get Artists")] : _vm._e(),
+            _vm._v(" "),
+            _vm.generation == "artistsRetrieved"
+              ? [_vm._v("Generate Better Release Radar")]
+              : _vm._e()
+          ],
+          2
+        )
+      : _vm._e()
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("p", [_vm._v("Test")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
