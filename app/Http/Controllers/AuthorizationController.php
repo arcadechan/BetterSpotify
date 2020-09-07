@@ -51,8 +51,10 @@ class AuthorizationController extends Controller
         
         if($response->getStatusCode() == 200){
             $data = json_decode($response->getContent());
-            Cookie::forever('spotify_access_token', $data->access_token);
+            return $data->access_token;
         }
+        
+        return false;
     }
 
     private static function get_access_token($spotify_access_code, $grant_type){
@@ -65,16 +67,12 @@ class AuthorizationController extends Controller
         ];
 
         if($spotify_access_code !== null){
-            $form_params[] = [
-                'code' => $spotify_access_code,
-                'redirect_uri' => env('APP_URL', getenv('APP_URL')) . ':8000/authorize_access'
-            ];
+            $form_params['code'] = $spotify_access_code;
+            $form_params['redirect_uri'] = env('APP_URL', getenv('APP_URL')) . ':8000/authorize_access';
         }
 
         if($grant_type == 'refresh_token'){
-            $form_params[] = [
-                'refresh_token' => Cookie::get('spotify_refresh_token')
-            ];
+            $form_params['refresh_token'] = Cookie::get('spotify_refresh_token');
         }
 
         $client = new GuzzleHttp\Client();

@@ -17,3 +17,24 @@ nav.navbar {
 .nav-item:hover {
     background-color: $brown;
 }
+
+#artists-table {
+    .artist-image {
+        object-fit: cover;
+        height: 75px;
+        width: 75px;
+
+        &.no-artist-image {
+            background-color: black;
+        }
+    }
+
+    tr {
+        border-bottom: 1px solid $text-color;
+
+        td {
+            padding: 1.5rem 0;
+        }
+    }
+
+}

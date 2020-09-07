@@ -11292,3 +11292,22 @@ nav.navbar #navbar-spotify-icon {
   background-color: #a76d47;
 }
 
+#artists-table .artist-image {
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: 75px;
+  width: 75px;
+}
+
+#artists-table .artist-image.no-artist-image {
+  background-color: black;
+}
+
+#artists-table tr {
+  border-bottom: 1px solid #FFFEDF;
+}
+
+#artists-table tr td {
+  padding: 1.5rem 0;
+}
+
