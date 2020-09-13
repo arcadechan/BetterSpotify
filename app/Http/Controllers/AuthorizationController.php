@@ -23,6 +23,7 @@ class AuthorizationController extends Controller
         $access_token = Cookie::get('spotify_access_token');
         $refresh_token = Cookie::get('spotify_refresh_token');
         $spotify_access_code = Cookie::get('spotify_access_code');
+        $user_id = Cookie::get('spotify_user_id');
 
         if($request->has('code') && $spotify_access_code === null){
             $code = $request->code;
@@ -38,12 +39,22 @@ class AuthorizationController extends Controller
                 $refresh_token = Cookie::forever('spotify_refresh_token', $data->refresh_token);
             }
 
+            $client = new GuzzleHttp\Client();
+            $request = $client->get('https://api.spotify.com/v1/me', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $data->access_token
+                ]
+            ]);
+
+            $response = json_decode($request->getBody());
+            $user_id = Cookie::forever('spotify_user_id', $response->id);
         }
 
         return redirect()->action('PagesController@better_release_radar')
             ->withCookie($spotify_access_code)
             ->withCookie($access_token)
-            ->withCookie($refresh_token);
+            ->withCookie($refresh_token)
+            ->withCookie($user_id);
     }
 
     public static function refresh_access(){

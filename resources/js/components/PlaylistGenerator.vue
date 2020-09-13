@@ -3,7 +3,8 @@
         <p v-if="generation == 'pending'">The first step is to get all the artists you follow. Click the "Get Artists" button when you're ready!</p>
         <p v-if="generation == 'gettingArtists'">Getting followed artists...</p>
         <div v-if="generation == 'artistsRetrieved'">
-            <p>Artists retrieved! Double check your list and if the list of artists looks ok, press the button to generate and create the Better Release Radar straight into your account.</p>
+            <p v-if="artistsInStorage">Here is a list of your followed artists we saved from your last visit. If the artists you follow hasn't changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.</p>
+            <p v-else>Artists retrieved! Double check your list and if the list of artists looks ok, press the button to generate and create the Better Release Radar straight into your account.</p>
             <table id="artists-table" class="col-12 col-lg-10 mx-auto">
                 <thead>
                     <tr>
@@ -28,12 +29,18 @@
                 </tbody>
             </table>
         </div>
+
         <p v-if="generation == 'generatingPlaylist'">Generating Playlist...</p>
 
-        <button v-on:click="generatePlaylist" class="btn btn-spotify m-1" v-if="generation == 'pending' || generation == 'artistsRetrieved'">
-            <template v-if="generation == 'pending'">Get Artists</template>
-            <template v-if="generation == 'artistsRetrieved'">Generate Better Release Radar</template>
-        </button>
+        <div class="col-12 justify-content-center">
+            <button v-on:click="getArtists" class="btn btn-spotify mx-auto my-4 d-block" v-if="generation == 'pending' || generation == 'artistsRetrieved'">
+                <template>Get Artists</template>
+            </button>
+
+            <button v-on:click="generatePlaylist" class="btn btn-spotify mx-auto my-4 d-block" v-if="generation == 'artistsRetrieved'">
+                <template v-if="generation == 'artistsRetrieved'">Generate Better Release Radar</template>
+            </button>
+        </div>
     </div>
 </template>
 
@@ -42,37 +49,51 @@
         data() {
             return {
                 generation: 'pending',
-                artists: {}
+                artists: {},
+                artistsInStorage: false
             }
         },
         methods: {
-            generatePlaylist: function() {
+            getArtists: function() {
                 const self = this;
 
                 this.generation = 'gettingArtists';
+
                 axios.get('/api/spotify/get_artists')
                 .then( response => {
                     self.generation = 'artistsRetrieved';
                     self.artists = response.data;
-                    const artists = { value: self.artists, timestamp: new Date().getDate() }
-                    localStorage.setItem('artists', JSON.stringify(artists));
+                                        
+                    localStorage.setItem('artists', JSON.stringify(self.artists));
+                    
                 }).catch( error => {
                     self.generation = 'pending';
                     console.log(error);
                 });
+            },
+            generatePlaylist: function() {
+                const self = this;
+
+                this.generation = 'generatingPlaylist';
+
+                const artists = this.artists;
+
+                axios.post('/api/spotify/create_playlist', { artists })
+                .then( response => {
+
+                }).catch( error => {
+                    console.log(error);
+                });
+
             }
         },
         mounted() {
             const oldArtistList = localStorage.getItem('artists');
+
             if(!!oldArtistList){
-                const { value, timestamp } = JSON.parse(oldArtistList);
-
-                if(timestamp - 7 <= new Date().getDate()){
-
-                } else {
-                    this.artists = value;
-                    this.generation = 'artistsRetrieved';
-                }
+                this.artistsInStorage = true;
+                this.artists = JSON.parse(oldArtistList);;
+                this.generation = 'artistsRetrieved';
                 
             }
         }

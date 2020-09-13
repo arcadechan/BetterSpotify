@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthorizationController;
 use Illuminate\Support\Facades\Cookie;
 use GuzzleHttp;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Support\Facades\Storage;
 
 class SpotifyController extends Controller
 {
@@ -53,6 +55,56 @@ class SpotifyController extends Controller
     }
 
     public function create_playlist(Request $request){
+        $artists = $request->artists ?? [];
+        $user_id = Cookie::get('spotify_user_id');
+        $playlist_id = Cookie::get('playlist_id');
 
+        $access_token = AuthorizationController::refresh_access('refresh');
+
+        if($playlist_id == NULL){
+
+            //Create Playlist
+            $client = new GuzzleHttp\Client();
+            
+            $request = $client->post('https://api.spotify.com/v1/users/'.$user_id.'/playlists', [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $access_token
+                ],
+                'json' => [
+                    'name' => 'Better Release Radar',
+                    'description' => 'Finally, no more wrong aritsts.'
+                ]
+            ]);
+
+            $request = json_decode($request->getBody());
+            $playlist_id = Cookie::forever('playlist_id', $request->id);
+
+            //Set playlist image
+            $base64image = 'data:image/jpg;base64,' . base64_encode(Storage::disk('public')->get('/img/better-release-radar.jpg'));
+
+            $client = new GuzzleHttp\Client();
+            $request = $client->put('https://api.spotify.com/v1/playlists/'.$request->id.'/images',[
+                'headers' => [
+                    'Content-Type' => 'image/jpeg',
+                    'Authorization' => 'Bearer ' . $access_token
+                ],
+                'body' => base64_encode(Storage::disk('public')->get('/img/better-release-radar.jpg'))
+            ]);
+
+        } else {
+            //delete contents in playlist
+        }
+
+        dd($artists);
+
+        for($i = 0; $i < count($artists); $i++){
+            $artist = $artists[1];
+
+            $artist_id = $artist['id'];
+            
+        }
+
+        return response()->json($response, $responseStatus)->withCookie($playlist_id);
     }
 }

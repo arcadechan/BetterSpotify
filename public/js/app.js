@@ -1947,27 +1947,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       generation: 'pending',
-      artists: {}
+      artists: {},
+      artistsInStorage: false
     };
   },
   methods: {
-    generatePlaylist: function generatePlaylist() {
+    getArtists: function getArtists() {
       var self = this;
       this.generation = 'gettingArtists';
       axios.get('/api/spotify/get_artists').then(function (response) {
         self.generation = 'artistsRetrieved';
         self.artists = response.data;
-        var artists = {
-          value: self.artists,
-          timestamp: new Date().getDate()
-        };
-        localStorage.setItem('artists', JSON.stringify(artists));
+        localStorage.setItem('artists', JSON.stringify(self.artists));
       })["catch"](function (error) {
         self.generation = 'pending';
+        console.log(error);
+      });
+    },
+    generatePlaylist: function generatePlaylist() {
+      var self = this;
+      this.generation = 'generatingPlaylist';
+      var artists = this.artists;
+      axios.post('/api/spotify/create_playlist', {
+        artists: artists
+      }).then(function (response) {})["catch"](function (error) {
         console.log(error);
       });
     }
@@ -1976,14 +1990,10 @@ __webpack_require__.r(__webpack_exports__);
     var oldArtistList = localStorage.getItem('artists');
 
     if (!!oldArtistList) {
-      var _JSON$parse = JSON.parse(oldArtistList),
-          value = _JSON$parse.value,
-          timestamp = _JSON$parse.timestamp;
-
-      if (timestamp - 7 <= new Date().getDate()) {} else {
-        this.artists = value;
-        this.generation = 'artistsRetrieved';
-      }
+      this.artistsInStorage = true;
+      this.artists = JSON.parse(oldArtistList);
+      ;
+      this.generation = 'artistsRetrieved';
     }
   }
 });
@@ -33167,11 +33177,17 @@ var render = function() {
     _vm._v(" "),
     _vm.generation == "artistsRetrieved"
       ? _c("div", [
-          _c("p", [
-            _vm._v(
-              "Artists retrieved! Double check your list and if the list of artists looks ok, press the button to generate and create the Better Release Radar straight into your account."
-            )
-          ]),
+          _vm.artistsInStorage
+            ? _c("p", [
+                _vm._v(
+                  'Here is a list of your followed artists we saved from your last visit. If the artists you follow hasn\'t changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.'
+                )
+              ])
+            : _c("p", [
+                _vm._v(
+                  "Artists retrieved! Double check your list and if the list of artists looks ok, press the button to generate and create the Better Release Radar straight into your account."
+                )
+              ]),
           _vm._v(" "),
           _c(
             "table",
@@ -33242,23 +33258,35 @@ var render = function() {
       ? _c("p", [_vm._v("Generating Playlist...")])
       : _vm._e(),
     _vm._v(" "),
-    _vm.generation == "pending" || _vm.generation == "artistsRetrieved"
-      ? _c(
-          "button",
-          {
-            staticClass: "btn btn-spotify m-1",
-            on: { click: _vm.generatePlaylist }
-          },
-          [
-            _vm.generation == "pending" ? [_vm._v("Get Artists")] : _vm._e(),
-            _vm._v(" "),
-            _vm.generation == "artistsRetrieved"
-              ? [_vm._v("Generate Better Release Radar")]
-              : _vm._e()
-          ],
-          2
-        )
-      : _vm._e()
+    _c("div", { staticClass: "col-12 justify-content-center" }, [
+      _vm.generation == "pending" || _vm.generation == "artistsRetrieved"
+        ? _c(
+            "button",
+            {
+              staticClass: "btn btn-spotify mx-auto my-4 d-block",
+              on: { click: _vm.getArtists }
+            },
+            [[_vm._v("Get Artists")]],
+            2
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.generation == "artistsRetrieved"
+        ? _c(
+            "button",
+            {
+              staticClass: "btn btn-spotify mx-auto my-4 d-block",
+              on: { click: _vm.generatePlaylist }
+            },
+            [
+              _vm.generation == "artistsRetrieved"
+                ? [_vm._v("Generate Better Release Radar")]
+                : _vm._e()
+            ],
+            2
+          )
+        : _vm._e()
+    ])
   ])
 }
 var staticRenderFns = [

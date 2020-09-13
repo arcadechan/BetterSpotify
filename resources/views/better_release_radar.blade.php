@@ -14,12 +14,20 @@
                         </p>
                         <ul>
                             <li>
+                                <h6>user-read-private</h6>
+                                <p>Used to get your username, necessary to then save a playlist to your account.</p>
+                            </li>
+                            <li>
                                 <h6>user-follow-read</h6>
                                 <p>Used to find all the artists you are following.</p>
                             </li>
                             <li>
                                 <h6>playlist-modify-public</h6>
                                 <p>Used to create a new "Better Release Radar" playlist on your account.</p>
+                            </li>
+                            <li>
+                                <h6>ugc-image-upload</h6>
+                                <p>Needed to upload your "Better Release Radar's" playlist cover image (You're free to change this image at any time).</p>
                             </li>
                         </ul>
                     </div>
