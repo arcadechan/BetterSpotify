@@ -1,11 +1,24 @@
 <template>
     <div>
+        <div class="col-12 justify-content-center">
+            <button v-on:click="getArtists" class="btn btn-spotify mx-auto my-4 d-block" v-if="generation == 'pending' || generation == 'artistsRetrieved' || generation == 'albumsRetrieved'">
+                Get Artists
+            </button>
+
+            <button v-on:click="generatePlaylist" class="btn btn-spotify mx-auto my-4 d-block" v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'">
+                Generate Better Release Radar
+            </button>
+        </div>
+
         <p v-if="generation == 'pending'">The first step is to get all the artists you follow. Click the "Get Artists" button when you're ready!</p>
         <p v-if="generation == 'gettingArtists'">Getting followed artists...</p>
-        <div v-if="generation == 'artistsRetrieved'">
+        <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'">
             <p v-if="artistsInStorage">Here is a list of your followed artists we saved from your last visit. If the artists you follow hasn't changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.</p>
             <p v-else>Artists retrieved! Double check your list and if the list of artists looks ok, press the button to generate and create the Better Release Radar straight into your account.</p>
-            <table id="artists-table" class="col-12 col-lg-10 mx-auto">
+            
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#artists-table" aria-expanded="false" aria-controls="artists-table">Hide/Show Artist List</button>
+
+            <table id="artists-table" class="col-12 col-lg-10 mx-auto show">
                 <thead>
                     <tr>
                         <td></td>
@@ -32,14 +45,51 @@
 
         <p v-if="generation == 'generatingPlaylist'">Generating Playlist...</p>
 
-        <div class="col-12 justify-content-center">
-            <button v-on:click="getArtists" class="btn btn-spotify mx-auto my-4 d-block" v-if="generation == 'pending' || generation == 'artistsRetrieved'">
-                <template>Get Artists</template>
-            </button>
+        <div v-if="generation == 'albumsRetrieved'" class="my-5">
+            <p v-if="albumsInStorage">Here is the last "Better Release Radar" you generated.</p>
+            <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your list! To generate again click "Generate Better Release Radar".</p>
 
-            <button v-on:click="generatePlaylist" class="btn btn-spotify mx-auto my-4 d-block" v-if="generation == 'artistsRetrieved'">
-                <template v-if="generation == 'artistsRetrieved'">Generate Better Release Radar</template>
-            </button>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">Hide/Show Album List</button>
+
+            <div id="album-gallery" class="col-12 show">
+                <div v-for="album in albums" :key="album.id" class="album-container col-12 col-md-6 col-lg-3 p-0">
+                    <div class="album-inner-container">
+                        <img v-if="album.images.length > 0" :src="album.images[0]['url']" class="album-image" alt="">
+                        <table class="mt-2">
+                            <tr>
+                                <template v-if="album.artists.length == 1">
+                                    <td>Album Artist:</td>
+                                    <td>{{ album.artists[0].name }}</td>
+                                </template>
+                                <template v-else>
+                                    <td>Album Artists:</td>
+                                    <td>
+                                        <template v-for="(artist, index) in album.artists">
+                                            {{ artist }}<template v-if="index < artists.length">, </template>
+                                        </template>
+                                    </td>
+                                </template>
+                            </tr>
+                            <tr>
+                                <td>Album Name:</td>
+                                <td>{{ album.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Release Type:</td>
+                                <td style="text-transform: capitalize;">{{ album.album_type }}</td>
+                            </tr>
+                            <tr>
+                                <td>Release Date:</td>
+                                <td>{{ album.release_date }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Tracks:</td>
+                                <td>{{ album.total_tracks }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -49,8 +99,12 @@
         data() {
             return {
                 generation: 'pending',
-                artists: {},
-                artistsInStorage: false
+                artists: [],
+                albums: [],
+                tracks: [],
+                artistsInStorage: false,
+                albumsInStorage: false,
+                tracksInStorage: false,
             }
         },
         methods: {
@@ -80,7 +134,12 @@
 
                 axios.post('/api/spotify/create_playlist', { artists })
                 .then( response => {
+                    self.generation = 'albumsRetrieved';
+                    self.albums = response.data.albums;
+                    self.tracks = response.data.tracks;
 
+                    localStorage.setItem('albums', JSON.stringify(self.albums));
+                    localStorage.setItem('tracks', JSON.stringify(self.tracks));
                 }).catch( error => {
                     console.log(error);
                 });
@@ -94,7 +153,19 @@
                 this.artistsInStorage = true;
                 this.artists = JSON.parse(oldArtistList);;
                 this.generation = 'artistsRetrieved';
-                
+            }
+
+            const oldAlbumsList = localStorage.getItem('albums');
+            const oldTracksList = localStorage.getItem('tracks');
+
+            if(!!oldAlbumsList && !!oldTracksList){
+                this.albumsInStorage = true;
+                this.albums = JSON.parse(oldAlbumsList);
+
+                this.tracksInStorage = true;
+                this.tracks = JSON.parse(oldTracksList);
+
+                this.generation = 'albumsRetrieved';
             }
         }
     }

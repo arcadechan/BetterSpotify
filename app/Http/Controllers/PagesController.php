@@ -17,7 +17,7 @@ class PagesController extends Controller
 
         $client_id = env('SPOTIFY_APP_CLIENT_ID', getenv('SPOTIFY_APP_CLIENT_ID'));
         $redirect_uri = env('APP_URL', getenv('APP_URL')) . ":8000/authorize_access";
-        $scopes = "user-read-private ugc-image-upload user-follow-read playlist-modify-public";
+        $scopes = "user-read-private ugc-image-upload user-follow-read playlist-modify-public playlist-modify-private";
 
         return view('better_release_radar', compact([
             'client_id',

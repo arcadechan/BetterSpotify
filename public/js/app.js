@@ -1954,12 +1954,66 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       generation: 'pending',
-      artists: {},
-      artistsInStorage: false
+      artists: [],
+      albums: [],
+      tracks: [],
+      artistsInStorage: false,
+      albumsInStorage: false,
+      tracksInStorage: false
     };
   },
   methods: {
@@ -1981,7 +2035,13 @@ __webpack_require__.r(__webpack_exports__);
       var artists = this.artists;
       axios.post('/api/spotify/create_playlist', {
         artists: artists
-      }).then(function (response) {})["catch"](function (error) {
+      }).then(function (response) {
+        self.generation = 'albumsRetrieved';
+        self.albums = response.data.albums;
+        self.tracks = response.data.tracks;
+        localStorage.setItem('albums', JSON.stringify(self.albums));
+        localStorage.setItem('tracks', JSON.stringify(self.tracks));
+      })["catch"](function (error) {
         console.log(error);
       });
     }
@@ -1994,6 +2054,17 @@ __webpack_require__.r(__webpack_exports__);
       this.artists = JSON.parse(oldArtistList);
       ;
       this.generation = 'artistsRetrieved';
+    }
+
+    var oldAlbumsList = localStorage.getItem('albums');
+    var oldTracksList = localStorage.getItem('tracks');
+
+    if (!!oldAlbumsList && !!oldTracksList) {
+      this.albumsInStorage = true;
+      this.albums = JSON.parse(oldAlbumsList);
+      this.tracksInStorage = true;
+      this.tracks = JSON.parse(oldTracksList);
+      this.generation = 'albumsRetrieved';
     }
   }
 });
@@ -33163,6 +33234,33 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c("div", { staticClass: "col-12 justify-content-center" }, [
+      _vm.generation == "pending" ||
+      _vm.generation == "artistsRetrieved" ||
+      _vm.generation == "albumsRetrieved"
+        ? _c(
+            "button",
+            {
+              staticClass: "btn btn-spotify mx-auto my-4 d-block",
+              on: { click: _vm.getArtists }
+            },
+            [_vm._v("\n            Get Artists\n        ")]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.generation == "artistsRetrieved" ||
+      _vm.generation == "albumsRetrieved"
+        ? _c(
+            "button",
+            {
+              staticClass: "btn btn-spotify mx-auto my-4 d-block",
+              on: { click: _vm.generatePlaylist }
+            },
+            [_vm._v("\n            Generate Better Release Radar\n        ")]
+          )
+        : _vm._e()
+    ]),
+    _vm._v(" "),
     _vm.generation == "pending"
       ? _c("p", [
           _vm._v(
@@ -33175,7 +33273,7 @@ var render = function() {
       ? _c("p", [_vm._v("Getting followed artists...")])
       : _vm._e(),
     _vm._v(" "),
-    _vm.generation == "artistsRetrieved"
+    _vm.generation == "artistsRetrieved" || _vm.generation == "albumsRetrieved"
       ? _c("div", [
           _vm.artistsInStorage
             ? _c("p", [
@@ -33190,9 +33288,24 @@ var render = function() {
               ]),
           _vm._v(" "),
           _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              attrs: {
+                type: "button",
+                "data-toggle": "collapse",
+                "data-target": "#artists-table",
+                "aria-expanded": "false",
+                "aria-controls": "artists-table"
+              }
+            },
+            [_vm._v("Hide/Show Artist List")]
+          ),
+          _vm._v(" "),
+          _c(
             "table",
             {
-              staticClass: "col-12 col-lg-10 mx-auto",
+              staticClass: "col-12 col-lg-10 mx-auto show",
               attrs: { id: "artists-table" }
             },
             [
@@ -33258,35 +33371,128 @@ var render = function() {
       ? _c("p", [_vm._v("Generating Playlist...")])
       : _vm._e(),
     _vm._v(" "),
-    _c("div", { staticClass: "col-12 justify-content-center" }, [
-      _vm.generation == "pending" || _vm.generation == "artistsRetrieved"
-        ? _c(
+    _vm.generation == "albumsRetrieved"
+      ? _c("div", { staticClass: "my-5" }, [
+          _vm.albumsInStorage
+            ? _c("p", [
+                _vm._v('Here is the last "Better Release Radar" you generated.')
+              ])
+            : _c("p", [
+                _vm._v(
+                  'Your playlist has been generated! Here are the the latest releases we found and added to your list! To generate again click "Generate Better Release Radar".'
+                )
+              ]),
+          _vm._v(" "),
+          _c(
             "button",
             {
-              staticClass: "btn btn-spotify mx-auto my-4 d-block",
-              on: { click: _vm.getArtists }
+              staticClass: "btn btn-primary",
+              attrs: {
+                type: "button",
+                "data-toggle": "collapse",
+                "data-target": "#album-gallery",
+                "aria-expanded": "false",
+                "aria-controls": "album-gallery"
+              }
             },
-            [[_vm._v("Get Artists")]],
-            2
+            [_vm._v("Hide/Show Album List")]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-12 show", attrs: { id: "album-gallery" } },
+            _vm._l(_vm.albums, function(album) {
+              return _c(
+                "div",
+                {
+                  key: album.id,
+                  staticClass: "album-container col-12 col-md-6 col-lg-3 p-0"
+                },
+                [
+                  _c("div", { staticClass: "album-inner-container" }, [
+                    album.images.length > 0
+                      ? _c("img", {
+                          staticClass: "album-image",
+                          attrs: { src: album.images[0]["url"], alt: "" }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("table", { staticClass: "mt-2" }, [
+                      _c(
+                        "tr",
+                        [
+                          album.artists.length == 1
+                            ? [
+                                _c("td", [_vm._v("Album Artist:")]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(_vm._s(album.artists[0].name))
+                                ])
+                              ]
+                            : [
+                                _c("td", [_vm._v("Album Artists:")]),
+                                _vm._v(" "),
+                                _c(
+                                  "td",
+                                  [
+                                    _vm._l(album.artists, function(
+                                      artist,
+                                      index
+                                    ) {
+                                      return [
+                                        _vm._v(
+                                          "\n                                        " +
+                                            _vm._s(artist)
+                                        ),
+                                        index < _vm.artists.length
+                                          ? [_vm._v(", ")]
+                                          : _vm._e()
+                                      ]
+                                    })
+                                  ],
+                                  2
+                                )
+                              ]
+                        ],
+                        2
+                      ),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("td", [_vm._v("Album Name:")]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(album.name))])
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("td", [_vm._v("Release Type:")]),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          { staticStyle: { "text-transform": "capitalize" } },
+                          [_vm._v(_vm._s(album.album_type))]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("td", [_vm._v("Release Date:")]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(album.release_date))])
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("td", [_vm._v("Total Tracks:")]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(album.total_tracks))])
+                      ])
+                    ])
+                  ])
+                ]
+              )
+            }),
+            0
           )
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.generation == "artistsRetrieved"
-        ? _c(
-            "button",
-            {
-              staticClass: "btn btn-spotify mx-auto my-4 d-block",
-              on: { click: _vm.generatePlaylist }
-            },
-            [
-              _vm.generation == "artistsRetrieved"
-                ? [_vm._v("Generate Better Release Radar")]
-                : _vm._e()
-            ],
-            2
-          )
-        : _vm._e()
-    ])
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = [

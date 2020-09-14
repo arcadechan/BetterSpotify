@@ -24,6 +24,7 @@ class AuthorizationController extends Controller
         $refresh_token = Cookie::get('spotify_refresh_token');
         $spotify_access_code = Cookie::get('spotify_access_code');
         $user_id = Cookie::get('spotify_user_id');
+        $user_country = Cookie::get('spotify_user_country');
 
         if($request->has('code') && $spotify_access_code === null){
             $code = $request->code;
@@ -48,13 +49,15 @@ class AuthorizationController extends Controller
 
             $response = json_decode($request->getBody());
             $user_id = Cookie::forever('spotify_user_id', $response->id);
+            $user_country = Cookie::forever('spotify_user_country', $response->country);
         }
 
         return redirect()->action('PagesController@better_release_radar')
             ->withCookie($spotify_access_code)
             ->withCookie($access_token)
             ->withCookie($refresh_token)
-            ->withCookie($user_id);
+            ->withCookie($user_id)
+            ->withCookie($user_country);
     }
 
     public static function refresh_access(){

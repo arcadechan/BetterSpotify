@@ -38,3 +38,39 @@ nav.navbar {
     }
 
 }
+
+#album-gallery {
+    .album-container {
+        width: auto;
+        display: inline-block;
+
+        .album-inner-container {
+            padding: 1em;
+            margin: 1em .5em;
+            background-color: #000000;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            font-size: 12px;
+
+            tr  {                
+                td {
+                    padding: .75em 0;
+                    width: 50%;
+                    border-bottom: 1px solid $text-color;
+                    vertical-align: super;
+
+                    &:not(tr td:last-child){
+                        border-bottom: none;
+                    }
+            
+                }
+            }
+        }
+    }
+}

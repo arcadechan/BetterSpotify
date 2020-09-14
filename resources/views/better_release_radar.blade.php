@@ -23,7 +23,10 @@
                             </li>
                             <li>
                                 <h6>playlist-modify-public</h6>
-                                <p>Used to create a new "Better Release Radar" playlist on your account.</p>
+                            </li>
+                            <li>
+                                <h6>playlist-modify-private</h6>
+                                <p>Used to create and manage your "Better Release Radar" playlist on your account, whether it's set to public or private.</p>
                             </li>
                             <li>
                                 <h6>ugc-image-upload</h6>
