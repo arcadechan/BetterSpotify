@@ -20,4 +20,11 @@ Route::get('/contact', 'PagesController@contact');
 
 //Spotify Authorization Routes
 Route::get('/authorize_access', 'AuthorizationController@authorize_access');
+Route::get('/get_access', 'AuthorizationController@get_access');
 Route::get('/refresh_access', 'AuthorizationController@refresh_access');
+
+//Spotify APIs
+Route::prefix('api/spotify')->group(function(){
+    Route::get('/get_artists', 'SpotifyController@get_artists');
+    Route::post('/create_playlist', 'SpotifyController@create_playlist');
+});
