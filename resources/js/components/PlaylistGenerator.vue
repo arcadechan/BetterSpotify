@@ -1,11 +1,17 @@
 <template>
     <div>
         <div class="col-12 justify-content-center">
-            <button v-on:click="getArtists" class="btn btn-spotify mx-auto my-4 d-block" v-if="generation == 'pending' || generation == 'artistsRetrieved' || generation == 'albumsRetrieved'">
+            <button 
+                v-if="generation == 'pending' || generation == 'artistsRetrieved' ||  generation == 'albumsRetrieved'"
+                @click="getArtists"
+                class="btn btn-spotify mx-auto my-4 d-block">
                 Get Artists
             </button>
 
-            <button v-on:click="generatePlaylist" class="btn btn-spotify mx-auto my-4 d-block" v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'">
+            <button
+                v-if="generation == 'artistsRetrieved'"
+                @click="generatePlaylist"
+                class="btn btn-spotify mx-auto my-4 d-block">
                 Generate Better Release Radar
             </button>
         </div>
@@ -16,9 +22,9 @@
             <p v-if="artistsInStorage">Here is a list of your followed artists we saved from your last visit. If the artists you follow hasn't changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.</p>
             <p v-else>Artists retrieved! Double check your list and if the list of artists looks ok, press the button to generate and create the Better Release Radar straight into your account.</p>
             
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#artists-table" aria-expanded="false" aria-controls="artists-table">Hide/Show Artist List</button>
+            <button @click="artistsTableOpen = !artistsTableOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#artists-table" aria-expanded="false" aria-controls="artists-table">Hide/Show Artist List</button>
 
-            <table id="artists-table" class="col-12 col-lg-10 mx-auto show">
+            <table id="artists-table" class="col-12 mx-auto my-4 show">
                 <thead>
                     <tr>
                         <td></td>
@@ -41,6 +47,9 @@
                     </tr>
                 </tbody>
             </table>
+
+            <button @click="artistsTableOpen = !artistsTableOpen" v-if="artistsTableOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#artists-table" aria-expanded="false" aria-controls="artists-table">Hide/Show Artist List</button>
+
         </div>
 
         <p v-if="generation == 'generatingPlaylist'">Generating Playlist...</p>
@@ -49,47 +58,79 @@
             <p v-if="albumsInStorage">Here is the last "Better Release Radar" you generated.</p>
             <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your list! To generate again click "Generate Better Release Radar".</p>
 
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">Hide/Show Album List</button>
+            <button @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">Hide/Show Album List</button>
 
-            <div id="album-gallery" class="col-12 show">
-                <div v-for="album in albums" :key="album.id" class="album-container col-12 col-md-6 col-lg-3 p-0">
-                    <div class="album-inner-container">
-                        <img v-if="album.images.length > 0" :src="album.images[0]['url']" class="album-image" alt="">
-                        <table class="mt-2">
-                            <tr>
-                                <template v-if="album.artists.length == 1">
-                                    <td>Album Artist:</td>
-                                    <td>{{ album.artists[0].name }}</td>
-                                </template>
-                                <template v-else>
-                                    <td>Album Artists:</td>
-                                    <td>
-                                        <template v-for="(artist, index) in album.artists">
-                                            {{ artist }}<template v-if="index < artists.length">, </template>
-                                        </template>
-                                    </td>
-                                </template>
-                            </tr>
-                            <tr>
-                                <td>Album Name:</td>
-                                <td>{{ album.name }}</td>
-                            </tr>
-                            <tr>
-                                <td>Release Type:</td>
-                                <td style="text-transform: capitalize;">{{ album.album_type }}</td>
-                            </tr>
-                            <tr>
-                                <td>Release Date:</td>
-                                <td>{{ album.release_date }}</td>
-                            </tr>
-                            <tr>
-                                <td>Total Tracks:</td>
-                                <td>{{ album.total_tracks }}</td>
-                            </tr>
-                        </table>
+            <div id="album-gallery" class="col-12 p-0 my-4 show">
+                <div v-for="(album, index) in albums" :key="album.id" class="album-container col-12 col-md-6 col-lg-4 col-xl-3 p-0">
+                    <div>
+                        <div class="album-inner-container text-center">                            
+                            <img v-if="album.images.length > 0" :src="album.images[0]['url']" class="album-image" alt="">
+                            <div class="flip-card mt-2">
+                                <div :id="`card-${index}`" class="table-container flip-card-inner">
+                                    <div class="flip-card-front">
+                                        <table class="mt-2">
+                                            <tbody>
+                                                <tr>
+                                                    <template v-if="album.artists.length == 1">
+                                                        <td>Artist:</td>
+                                                        <td>{{ album.artists[0].name }}</td>
+                                                    </template>
+                                                    <template v-else>
+                                                        <td>Artists:</td>
+                                                        <td>
+                                                            <template v-for="(artist, index) in album.artists">
+                                                                {{ artist }}<template v-if="index < artists.length">, </template>
+                                                            </template>
+                                                        </td>
+                                                    </template>
+                                                </tr>
+                                                <tr>
+                                                    <td>Album:</td>
+                                                    <td>{{ album.name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Type:</td>
+                                                    <td style="text-transform: capitalize;">{{ album.album_type }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Released:</td>
+                                                    <td>{{ album.release_date }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tracks:</td>
+                                                    <td>{{ album.total_tracks }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="flip-card-back">
+                                        <div class="track-list-container">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="track-no">Track #</td>
+                                                        <td class="track-title">Title</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="track in tracks[album.id]" :key="track.id">
+                                                        <td>{{ track.track_number }}</td>
+                                                        <td>{{ track.name }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            <button class="btn btn-spotify btn-sm mt-3" @click="flipCard(`#card-${index}`)"><i class="fas fa-redo-alt"></i> View album tracks.</button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <button @click="albumGalleryOpen = !albumGalleryOpen" v-if="albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">Hide/Show Album List</button>
+            
         </div>
     </div>
 </template>
@@ -105,6 +146,8 @@
                 artistsInStorage: false,
                 albumsInStorage: false,
                 tracksInStorage: false,
+                artistsTableOpen: true,
+                albumGalleryOpen: true
             }
         },
         methods: {
@@ -144,6 +187,10 @@
                     console.log(error);
                 });
 
+            },
+            flipCard: function(cardId){
+                let card = document.querySelector(cardId);
+                card.classList.toggle('flipped');
             }
         },
         mounted() {

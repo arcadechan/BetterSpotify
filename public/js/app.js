@@ -2004,6 +2004,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2013,7 +2054,9 @@ __webpack_require__.r(__webpack_exports__);
       tracks: [],
       artistsInStorage: false,
       albumsInStorage: false,
-      tracksInStorage: false
+      tracksInStorage: false,
+      artistsTableOpen: true,
+      albumGalleryOpen: true
     };
   },
   methods: {
@@ -2044,6 +2087,10 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    flipCard: function flipCard(cardId) {
+      var card = document.querySelector(cardId);
+      card.classList.toggle('flipped');
     }
   },
   mounted: function mounted() {
@@ -33248,8 +33295,7 @@ var render = function() {
           )
         : _vm._e(),
       _vm._v(" "),
-      _vm.generation == "artistsRetrieved" ||
-      _vm.generation == "albumsRetrieved"
+      _vm.generation == "artistsRetrieved"
         ? _c(
             "button",
             {
@@ -33290,13 +33336,18 @@ var render = function() {
           _c(
             "button",
             {
-              staticClass: "btn btn-primary",
+              staticClass: "d-block btn btn-dark mx-auto",
               attrs: {
                 type: "button",
                 "data-toggle": "collapse",
                 "data-target": "#artists-table",
                 "aria-expanded": "false",
                 "aria-controls": "artists-table"
+              },
+              on: {
+                click: function($event) {
+                  _vm.artistsTableOpen = !_vm.artistsTableOpen
+                }
               }
             },
             [_vm._v("Hide/Show Artist List")]
@@ -33305,7 +33356,7 @@ var render = function() {
           _c(
             "table",
             {
-              staticClass: "col-12 col-lg-10 mx-auto show",
+              staticClass: "col-12 mx-auto my-4 show",
               attrs: { id: "artists-table" }
             },
             [
@@ -33363,7 +33414,29 @@ var render = function() {
                 0
               )
             ]
-          )
+          ),
+          _vm._v(" "),
+          _vm.artistsTableOpen
+            ? _c(
+                "button",
+                {
+                  staticClass: "d-block btn btn-dark mx-auto",
+                  attrs: {
+                    type: "button",
+                    "data-toggle": "collapse",
+                    "data-target": "#artists-table",
+                    "aria-expanded": "false",
+                    "aria-controls": "artists-table"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.artistsTableOpen = !_vm.artistsTableOpen
+                    }
+                  }
+                },
+                [_vm._v("Hide/Show Artist List")]
+              )
+            : _vm._e()
         ])
       : _vm._e(),
     _vm._v(" "),
@@ -33386,13 +33459,18 @@ var render = function() {
           _c(
             "button",
             {
-              staticClass: "btn btn-primary",
+              staticClass: "d-block btn btn-dark mx-auto",
               attrs: {
                 type: "button",
                 "data-toggle": "collapse",
                 "data-target": "#album-gallery",
                 "aria-expanded": "false",
                 "aria-controls": "album-gallery"
+              },
+              on: {
+                click: function($event) {
+                  _vm.albumGalleryOpen = !_vm.albumGalleryOpen
+                }
               }
             },
             [_vm._v("Hide/Show Album List")]
@@ -33400,97 +33478,201 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "col-12 show", attrs: { id: "album-gallery" } },
-            _vm._l(_vm.albums, function(album) {
+            {
+              staticClass: "col-12 p-0 my-4 show",
+              attrs: { id: "album-gallery" }
+            },
+            _vm._l(_vm.albums, function(album, index) {
               return _c(
                 "div",
                 {
                   key: album.id,
-                  staticClass: "album-container col-12 col-md-6 col-lg-3 p-0"
+                  staticClass:
+                    "album-container col-12 col-md-6 col-lg-4 col-xl-3 p-0"
                 },
                 [
-                  _c("div", { staticClass: "album-inner-container" }, [
-                    album.images.length > 0
-                      ? _c("img", {
-                          staticClass: "album-image",
-                          attrs: { src: album.images[0]["url"], alt: "" }
-                        })
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("table", { staticClass: "mt-2" }, [
-                      _c(
-                        "tr",
-                        [
-                          album.artists.length == 1
-                            ? [
-                                _c("td", [_vm._v("Album Artist:")]),
-                                _vm._v(" "),
-                                _c("td", [
-                                  _vm._v(_vm._s(album.artists[0].name))
-                                ])
-                              ]
-                            : [
-                                _c("td", [_vm._v("Album Artists:")]),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  [
-                                    _vm._l(album.artists, function(
-                                      artist,
-                                      index
-                                    ) {
-                                      return [
-                                        _vm._v(
-                                          "\n                                        " +
-                                            _vm._s(artist)
-                                        ),
-                                        index < _vm.artists.length
-                                          ? [_vm._v(", ")]
-                                          : _vm._e()
-                                      ]
-                                    })
-                                  ],
-                                  2
-                                )
-                              ]
-                        ],
-                        2
-                      ),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("td", [_vm._v("Album Name:")]),
+                  _c("div", [
+                    _c(
+                      "div",
+                      { staticClass: "album-inner-container text-center" },
+                      [
+                        album.images.length > 0
+                          ? _c("img", {
+                              staticClass: "album-image",
+                              attrs: { src: album.images[0]["url"], alt: "" }
+                            })
+                          : _vm._e(),
                         _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(album.name))])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("td", [_vm._v("Release Type:")]),
+                        _c("div", { staticClass: "flip-card mt-2" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "table-container flip-card-inner",
+                              attrs: { id: "card-" + index }
+                            },
+                            [
+                              _c("div", { staticClass: "flip-card-front" }, [
+                                _c("table", { staticClass: "mt-2" }, [
+                                  _c("tbody", [
+                                    _c(
+                                      "tr",
+                                      [
+                                        album.artists.length == 1
+                                          ? [
+                                              _c("td", [_vm._v("Artist:")]),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _vm._v(
+                                                  _vm._s(album.artists[0].name)
+                                                )
+                                              ])
+                                            ]
+                                          : [
+                                              _c("td", [_vm._v("Artists:")]),
+                                              _vm._v(" "),
+                                              _c(
+                                                "td",
+                                                [
+                                                  _vm._l(
+                                                    album.artists,
+                                                    function(artist, index) {
+                                                      return [
+                                                        _vm._v(
+                                                          "\n                                                            " +
+                                                            _vm._s(artist)
+                                                        ),
+                                                        index <
+                                                        _vm.artists.length
+                                                          ? [_vm._v(", ")]
+                                                          : _vm._e()
+                                                      ]
+                                                    }
+                                                  )
+                                                ],
+                                                2
+                                              )
+                                            ]
+                                      ],
+                                      2
+                                    ),
+                                    _vm._v(" "),
+                                    _c("tr", [
+                                      _c("td", [_vm._v("Album:")]),
+                                      _vm._v(" "),
+                                      _c("td", [_vm._v(_vm._s(album.name))])
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("tr", [
+                                      _c("td", [_vm._v("Type:")]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        {
+                                          staticStyle: {
+                                            "text-transform": "capitalize"
+                                          }
+                                        },
+                                        [_vm._v(_vm._s(album.album_type))]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("tr", [
+                                      _c("td", [_vm._v("Released:")]),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v(_vm._s(album.release_date))
+                                      ])
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("tr", [
+                                      _c("td", [_vm._v("Tracks:")]),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v(_vm._s(album.total_tracks))
+                                      ])
+                                    ])
+                                  ])
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "flip-card-back" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "track-list-container" },
+                                  [
+                                    _c("table", [
+                                      _vm._m(1, true),
+                                      _vm._v(" "),
+                                      _c(
+                                        "tbody",
+                                        _vm._l(_vm.tracks[album.id], function(
+                                          track
+                                        ) {
+                                          return _c("tr", { key: track.id }, [
+                                            _c("td", [
+                                              _vm._v(_vm._s(track.track_number))
+                                            ]),
+                                            _vm._v(" "),
+                                            _c("td", [
+                                              _vm._v(_vm._s(track.name))
+                                            ])
+                                          ])
+                                        }),
+                                        0
+                                      )
+                                    ])
+                                  ]
+                                )
+                              ])
+                            ]
+                          )
+                        ]),
                         _vm._v(" "),
                         _c(
-                          "td",
-                          { staticStyle: { "text-transform": "capitalize" } },
-                          [_vm._v(_vm._s(album.album_type))]
+                          "button",
+                          {
+                            staticClass: "btn btn-spotify btn-sm mt-3",
+                            on: {
+                              click: function($event) {
+                                return _vm.flipCard("#card-" + index)
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fas fa-redo-alt" }),
+                            _vm._v(" View album tracks.")
+                          ]
                         )
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("td", [_vm._v("Release Date:")]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(album.release_date))])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("td", [_vm._v("Total Tracks:")]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(album.total_tracks))])
-                      ])
-                    ])
+                      ]
+                    )
                   ])
                 ]
               )
             }),
             0
-          )
+          ),
+          _vm._v(" "),
+          _vm.albumGalleryOpen
+            ? _c(
+                "button",
+                {
+                  staticClass: "d-block btn btn-dark mx-auto",
+                  attrs: {
+                    type: "button",
+                    "data-toggle": "collapse",
+                    "data-target": "#album-gallery",
+                    "aria-expanded": "false",
+                    "aria-controls": "album-gallery"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.albumGalleryOpen = !_vm.albumGalleryOpen
+                    }
+                  }
+                },
+                [_vm._v("Hide/Show Album List")]
+              )
+            : _vm._e()
         ])
       : _vm._e()
   ])
@@ -33509,6 +33691,18 @@ var staticRenderFns = [
         _c("td", [_vm._v("Artist Name")]),
         _vm._v(" "),
         _c("td", [_vm._v("Link to Spotify Artist Page")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("td", { staticClass: "track-no" }, [_vm._v("Track #")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "track-title" }, [_vm._v("Title")])
       ])
     ])
   }

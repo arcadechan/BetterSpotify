@@ -11144,6 +11144,11 @@ footer a {
   transition: background-color 0.25s ease-in-out;
 }
 
+.btn.btn-spotify.btn-sm,
+.btn-group-sm > .btn.btn-spotify {
+  font-size: 1em;
+}
+
 .intro {
   padding-top: 160px;
   padding-bottom: 160px;
@@ -11312,14 +11317,70 @@ nav.navbar #navbar-spotify-icon {
 }
 
 #album-gallery .album-container {
-  width: auto;
+  width: 100%;
   display: inline-block;
 }
 
 #album-gallery .album-container .album-inner-container {
   padding: 1em;
-  margin: 1em 0.5em;
+  margin: 0.5em;
   background-color: #000000;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner {
+  position: relative;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner.flipped .flip-card-front {
+  display: none;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner.flipped .flip-card-back {
+  display: block;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front,
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back {
+  width: 100%;
+  height: 200px;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back {
+  transform: rotateY(180deg);
+  display: none;
+  padding-right: 0.5em;
+  overflow-y: auto;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back .track-list-container .track-no {
+  width: 25%;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back::-webkit-scrollbar {
+  width: 10px;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back::-webkit-scrollbar-button {
+  display: none;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #1DB954;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back::-webkit-scrollbar-track {
+  background-color: #083518;
+  border-radius: 10px;
 }
 
 #album-gallery .album-container img {
@@ -11333,12 +11394,12 @@ nav.navbar #navbar-spotify-icon {
 
 #album-gallery .album-container table tr td {
   padding: 0.75em 0;
-  width: 50%;
+  text-align: left;
   border-bottom: 1px solid #FFFEDF;
   vertical-align: super;
 }
 
-#album-gallery .album-container table tr td:not(tr td:last-child) {
+#album-gallery .album-container table tbody tr:last-child td {
   border-bottom: none;
 }
 
