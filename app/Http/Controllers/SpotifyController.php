@@ -144,20 +144,31 @@ class SpotifyController extends Controller
 
             
             $client = new GuzzleHttp\Client();
-            $request = $client->get('https://api.spotify.com/v1/artists/'.$artist_id.'/albums', [
+            $singlesRequest = $client->get('https://api.spotify.com/v1/artists/'.$artist_id.'/albums', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $access_token
                 ],
                 'query' => [
-                    'include_groups' => 'single,album',
+                    'include_groups' => 'single',
                     'limit' => 3
                 ]
             ]);
 
-            if($request->getStatusCode() == 200){
-                $response = json_decode($request->getBody());
+            $albumsRequest = $client->get('https://api.spotify.com/v1/artists/'.$artist_id.'/albums', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $access_token
+                ],
+                'query' => [
+                    'include_groups' => 'album',
+                    'limit' => 3
+                ]
+            ]);
 
-                $artist_albums = $response->items;
+            if($singlesRequest->getStatusCode() == 200 && $albumsRequest->getStatusCode() == 200){
+                $singlesResponse = json_decode($singlesRequest->getBody());
+                $albumsResponse = json_decode($albumsRequest->getBody());
+
+                $artist_albums = array_merge($singlesResponse->items, $albumsResponse->items);
                 
                 if(count($artist_albums) > 0){
                     foreach($artist_albums as $key => $album){
