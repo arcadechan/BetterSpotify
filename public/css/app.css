@@ -11378,7 +11378,7 @@ nav.navbar #navbar-spotify-icon {
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner {
   position: relative;
   text-align: center;
-  transition: transform 0.8s;
+  transition: transform 0.25s;
   transform-style: preserve-3d;
 }
 
@@ -11392,6 +11392,17 @@ nav.navbar #navbar-spotify-icon {
 
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner.flipped .flip-card-back {
   display: block;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front .album-artist-link,
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front .album-link {
+  color: #1DB954;
+  text-decoration: underline;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front .album-artist-link:hover,
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front .album-link:hover {
+  color: #FFFEDF;
 }
 
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front,

@@ -2038,6 +2038,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -33482,7 +33491,13 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("Hide/Show Album List")]
+            [
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.albumGalleryOpen ? "Hide" : "Show") +
+                  " Album List\n        "
+              )
+            ]
           ),
           _vm._v(" "),
           _c(
@@ -33506,10 +33521,27 @@ var render = function() {
                       { staticClass: "album-inner-container text-center" },
                       [
                         album.images.length > 0
-                          ? _c("img", {
-                              staticClass: "album-image",
-                              attrs: { src: album.images[0]["url"], alt: "" }
-                            })
+                          ? [
+                              !!album.images[1]
+                                ? [
+                                    _c("img", {
+                                      staticClass: "album-image",
+                                      attrs: {
+                                        src: album.images[1]["url"],
+                                        alt: ""
+                                      }
+                                    })
+                                  ]
+                                : [
+                                    _c("img", {
+                                      staticClass: "album-image",
+                                      attrs: {
+                                        src: album.images[0]["url"],
+                                        alt: ""
+                                      }
+                                    })
+                                  ]
+                            ]
                           : _vm._e(),
                         _vm._v(" "),
                         _c("div", { staticClass: "flip-card mt-2" }, [
@@ -33531,8 +33563,26 @@ var render = function() {
                                               _c("td", [_vm._v("Artist:")]),
                                               _vm._v(" "),
                                               _c("td", [
-                                                _vm._v(
-                                                  _vm._s(album.artists[0].name)
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    staticClass:
+                                                      "album-artist-link",
+                                                    attrs: {
+                                                      href:
+                                                        album.artists[0]
+                                                          .external_urls
+                                                          .spotify,
+                                                      target: "_blank"
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(
+                                                        album.artists[0].name
+                                                      )
+                                                    )
+                                                  ]
                                                 )
                                               ])
                                             ]
@@ -33546,12 +33596,30 @@ var render = function() {
                                                     album.artists,
                                                     function(artist, index) {
                                                       return [
-                                                        _vm._v(
-                                                          "\n                                                            " +
-                                                            _vm._s(artist)
+                                                        _c(
+                                                          "a",
+                                                          {
+                                                            key: index,
+                                                            staticClass:
+                                                              "album-artist-link",
+                                                            attrs: {
+                                                              href:
+                                                                artist
+                                                                  .external_urls
+                                                                  .spotify,
+                                                              target: "_blank"
+                                                            }
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              _vm._s(
+                                                                artist.name
+                                                              )
+                                                            )
+                                                          ]
                                                         ),
                                                         index <
-                                                        _vm.artists.length
+                                                        album.artists.length - 1
                                                           ? [_vm._v(", ")]
                                                           : _vm._e()
                                                       ]
@@ -33568,7 +33636,18 @@ var render = function() {
                                     _c("tr", [
                                       _c("td", [_vm._v("Album:")]),
                                       _vm._v(" "),
-                                      _c("td", [_vm._v(_vm._s(album.name))])
+                                      _c("td", [
+                                        _c(
+                                          "a",
+                                          {
+                                            staticClass: "album-link",
+                                            attrs: {
+                                              href: album.external_urls.spotify
+                                            }
+                                          },
+                                          [_vm._v(_vm._s(album.name))]
+                                        )
+                                      ])
                                     ]),
                                     _vm._v(" "),
                                     _c("tr", [
@@ -33652,7 +33731,8 @@ var render = function() {
                             _vm._v(" View album tracks.")
                           ]
                         )
-                      ]
+                      ],
+                      2
                     )
                   ])
                 ]
