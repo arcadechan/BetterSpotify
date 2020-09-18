@@ -11364,6 +11364,12 @@ nav.navbar #navbar-spotify-icon {
   border-radius: 10px;
 }
 
+#album-gallery {
+  height: calc(100vh - 200px);
+  min-height: 650px;
+  overflow-y: auto;
+}
+
 #album-gallery .album-container {
   width: 100%;
   display: inline-block;
@@ -11460,5 +11466,23 @@ nav.navbar #navbar-spotify-icon {
 
 #album-gallery .album-container table tbody tr:last-child td {
   border-bottom: none;
+}
+
+#album-gallery::-webkit-scrollbar {
+  width: 10px;
+}
+
+#album-gallery::-webkit-scrollbar-button {
+  display: none;
+}
+
+#album-gallery::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #1DB954;
+}
+
+#album-gallery::-webkit-scrollbar-track {
+  background-color: #083518;
+  border-radius: 10px;
 }
 

@@ -131,8 +131,6 @@
                 </div>
             </div>
 
-            <button @click="albumGalleryOpen = !albumGalleryOpen" v-if="albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">Hide/Show Album List</button>
-            
         </div>
     </div>
 </template>
