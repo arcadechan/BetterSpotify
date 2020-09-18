@@ -119,7 +119,7 @@ nav.navbar {
                 .flip-card-inner {
                     position: relative;
                     text-align: center;
-                    transition: transform 0.8s;
+                    transition: transform 0.25s;
                     transform-style: preserve-3d;                    
 
                     &.flipped {
@@ -131,6 +131,17 @@ nav.navbar {
 
                         .flip-card-back {
                             display: block;
+                        }
+                    }
+                    .flip-card-front {
+                        .album-artist-link,
+                        .album-link {
+                            color: $spotify-green;
+                            text-decoration: underline;
+
+                            &:hover {
+                                color: $text-color;
+                            }
                         }
                     }
 

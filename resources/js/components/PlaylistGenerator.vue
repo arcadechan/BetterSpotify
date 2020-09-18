@@ -51,13 +51,22 @@
             <p v-if="albumsInStorage">Here is the last "Better Release Radar" you generated.</p>
             <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your list! To generate again click "Generate Better Release Radar".</p>
 
-            <button @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">Hide/Show Album List</button>
+            <button @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">
+                {{ albumGalleryOpen ? 'Hide' : 'Show' }} Album List
+            </button>
 
             <div id="album-gallery" class="col-12 p-0 my-4 show">
                 <div v-for="(album, index) in albums" :key="album.id" class="album-container col-12 col-md-6 col-lg-4 col-xl-3 p-0">
                     <div>
-                        <div class="album-inner-container text-center">                            
-                            <img v-if="album.images.length > 0" :src="album.images[0]['url']" class="album-image" alt="">
+                        <div class="album-inner-container text-center">
+                            <template v-if="album.images.length > 0">
+                                <template v-if="!!album.images[1]">
+                                    <img :src="album.images[1]['url']" class="album-image" alt="">
+                                </template>
+                                <template v-else>
+                                    <img :src="album.images[0]['url']" class="album-image" alt="">
+                                </template>
+                            </template>
                             <div class="flip-card mt-2">
                                 <div :id="`card-${index}`" class="table-container flip-card-inner">
                                     <div class="flip-card-front">
@@ -66,20 +75,20 @@
                                                 <tr>
                                                     <template v-if="album.artists.length == 1">
                                                         <td>Artist:</td>
-                                                        <td>{{ album.artists[0].name }}</td>
+                                                        <td><a :href="album.artists[0].external_urls.spotify" target="_blank" class="album-artist-link">{{ album.artists[0].name }}</a></td>
                                                     </template>
                                                     <template v-else>
                                                         <td>Artists:</td>
                                                         <td>
                                                             <template v-for="(artist, index) in album.artists">
-                                                                {{ artist }}<template v-if="index < artists.length">, </template>
+                                                                <a :href="artist.external_urls.spotify" :key="index" target="_blank" class="album-artist-link">{{ artist.name }}</a><template v-if="index < album.artists.length - 1">, </template>
                                                             </template>
                                                         </td>
                                                     </template>
                                                 </tr>
                                                 <tr>
                                                     <td>Album:</td>
-                                                    <td>{{ album.name }}</td>
+                                                    <td><a :href="album.external_urls.spotify" class="album-link">{{ album.name }}</a></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Type:</td>
