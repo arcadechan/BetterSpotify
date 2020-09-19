@@ -2045,6 +2045,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2092,6 +2105,19 @@ __webpack_require__.r(__webpack_exports__);
     flipCard: function flipCard(cardId) {
       var card = document.querySelector(cardId);
       card.classList.toggle('flipped');
+    }
+  },
+  computed: {
+    trackCount: function trackCount() {
+      var count = 0;
+
+      if (!!this.tracks) {
+        for (var track in this.tracks) {
+          count += this.tracks[track].length;
+        }
+      }
+
+      return count;
     }
   },
   mounted: function mounted() {
@@ -33317,8 +33343,18 @@ var render = function() {
         ])
       : _vm._e(),
     _vm._v(" "),
-    _vm.generation == "gettingArtists"
-      ? _c("p", [_vm._v("Getting followed artists...")])
+    _c("div", { staticClass: "d-block text-center" }, [
+      _vm.generation == "gettingArtists"
+        ? _c("p", [_vm._v("Getting followed artists...")])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.generation == "generatingPlaylist"
+        ? _c("p", [_vm._v("Generating Playlist...")])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _vm.generation == "gettingArtists" || _vm.generation == "generatingPlaylist"
+      ? _c("div", [_vm._m(0)])
       : _vm._e(),
     _vm._v(" "),
     _vm.generation == "artistsRetrieved" || _vm.generation == "albumsRetrieved"
@@ -33348,9 +33384,9 @@ var render = function() {
               attrs: {
                 type: "button",
                 "data-toggle": "collapse",
-                "data-target": "#artist-gallery-container",
+                "data-target": "#artist-gallery",
                 "aria-expanded": "false",
-                "aria-controls": "artist-gallery-container"
+                "aria-controls": "artist-gallery"
               },
               on: {
                 click: function($event) {
@@ -33367,97 +33403,78 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
+          _c("h6", { staticClass: "d-block text-center my-4" }, [
+            _vm._v("Artist Count: " + _vm._s(_vm.artists.length))
+          ]),
+          _vm._v(" "),
           _c(
             "div",
             {
               staticClass: "col-12 p-0 mx-auto my-4 show",
-              attrs: { id: "artist-gallery-container" }
+              attrs: { id: "artist-gallery" }
             },
-            [
-              _c(
+            _vm._l(_vm.artists, function(artist, index) {
+              return _c(
                 "div",
-                { staticClass: "col-12 p-0", attrs: { id: "artists-gallery" } },
-                _vm._l(_vm.artists, function(artist, index) {
-                  return _c(
-                    "div",
+                {
+                  key: artist.id,
+                  staticClass: "artist-container col-12 col-md-6 col-xl-4 p-0"
+                },
+                [
+                  _c(
+                    "a",
                     {
-                      key: artist.id,
-                      staticClass:
-                        "artist-container col-12 col-md-6 col-xl-4 p-0"
+                      attrs: {
+                        href: artist.external_urls.spotify,
+                        target: "_blank"
+                      }
                     },
                     [
-                      _c(
-                        "a",
-                        {
-                          attrs: {
-                            href: artist.external_urls.spotify,
-                            target: "_blank"
-                          }
-                        },
-                        [
-                          _c("div", { staticClass: "artist-no" }, [
-                            _vm._v(_vm._s(index + 1))
-                          ]),
-                          _vm._v(" "),
-                          artist.images.length > 0
-                            ? _c(
-                                "div",
-                                { staticClass: "artist-image-container" },
-                                [
-                                  _c("img", {
-                                    staticClass: "artist-image",
-                                    attrs: {
-                                      src: artist.images[2]["url"],
-                                      alt: ""
-                                    }
-                                  })
-                                ]
-                              )
-                            : _c(
-                                "div",
-                                { staticClass: "artist-image-container" },
-                                [
-                                  _c(
-                                    "svg",
-                                    {
-                                      staticClass:
-                                        "artist-image no-artist-image",
-                                      attrs: {
-                                        role: "img",
-                                        viewBox: "-25 -22 100 100"
-                                      }
-                                    },
-                                    [
-                                      _c("path", {
-                                        attrs: {
-                                          d:
-                                            "M35.711 34.619l-4.283-2.461a1.654 1.654 0 0 1-.808-1.156 1.65 1.65 0 0 1 .373-1.36l3.486-4.088a14.3 14.3 0 0 0 3.432-9.293V14.93c0-3.938-1.648-7.74-4.522-10.435C30.475 1.764 26.658.398 22.661.661c-7.486.484-13.35 6.952-13.35 14.725v.875c0 3.408 1.219 6.708 3.431 9.292l3.487 4.089a1.656 1.656 0 0 1-.436 2.516l-8.548 4.914A14.337 14.337 0 0 0 0 49.513V53.5h2v-3.987c0-4.417 2.388-8.518 6.237-10.705l8.552-4.916a3.648 3.648 0 0 0 1.783-2.549 3.643 3.643 0 0 0-.822-2.999l-3.488-4.091a12.297 12.297 0 0 1-2.951-7.993v-.875c0-6.721 5.042-12.312 11.479-12.729 3.449-.22 6.725.949 9.231 3.298a12.182 12.182 0 0 1 3.89 8.976v1.331c0 2.931-1.048 5.77-2.952 7.994l-3.487 4.089a3.653 3.653 0 0 0-.822 3 3.653 3.653 0 0 0 1.782 2.548l3.036 1.745a11.959 11.959 0 0 1 2.243-1.018zM45 25.629v15.289a7.476 7.476 0 0 0-5.501-2.418c-4.135 0-7.5 3.365-7.5 7.5s3.364 7.5 7.5 7.5 7.5-3.365 7.5-7.5V29.093l5.861 3.384 1-1.732L45 25.629zM39.499 51.5a5.506 5.506 0 0 1-5.5-5.5c0-3.033 2.467-5.5 5.5-5.5s5.5 2.467 5.5 5.5-2.467 5.5-5.5 5.5z",
-                                          fill: "currentColor",
-                                          "fill-rule": "evenodd"
-                                        }
-                                      })
-                                    ]
-                                  )
-                                ]
-                              ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "artist-name" }, [
-                            _vm._v(_vm._s(artist.name))
+                      _c("div", { staticClass: "artist-no" }, [
+                        _vm._v(_vm._s(index + 1))
+                      ]),
+                      _vm._v(" "),
+                      artist.images.length > 0
+                        ? _c("div", { staticClass: "artist-image-container" }, [
+                            _c("img", {
+                              staticClass: "artist-image",
+                              attrs: { src: artist.images[2]["url"], alt: "" }
+                            })
                           ])
-                        ]
-                      )
+                        : _c("div", { staticClass: "artist-image-container" }, [
+                            _c(
+                              "svg",
+                              {
+                                staticClass: "artist-image no-artist-image",
+                                attrs: {
+                                  role: "img",
+                                  viewBox: "-25 -22 100 100"
+                                }
+                              },
+                              [
+                                _c("path", {
+                                  attrs: {
+                                    d:
+                                      "M35.711 34.619l-4.283-2.461a1.654 1.654 0 0 1-.808-1.156 1.65 1.65 0 0 1 .373-1.36l3.486-4.088a14.3 14.3 0 0 0 3.432-9.293V14.93c0-3.938-1.648-7.74-4.522-10.435C30.475 1.764 26.658.398 22.661.661c-7.486.484-13.35 6.952-13.35 14.725v.875c0 3.408 1.219 6.708 3.431 9.292l3.487 4.089a1.656 1.656 0 0 1-.436 2.516l-8.548 4.914A14.337 14.337 0 0 0 0 49.513V53.5h2v-3.987c0-4.417 2.388-8.518 6.237-10.705l8.552-4.916a3.648 3.648 0 0 0 1.783-2.549 3.643 3.643 0 0 0-.822-2.999l-3.488-4.091a12.297 12.297 0 0 1-2.951-7.993v-.875c0-6.721 5.042-12.312 11.479-12.729 3.449-.22 6.725.949 9.231 3.298a12.182 12.182 0 0 1 3.89 8.976v1.331c0 2.931-1.048 5.77-2.952 7.994l-3.487 4.089a3.653 3.653 0 0 0-.822 3 3.653 3.653 0 0 0 1.782 2.548l3.036 1.745a11.959 11.959 0 0 1 2.243-1.018zM45 25.629v15.289a7.476 7.476 0 0 0-5.501-2.418c-4.135 0-7.5 3.365-7.5 7.5s3.364 7.5 7.5 7.5 7.5-3.365 7.5-7.5V29.093l5.861 3.384 1-1.732L45 25.629zM39.499 51.5a5.506 5.506 0 0 1-5.5-5.5c0-3.033 2.467-5.5 5.5-5.5s5.5 2.467 5.5 5.5-2.467 5.5-5.5 5.5z",
+                                    fill: "currentColor",
+                                    "fill-rule": "evenodd"
+                                  }
+                                })
+                              ]
+                            )
+                          ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "artist-name" }, [
+                        _vm._v(_vm._s(artist.name))
+                      ])
                     ]
                   )
-                }),
-                0
+                ]
               )
-            ]
+            }),
+            0
           )
         ])
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.generation == "generatingPlaylist"
-      ? _c("p", [_vm._v("Generating Playlist...")])
       : _vm._e(),
     _vm._v(" "),
     _vm.generation == "albumsRetrieved"
@@ -33497,6 +33514,16 @@ var render = function() {
               )
             ]
           ),
+          _vm._v(" "),
+          _c("h6", { staticClass: "d-block text-center my-4" }, [
+            _vm._v("Album Count: " + _vm._s(_vm.albums.length))
+          ]),
+          _vm._v(" "),
+          _vm.trackCount
+            ? _c("h6", { staticClass: "d-block text-center my-4" }, [
+                _vm._v("Track Count: " + _vm._s(_vm.trackCount))
+              ])
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "div",
@@ -33687,7 +33714,7 @@ var render = function() {
                                   { staticClass: "track-list-container" },
                                   [
                                     _c("table", [
-                                      _vm._m(0, true),
+                                      _vm._m(1, true),
                                       _vm._v(" "),
                                       _c(
                                         "tbody",
@@ -33743,6 +33770,22 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "text-center" }, [
+      _c(
+        "div",
+        {
+          staticClass: "spinner-border text-spotify m-5",
+          staticStyle: { width: "3rem", height: "3rem" },
+          attrs: { role: "status" }
+        },
+        [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+      )
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

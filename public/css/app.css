@@ -11281,6 +11281,10 @@ footer a {
   margin: 0 !important;
 }
 
+.text-spotify {
+  color: #1DB954;
+}
+
 nav.navbar #navbar-spotify-icon {
   width: 40px;
   margin-right: 1em;
@@ -11297,37 +11301,60 @@ nav.navbar #navbar-spotify-icon {
   background-color: #a76d47;
 }
 
-#artist-gallery-container {
+#artist-gallery,
+#album-gallery {
   height: calc(100vh - 200px);
-  min-height: 600px;
+  min-height: 650px;
   overflow-y: auto;
 }
 
-#artist-gallery-container #artists-gallery .artist-container {
+#artist-gallery::-webkit-scrollbar,
+#album-gallery::-webkit-scrollbar {
+  width: 10px;
+}
+
+#artist-gallery::-webkit-scrollbar-button,
+#album-gallery::-webkit-scrollbar-button {
+  display: none;
+}
+
+#artist-gallery::-webkit-scrollbar-thumb,
+#album-gallery::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #1DB954;
+}
+
+#artist-gallery::-webkit-scrollbar-track,
+#album-gallery::-webkit-scrollbar-track {
+  background-color: #083518;
+  border-radius: 10px;
+}
+
+#artist-gallery .artist-container {
   display: inline-block;
 }
 
-#artist-gallery-container #artists-gallery .artist-no {
+#artist-gallery .artist-no {
   padding-right: 1em;
   padding-left: 0.5em;
 }
 
-#artist-gallery-container #artists-gallery .artist-image {
+#artist-gallery .artist-image {
   -o-object-fit: cover;
      object-fit: cover;
   height: 75px;
   width: 75px;
 }
 
-#artist-gallery-container #artists-gallery .artist-image.no-artist-image {
+#artist-gallery .artist-image.no-artist-image {
   background-color: black;
 }
 
-#artist-gallery-container #artists-gallery .artist-name {
+#artist-gallery .artist-name {
   padding: 0 1em;
 }
 
-#artist-gallery-container #artists-gallery a {
+#artist-gallery a {
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -11337,37 +11364,13 @@ nav.navbar #navbar-spotify-icon {
   color: #FFFEDF;
 }
 
-#artist-gallery-container #artists-gallery a div {
+#artist-gallery a div {
   display: inline-block;
 }
 
-#artist-gallery-container #artists-gallery a:hover {
+#artist-gallery a:hover {
   background-color: #222222;
   color: #FFFEDF;
-}
-
-#artist-gallery-container::-webkit-scrollbar {
-  width: 10px;
-}
-
-#artist-gallery-container::-webkit-scrollbar-button {
-  display: none;
-}
-
-#artist-gallery-container::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #1DB954;
-}
-
-#artist-gallery-container::-webkit-scrollbar-track {
-  background-color: #083518;
-  border-radius: 10px;
-}
-
-#album-gallery {
-  height: calc(100vh - 200px);
-  min-height: 650px;
-  overflow-y: auto;
 }
 
 #album-gallery .album-container {
@@ -11466,23 +11469,5 @@ nav.navbar #navbar-spotify-icon {
 
 #album-gallery .album-container table tbody tr:last-child td {
   border-bottom: none;
-}
-
-#album-gallery::-webkit-scrollbar {
-  width: 10px;
-}
-
-#album-gallery::-webkit-scrollbar-button {
-  display: none;
-}
-
-#album-gallery::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #1DB954;
-}
-
-#album-gallery::-webkit-scrollbar-track {
-  background-color: #083518;
-  border-radius: 10px;
 }
 
