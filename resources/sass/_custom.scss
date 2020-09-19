@@ -268,10 +268,6 @@ $player-text-color: $player-link-color;
             &.pressed {
                 background-color: #0c0c0c;
             }
-
-            &.stop:active {
-                transition: backgroundColor 1s ease-in-out;
-            }
         }
         
         .volume {

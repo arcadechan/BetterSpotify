@@ -11525,10 +11525,6 @@ nav.navbar #navbar-spotify-icon {
   background-color: #0c0c0c;
 }
 
-.player-controls > div a.stop:active {
-  transition: backgroundColor 1s ease-in-out;
-}
-
 .player-controls > div .volume {
   height: 100%;
   display: flex;

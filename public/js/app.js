@@ -33616,7 +33616,7 @@ var render = function() {
         _c(
           "div",
           {
-            staticClass: "volume d-none d-md-block",
+            staticClass: "volume d-none d-md-flex",
             attrs: { title: "Volume" },
             on: {
               click: function($event) {
