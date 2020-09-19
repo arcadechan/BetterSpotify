@@ -198,6 +198,7 @@
                     localStorage.setItem('albums', JSON.stringify(self.albums));
                     localStorage.setItem('tracks', JSON.stringify(self.tracks));
                 }).catch( error => {
+                    self.generation = 'artistsRetrieved';
                     console.log(error);
                 });
 

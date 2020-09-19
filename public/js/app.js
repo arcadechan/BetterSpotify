@@ -2099,6 +2099,7 @@ __webpack_require__.r(__webpack_exports__);
         localStorage.setItem('albums', JSON.stringify(self.albums));
         localStorage.setItem('tracks', JSON.stringify(self.tracks));
       })["catch"](function (error) {
+        self.generation = 'artistsRetrieved';
         console.log(error);
       });
     },

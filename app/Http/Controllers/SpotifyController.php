@@ -66,6 +66,8 @@ class SpotifyController extends Controller
 
     public function create_playlist(Request $request){
 
+        ini_set('max_execution_time', 180);
+
         $artists = $request->artists ?? [];
         $user_id = Cookie::get('spotify_user_id');
         $spotify_playlist_id = Cookie::get('spotify_playlist_id');
