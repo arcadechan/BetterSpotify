@@ -122,6 +122,7 @@ nav.navbar {
                             display: block;
                         }
                     }
+                    
                     .flip-card-front {
                         .album-artist-link,
                         .album-link {
@@ -131,6 +132,10 @@ nav.navbar {
                             &:hover {
                                 color: $text-color;
                             }
+                        }
+
+                        table tbody tr td {
+                            vertical-align: super;
                         }
                     }
 
@@ -146,11 +151,21 @@ nav.navbar {
                         display: none;
                         padding-right: .5em;
                         overflow-y: auto;
-                        
+
+                        table tbody tr td {
+                            vertical-align: middle;
+                        }                        
 
                         .track-list-container {
                             .track-no {
                                 width: 25%;
+                            }
+
+                            .track-preview {
+                                width: 2.5em;
+                                text-align: center;
+                                cursor: pointer;
+                                color: $spotify-green;
                             }
                         }
 
@@ -189,7 +204,6 @@ nav.navbar {
                     padding: .75em 0;
                     text-align: left;
                     border-bottom: 1px solid $text-color;
-                    vertical-align: super;
                 }
             }
 
@@ -204,4 +218,111 @@ nav.navbar {
             }
         }
     }
+}
+
+//Vue Player
+$player-bg: #fff;
+$player-border-color: darken($player-bg, 12%);
+$player-link-color: darken($player-bg, 75%);
+$player-progress-color: $player-border-color;
+$player-seeker-color: $player-link-color;
+$player-text-color: $player-link-color;
+
+.player-wrapper {
+    text-align: center;
+    position: fixed;
+    bottom: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+
+.player {
+	background-color: #060606;
+	border: 1px solid #060606;
+	border-radius: 5px;
+	box-shadow: 0 5px 8px rgba(0,0,0,0.75);
+	color: $text-color;
+	display: inline-block;
+	line-height: 1.5625;
+}
+
+.player-controls {
+	display: flex;
+	
+	> div {
+		//border-right: 1px solid $player-border-color;
+		
+		&:last-child {
+			border-right: none;
+		}
+		
+		a {
+			color: $spotify-green;
+			display: block;
+			line-height: 0;
+			padding: 1em;
+            text-decoration: none;
+
+            &.stop:active,
+            &.pressed {
+                background-color: #0c0c0c;
+            }
+
+            &.stop:active {
+                transition: backgroundColor 1s ease-in-out;
+            }
+        }
+        
+        .volume {
+            height: 100%;
+            display: flex;
+            padding: 0 0.5em;
+        }
+    }
+    
+    .closePlayer {
+        padding: 0 1em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        cursor: pointer;
+        color: $spotify-green;
+
+        &:active {
+            background-color: #0c0c0c;
+        }
+    }
+}
+
+.player-progress {
+	background-color: darken($spotify-green, 30%);
+	cursor: pointer;
+	height: 50%;
+	min-width: 200px;
+	position: relative;
+	
+	.player-seeker {
+		background-color: $spotify-green;
+		bottom: 0;
+		left: 0;
+		position: absolute;
+		top: 0;
+	}
+}
+
+.player-time {
+	display: flex;
+	// font-size: 18px;
+	justify-content: space-between;
+
+	.player-time-current {
+		font-weight: 700;
+		padding-left: 5px;
+	}
+
+	.player-time-total {
+		opacity: 0.5;
+		padding-right: 5px;
+	}
 }

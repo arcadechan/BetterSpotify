@@ -11414,6 +11414,10 @@ nav.navbar #navbar-spotify-icon {
   color: #FFFEDF;
 }
 
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front table tbody tr td {
+  vertical-align: super;
+}
+
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front,
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back {
   width: 100%;
@@ -11429,8 +11433,19 @@ nav.navbar #navbar-spotify-icon {
   overflow-y: auto;
 }
 
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back table tbody tr td {
+  vertical-align: middle;
+}
+
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back .track-list-container .track-no {
   width: 25%;
+}
+
+#album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back .track-list-container .track-preview {
+  width: 2.5em;
+  text-align: center;
+  cursor: pointer;
+  color: #1DB954;
 }
 
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back::-webkit-scrollbar {
@@ -11464,10 +11479,103 @@ nav.navbar #navbar-spotify-icon {
   padding: 0.75em 0;
   text-align: left;
   border-bottom: 1px solid #FFFEDF;
-  vertical-align: super;
 }
 
 #album-gallery .album-container table tbody tr:last-child td {
   border-bottom: none;
+}
+
+.player-wrapper {
+  text-align: center;
+  position: fixed;
+  bottom: 1em;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
+.player {
+  background-color: #060606;
+  border: 1px solid #060606;
+  border-radius: 5px;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.75);
+  color: #FFFEDF;
+  display: inline-block;
+  line-height: 1.5625;
+}
+
+.player-controls {
+  display: flex;
+}
+
+.player-controls > div:last-child {
+  border-right: none;
+}
+
+.player-controls > div a {
+  color: #1DB954;
+  display: block;
+  line-height: 0;
+  padding: 1em;
+  text-decoration: none;
+}
+
+.player-controls > div a.stop:active,
+.player-controls > div a.pressed {
+  background-color: #0c0c0c;
+}
+
+.player-controls > div a.stop:active {
+  transition: backgroundColor 1s ease-in-out;
+}
+
+.player-controls > div .volume {
+  height: 100%;
+  display: flex;
+  padding: 0 0.5em;
+}
+
+.player-controls .closePlayer {
+  padding: 0 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  color: #1DB954;
+}
+
+.player-controls .closePlayer:active {
+  background-color: #0c0c0c;
+}
+
+.player-progress {
+  background-color: #083518;
+  cursor: pointer;
+  height: 50%;
+  min-width: 200px;
+  position: relative;
+}
+
+.player-progress .player-seeker {
+  background-color: #1DB954;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.player-time {
+  display: flex;
+  justify-content: space-between;
+}
+
+.player-time .player-time-current {
+  font-weight: 700;
+  padding-left: 5px;
+}
+
+.player-time .player-time-total {
+  opacity: 0.5;
+  padding-right: 5px;
 }
 

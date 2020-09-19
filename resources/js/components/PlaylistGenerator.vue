@@ -125,12 +125,16 @@
                                                     <tr>
                                                         <td class="track-no">Track #</td>
                                                         <td class="track-title">Title</td>
+                                                        <td></td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr v-for="track in tracks[album.id]" :key="track.id">
                                                         <td>{{ track.track_number }}</td>
                                                         <td>{{ track.name }}</td>
+                                                        <td @click="previewUrl = track.preview_url" class="track-preview">
+                                                            <i class="fas fa-play-circle"></i>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -145,6 +149,11 @@
             </div>
 
         </div>
+
+        <div v-show="!!previewUrl" id="audio" class="player-wrapper">
+            <audio-player :file="previewUrl" @closed="closePlayer"></audio-player>
+        </div>
+
     </div>
 </template>
 
@@ -160,7 +169,8 @@
                 albumsInStorage: false,
                 tracksInStorage: false,
                 artistGalleryOpen: true,
-                albumGalleryOpen: true
+                albumGalleryOpen: true,
+                previewUrl: null
             }
         },
         methods: {
@@ -205,6 +215,9 @@
             flipCard: function(cardId){
                 let card = document.querySelector(cardId);
                 card.classList.toggle('flipped');
+            },
+            closePlayer: function() {
+                this.previewUrl = null;
             }
         },
         computed: {
