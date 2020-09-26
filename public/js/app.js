@@ -1899,6 +1899,228 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AudioPlayer.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AudioPlayer.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      audio: undefined,
+      currentSeconds: 0,
+      durationSeconds: 0,
+      loaded: false,
+      playing: false,
+      previousVolume: 35,
+      showVolume: true,
+      volume: 30
+    };
+  },
+  props: {
+    file: {
+      type: String,
+      "default": null
+    },
+    artists: {
+      type: Array,
+      "default": []
+    },
+    track: {
+      type: String,
+      "default": null
+    },
+    autoPlay: {
+      type: Boolean,
+      "default": true
+    },
+    loop: {
+      type: Boolean,
+      "default": false
+    }
+  },
+  computed: {
+    currentTime: function currentTime() {
+      return convertTimeHHMMSS(this.currentSeconds);
+    },
+    durationTime: function durationTime() {
+      return convertTimeHHMMSS(this.durationSeconds);
+    },
+    percentComplete: function percentComplete() {
+      return parseInt(this.currentSeconds / this.durationSeconds * 100);
+    },
+    muted: function muted() {
+      return this.volume / 100 === 0;
+    },
+    trackInfo: function trackInfo() {
+      var trackInfo = '';
+      var artists = this.artists;
+      var trackMarquee = document.querySelector('.track-info .track-marquee');
+
+      if (artists.length) {
+        for (var i = 0; i < artists.length; i++) {
+          trackInfo += artists[i].name;
+
+          if (i < artists.length - 1) {
+            trackInfo += ', ';
+          }
+        }
+
+        trackInfo += " \u2014 ".concat(this.track);
+
+        if (trackInfo.length > 66) {
+          trackMarquee.classList.add('scroll');
+        } else {
+          trackMarquee.classList.remove('scroll');
+        }
+      }
+
+      return trackInfo;
+    }
+  },
+  watch: {
+    playing: function playing(value) {
+      if (value) {
+        return this.audio.play();
+      }
+
+      this.audio.pause();
+    },
+    volume: function volume(value) {
+      //this.showVolume = false;
+      this.audio.volume = this.volume / 100;
+    },
+    file: function file(newSrc, oldSrc) {
+      var self = this;
+
+      if (oldSrc !== null) {
+        if (newSrc !== oldSrc) {
+          self.loaded = false;
+          self.playing = false;
+        }
+      }
+    }
+  },
+  methods: {
+    load: function load() {
+      if (this.audio.readyState >= 2) {
+        this.loaded = true;
+        this.durationSeconds = parseInt(this.audio.duration);
+        return this.playing = this.autoPlay;
+      }
+
+      throw new Error('Failed to load sound file.');
+    },
+    mute: function mute() {
+      if (this.muted) {
+        return this.volume = this.previousVolume;
+      }
+
+      this.previousVolume = this.volume;
+      this.volume = 0;
+    },
+    seek: function seek(e) {
+      if (!this.playing || e.target.tagName === 'SPAN') {
+        return;
+      }
+
+      var el = e.target.getBoundingClientRect();
+      var seekPos = (e.clientX - el.left) / el.width;
+      this.audio.currentTime = parseInt(this.audio.duration * seekPos);
+    },
+    stop: function stop() {
+      this.playing = false;
+      this.audio.currentTime = 0;
+    },
+    update: function update(e) {
+      this.currentSeconds = parseInt(this.audio.currentTime);
+    },
+    closePlayer: function closePlayer() {
+      this.$emit('closed', true);
+    }
+  },
+  created: function created() {
+    this.innerLoop = this.loop;
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.audio = this.$el.querySelectorAll('audio')[0];
+    this.audio.addEventListener('timeupdate', this.update);
+    this.audio.addEventListener('loadeddata', this.load);
+    this.audio.addEventListener('pause', function () {
+      _this.playing = false;
+    });
+    this.audio.addEventListener('play', function () {
+      _this.playing = true;
+    });
+  }
+});
+
+var convertTimeHHMMSS = function convertTimeHHMMSS(val) {
+  var hhmmss = new Date(val * 1000).toISOString().substr(11, 8);
+  return hhmmss.indexOf("00:") === 0 ? hhmmss.substr(3) : hhmmss;
+};
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PlaylistGenerator.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PlaylistGenerator.vue?vue&type=script&lang=js& ***!
@@ -1908,6 +2130,17 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2069,7 +2302,10 @@ __webpack_require__.r(__webpack_exports__);
       albumsInStorage: false,
       tracksInStorage: false,
       artistGalleryOpen: true,
-      albumGalleryOpen: true
+      albumGalleryOpen: true,
+      previewUrl: null,
+      previewArtists: [],
+      previewTrack: null
     };
   },
   methods: {
@@ -2103,9 +2339,24 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    flipCard: function flipCard(cardId) {
-      var card = document.querySelector(cardId);
+    flipCard: function flipCard(index) {
+      var card = document.querySelector("#card-".concat(index));
       card.classList.toggle('flipped');
+      var trackText = document.querySelector("#flip-view-tracks-".concat(index));
+      var albumText = document.querySelector("#flip-view-albums-".concat(index));
+
+      if (card.classList.contains('flipped')) {
+        trackText.style.display = 'none';
+        albumText.style.display = 'inline-block';
+      } else {
+        trackText.style.display = 'inline-block';
+        albumText.style.display = 'none';
+      }
+    },
+    closePlayer: function closePlayer() {
+      this.previewUrl = null;
+      this.previewArtists = [];
+      this.previewTrack = null;
     }
   },
   computed: {
@@ -33293,6 +33544,240 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AudioPlayer.vue?vue&type=template&id=070e61bc&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AudioPlayer.vue?vue&type=template&id=070e61bc& ***!
+  \**************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "player" }, [
+    _c("div", { staticClass: "track-info" }, [
+      _c("p", { staticClass: "track-marquee" }, [
+        _vm._v("\n            " + _vm._s(_vm.trackInfo) + "\n        ")
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "player-controls" }, [
+      _c("div", { staticClass: "player-button" }, [
+        _c(
+          "a",
+          {
+            staticClass: "stop",
+            attrs: { title: "Stop", href: "#" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.stop($event)
+              }
+            }
+          },
+          [
+            _c(
+              "svg",
+              {
+                attrs: {
+                  width: "18px",
+                  xmlns: "http://www.w3.org/2000/svg",
+                  viewBox: "0 0 20 20"
+                }
+              },
+              [
+                _c("path", {
+                  attrs: {
+                    fill: "currentColor",
+                    d:
+                      "M16,4.995v9.808C16,15.464,15.464,16,14.804,16H4.997C4.446,16,4,15.554,4,15.003V5.196C4,4.536,4.536,4,5.196,4h9.808C15.554,4,16,4.446,16,4.995z"
+                  }
+                })
+              ]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "player-button" }, [
+        _c(
+          "a",
+          {
+            class: { pressed: _vm.playing },
+            attrs: { title: "Play/Pause", href: "#" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                _vm.playing = !_vm.playing
+              }
+            }
+          },
+          [
+            _c(
+              "svg",
+              {
+                attrs: {
+                  width: "18px",
+                  xmlns: "http://www.w3.org/2000/svg",
+                  viewBox: "0 0 20 20"
+                }
+              },
+              [
+                !_vm.playing
+                  ? _c("path", {
+                      attrs: {
+                        fill: "currentColor",
+                        d:
+                          "M15,10.001c0,0.299-0.305,0.514-0.305,0.514l-8.561,5.303C5.51,16.227,5,15.924,5,15.149V4.852c0-0.777,0.51-1.078,1.135-0.67l8.561,5.305C14.695,9.487,15,9.702,15,10.001z"
+                      }
+                    })
+                  : _c("path", {
+                      attrs: {
+                        fill: "currentColor",
+                        d:
+                          "M15,3h-2c-0.553,0-1,0.048-1,0.6v12.8c0,0.552,0.447,0.6,1,0.6h2c0.553,0,1-0.048,1-0.6V3.6C16,3.048,15.553,3,15,3z M7,3H5C4.447,3,4,3.048,4,3.6v12.8C4,16.952,4.447,17,5,17h2c0.553,0,1-0.048,1-0.6V3.6C8,3.048,7.553,3,7,3z"
+                      }
+                    })
+              ]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _c(
+          "div",
+          {
+            staticClass: "player-progress",
+            attrs: { title: "Time played : Total time" },
+            on: { click: _vm.seek }
+          },
+          [
+            _c("div", {
+              staticClass: "player-seeker",
+              style: { width: this.percentComplete + "%" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "player-time" }, [
+          _c("div", { staticClass: "player-time-current" }, [
+            _vm._v(_vm._s(_vm.currentTime))
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "player-time-total" }, [
+            _vm._v(_vm._s(_vm.durationTime))
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _c(
+          "div",
+          {
+            staticClass: "volume d-none d-md-flex",
+            attrs: { title: "Volume" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+              }
+            }
+          },
+          [
+            _c(
+              "svg",
+              {
+                attrs: {
+                  width: "18px",
+                  xmlns: "http://www.w3.org/2000/svg",
+                  viewBox: "0 0 20 20"
+                }
+              },
+              [
+                _c("path", {
+                  attrs: {
+                    fill: "currentColor",
+                    d:
+                      "M19,13.805C19,14.462,18.462,15,17.805,15H1.533c-0.88,0-0.982-0.371-0.229-0.822l16.323-9.055C18.382,4.67,19,5.019,19,5.9V13.805z"
+                  }
+                })
+              ]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model.lazy.number",
+                  value: _vm.volume,
+                  expression: "volume",
+                  modifiers: { lazy: true, number: true }
+                },
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.showVolume,
+                  expression: "showVolume"
+                }
+              ],
+              attrs: { type: "range", min: "0", max: "100" },
+              domProps: { value: _vm.volume },
+              on: {
+                change: function($event) {
+                  _vm.volume = _vm._n($event.target.value)
+                },
+                blur: function($event) {
+                  return _vm.$forceUpdate()
+                }
+              }
+            })
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "closePlayer player-button",
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.closePlayer($event)
+            }
+          }
+        },
+        [_vm._m(0)]
+      )
+    ]),
+    _vm._v(" "),
+    _c("audio", {
+      ref: "audiofile",
+      staticStyle: { display: "none" },
+      attrs: { src: _vm.file, preload: "auto" }
+    })
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { title: "Mute" } }, [
+      _c("i", { staticClass: "fas fa-times" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PlaylistGenerator.vue?vue&type=template&id=3d2d0c74&":
 /*!********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PlaylistGenerator.vue?vue&type=template&id=3d2d0c74& ***!
@@ -33722,15 +34207,59 @@ var render = function() {
                                         _vm._l(_vm.tracks[album.id], function(
                                           track
                                         ) {
-                                          return _c("tr", { key: track.id }, [
-                                            _c("td", [
-                                              _vm._v(_vm._s(track.track_number))
-                                            ]),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(_vm._s(track.name))
-                                            ])
-                                          ])
+                                          return _c(
+                                            "tr",
+                                            {
+                                              key: track.id,
+                                              class: {
+                                                playing:
+                                                  track.name == _vm.previewTrack
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "td",
+                                                { staticClass: "track-no-row" },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(track.track_number)
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _vm._v(_vm._s(track.name))
+                                              ]),
+                                              _vm._v(" "),
+                                              _c(
+                                                "td",
+                                                {
+                                                  staticClass: "track-preview",
+                                                  on: {
+                                                    click: function($event) {
+                                                      _vm.previewUrl =
+                                                        track.preview_url
+                                                      _vm.previewArtists =
+                                                        track.artists
+                                                      _vm.previewTrack =
+                                                        track.name
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _c("i", {
+                                                    staticClass:
+                                                      "fas fa-play-circle",
+                                                    class: {
+                                                      "playing-icon":
+                                                        track.name ==
+                                                        _vm.previewTrack
+                                                    }
+                                                  })
+                                                ]
+                                              )
+                                            ]
+                                          )
                                         }),
                                         0
                                       )
@@ -33745,16 +34274,28 @@ var render = function() {
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-spotify btn-sm mt-3",
+                            staticClass:
+                              "btn btn-spotify btn-sm mt-3 flip-card-button",
                             on: {
                               click: function($event) {
-                                return _vm.flipCard("#card-" + index)
+                                return _vm.flipCard(index)
                               }
                             }
                           },
                           [
                             _c("i", { staticClass: "fas fa-redo-alt" }),
-                            _vm._v(" View album tracks.")
+                            _vm._v("View album "),
+                            _c(
+                              "span",
+                              { attrs: { id: "flip-view-tracks-" + index } },
+                              [_vm._v("tracks")]
+                            ),
+                            _c(
+                              "span",
+                              { attrs: { id: "flip-view-albums-" + index } },
+                              [_vm._v("info")]
+                            ),
+                            _vm._v(".\n                        ")
                           ]
                         )
                       ],
@@ -33767,7 +34308,34 @@ var render = function() {
             0
           )
         ])
-      : _vm._e()
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: !!_vm.previewUrl,
+            expression: "!!previewUrl"
+          }
+        ],
+        staticClass: "player-wrapper",
+        attrs: { id: "audio" }
+      },
+      [
+        _c("audio-player", {
+          attrs: {
+            file: _vm.previewUrl,
+            artists: _vm.previewArtists,
+            track: _vm.previewTrack
+          },
+          on: { closed: _vm.closePlayer }
+        })
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = [
@@ -33795,7 +34363,9 @@ var staticRenderFns = [
       _c("tr", [
         _c("td", { staticClass: "track-no" }, [_vm._v("Track #")]),
         _vm._v(" "),
-        _c("td", { staticClass: "track-title" }, [_vm._v("Title")])
+        _c("td", { staticClass: "track-title" }, [_vm._v("Title")]),
+        _vm._v(" "),
+        _c("td")
       ])
     ])
   }
@@ -50401,6 +50971,7 @@ __webpack_require__(/*! ../assets/vendor/js/bootstrap */ "./resources/assets/ven
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 Vue.component('playlist-generator', __webpack_require__(/*! ./components/PlaylistGenerator.vue */ "./resources/js/components/PlaylistGenerator.vue")["default"]);
+Vue.component('audio-player', __webpack_require__(/*! ./components/AudioPlayer.vue */ "./resources/js/components/AudioPlayer.vue")["default"]);
 var app = new Vue({
   el: '#app'
 });
@@ -50450,6 +51021,75 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/components/AudioPlayer.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/components/AudioPlayer.vue ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AudioPlayer_vue_vue_type_template_id_070e61bc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AudioPlayer.vue?vue&type=template&id=070e61bc& */ "./resources/js/components/AudioPlayer.vue?vue&type=template&id=070e61bc&");
+/* harmony import */ var _AudioPlayer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AudioPlayer.vue?vue&type=script&lang=js& */ "./resources/js/components/AudioPlayer.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AudioPlayer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AudioPlayer_vue_vue_type_template_id_070e61bc___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AudioPlayer_vue_vue_type_template_id_070e61bc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AudioPlayer.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AudioPlayer.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/AudioPlayer.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AudioPlayer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AudioPlayer.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AudioPlayer.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AudioPlayer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AudioPlayer.vue?vue&type=template&id=070e61bc&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/AudioPlayer.vue?vue&type=template&id=070e61bc& ***!
+  \********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AudioPlayer_vue_vue_type_template_id_070e61bc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AudioPlayer.vue?vue&type=template&id=070e61bc& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AudioPlayer.vue?vue&type=template&id=070e61bc&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AudioPlayer_vue_vue_type_template_id_070e61bc___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AudioPlayer_vue_vue_type_template_id_070e61bc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 

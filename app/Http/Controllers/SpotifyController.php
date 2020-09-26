@@ -137,7 +137,8 @@ class SpotifyController extends Controller
 
         //junk info to reduce the filesize of json payload set in local storage.
         $junkAlbumInfo = ['album_group', 'available_markets', 'href', 'release_date_precision'];
-        $junkTrackInfo = ['artists', 'available_markets', 'disc_number', 'explicit', 'external_urls', 'href', 'is_local', 'type'];
+        $junkTrackInfo = ['available_markets', 'disc_number', 'explicit', 'external_urls', 'href', 'is_local', 'type'];
+        $junkTrackArtistInfo = ['external_urls', 'href', 'id', 'type', 'uri'];
 
         for($i = 0; $i < count($artists); $i++){            
             $artist = $artists[$i];
@@ -196,10 +197,12 @@ class SpotifyController extends Controller
 
                             $response = json_decode($request->getBody());
                             $tracks = $response->items;
-
+                                        
                             foreach($tracks as $track){
-                                foreach($junkTrackInfo as $info_key){
-                                    if(isset($track->{$info_key})) unset($track->{$info_key});
+                                foreach($track->artists as $artist){
+                                    foreach($junkTrackArtistInfo as $info_key){
+                                        if(isset($artist->{$info_key})) unset($artist->{$info_key});
+                                    }
                                 }
                             }
 
