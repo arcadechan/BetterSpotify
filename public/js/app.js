@@ -1952,6 +1952,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1962,11 +1971,19 @@ __webpack_require__.r(__webpack_exports__);
       playing: false,
       previousVolume: 35,
       showVolume: true,
-      volume: 100
+      volume: 30
     };
   },
   props: {
     file: {
+      type: String,
+      "default": null
+    },
+    artists: {
+      type: Array,
+      "default": []
+    },
+    track: {
       type: String,
       "default": null
     },
@@ -1991,6 +2008,31 @@ __webpack_require__.r(__webpack_exports__);
     },
     muted: function muted() {
       return this.volume / 100 === 0;
+    },
+    trackInfo: function trackInfo() {
+      var trackInfo = '';
+      var artists = this.artists;
+      var trackMarquee = document.querySelector('.track-info .track-marquee');
+
+      if (artists.length) {
+        for (var i = 0; i < artists.length; i++) {
+          trackInfo += artists[i].name;
+
+          if (i < artists.length - 1) {
+            trackInfo += ', ';
+          }
+        }
+
+        trackInfo += " \u2014 ".concat(this.track);
+
+        if (trackInfo.length > 66) {
+          trackMarquee.classList.add('scroll');
+        } else {
+          trackMarquee.classList.remove('scroll');
+        }
+      }
+
+      return trackInfo;
     }
   },
   watch: {
@@ -2051,7 +2093,6 @@ __webpack_require__.r(__webpack_exports__);
       this.currentSeconds = parseInt(this.audio.currentTime);
     },
     closePlayer: function closePlayer() {
-      console.log('closePlayerFired');
       this.$emit('closed', true);
     }
   },
@@ -2248,6 +2289,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2260,7 +2303,9 @@ __webpack_require__.r(__webpack_exports__);
       tracksInStorage: false,
       artistGalleryOpen: true,
       albumGalleryOpen: true,
-      previewUrl: null
+      previewUrl: null,
+      previewArtists: [],
+      previewTrack: null
     };
   },
   methods: {
@@ -2293,12 +2338,24 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    flipCard: function flipCard(cardId) {
-      var card = document.querySelector(cardId);
+    flipCard: function flipCard(index) {
+      var card = document.querySelector("#card-".concat(index));
       card.classList.toggle('flipped');
+      var trackText = document.querySelector("#flip-view-tracks-".concat(index));
+      var albumText = document.querySelector("#flip-view-albums-".concat(index));
+
+      if (card.classList.contains('flipped')) {
+        trackText.style.display = 'none';
+        albumText.style.display = 'inline-block';
+      } else {
+        trackText.style.display = 'inline-block';
+        albumText.style.display = 'none';
+      }
     },
     closePlayer: function closePlayer() {
       this.previewUrl = null;
+      this.previewArtists = [];
+      this.previewTrack = null;
     }
   },
   computed: {
@@ -33502,8 +33559,14 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "player" }, [
+    _c("div", { staticClass: "track-info" }, [
+      _c("p", { staticClass: "track-marquee" }, [
+        _vm._v("\n            " + _vm._s(_vm.trackInfo) + "\n        ")
+      ])
+    ]),
+    _vm._v(" "),
     _c("div", { staticClass: "player-controls" }, [
-      _c("div", [
+      _c("div", { staticClass: "player-button" }, [
         _c(
           "a",
           {
@@ -33540,7 +33603,7 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("div", [
+      _c("div", { staticClass: "player-button" }, [
         _c(
           "a",
           {
@@ -33679,7 +33742,7 @@ var render = function() {
       _c(
         "div",
         {
-          staticClass: "closePlayer",
+          staticClass: "closePlayer player-button",
           on: {
             click: function($event) {
               $event.preventDefault()
@@ -34143,34 +34206,59 @@ var render = function() {
                                         _vm._l(_vm.tracks[album.id], function(
                                           track
                                         ) {
-                                          return _c("tr", { key: track.id }, [
-                                            _c("td", [
-                                              _vm._v(_vm._s(track.track_number))
-                                            ]),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(_vm._s(track.name))
-                                            ]),
-                                            _vm._v(" "),
-                                            _c(
-                                              "td",
-                                              {
-                                                staticClass: "track-preview",
-                                                on: {
-                                                  click: function($event) {
-                                                    _vm.previewUrl =
-                                                      track.preview_url
+                                          return _c(
+                                            "tr",
+                                            {
+                                              key: track.id,
+                                              class: {
+                                                playing:
+                                                  track.name == _vm.previewTrack
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "td",
+                                                { staticClass: "track-no-row" },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(track.track_number)
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _vm._v(_vm._s(track.name))
+                                              ]),
+                                              _vm._v(" "),
+                                              _c(
+                                                "td",
+                                                {
+                                                  staticClass: "track-preview",
+                                                  on: {
+                                                    click: function($event) {
+                                                      _vm.previewUrl =
+                                                        track.preview_url
+                                                      _vm.previewArtists =
+                                                        track.artists
+                                                      _vm.previewTrack =
+                                                        track.name
+                                                    }
                                                   }
-                                                }
-                                              },
-                                              [
-                                                _c("i", {
-                                                  staticClass:
-                                                    "fas fa-play-circle"
-                                                })
-                                              ]
-                                            )
-                                          ])
+                                                },
+                                                [
+                                                  _c("i", {
+                                                    staticClass:
+                                                      "fas fa-play-circle",
+                                                    class: {
+                                                      "playing-icon":
+                                                        track.name ==
+                                                        _vm.previewTrack
+                                                    }
+                                                  })
+                                                ]
+                                              )
+                                            ]
+                                          )
                                         }),
                                         0
                                       )
@@ -34185,16 +34273,28 @@ var render = function() {
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-spotify btn-sm mt-3",
+                            staticClass:
+                              "btn btn-spotify btn-sm mt-3 flip-card-button",
                             on: {
                               click: function($event) {
-                                return _vm.flipCard("#card-" + index)
+                                return _vm.flipCard(index)
                               }
                             }
                           },
                           [
                             _c("i", { staticClass: "fas fa-redo-alt" }),
-                            _vm._v(" View album tracks.")
+                            _vm._v("View album "),
+                            _c(
+                              "span",
+                              { attrs: { id: "flip-view-tracks-" + index } },
+                              [_vm._v("tracks")]
+                            ),
+                            _c(
+                              "span",
+                              { attrs: { id: "flip-view-albums-" + index } },
+                              [_vm._v("info")]
+                            ),
+                            _vm._v(".\n                        ")
                           ]
                         )
                       ],
@@ -34225,7 +34325,11 @@ var render = function() {
       },
       [
         _c("audio-player", {
-          attrs: { file: _vm.previewUrl },
+          attrs: {
+            file: _vm.previewUrl,
+            artists: _vm.previewArtists,
+            track: _vm.previewTrack
+          },
           on: { closed: _vm.closePlayer }
         })
       ],

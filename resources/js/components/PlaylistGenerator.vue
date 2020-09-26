@@ -129,11 +129,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-for="track in tracks[album.id]" :key="track.id">
-                                                        <td>{{ track.track_number }}</td>
+                                                    <tr v-for="track in tracks[album.id]" :key="track.id" :class="{ 'playing' : track.name == previewTrack }">
+                                                        <td class="track-no-row">{{ track.track_number }}</td>
                                                         <td>{{ track.name }}</td>
-                                                        <td @click="previewUrl = track.preview_url" class="track-preview">
-                                                            <i class="fas fa-play-circle"></i>
+                                                        <td @click="previewUrl = track.preview_url; previewArtists = track.artists; previewTrack = track.name" class="track-preview">
+                                                            <i class="fas fa-play-circle" :class="{ 'playing-icon' : track.name == previewTrack }"></i>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -141,8 +141,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                </div>
-                            <button class="btn btn-spotify btn-sm mt-3" @click="flipCard(`#card-${index}`)"><i class="fas fa-redo-alt"></i> View album tracks.</button>
+                            </div>
+                            <button class="btn btn-spotify btn-sm mt-3 flip-card-button" @click="flipCard(index)">
+                                <i class="fas fa-redo-alt"></i>View album <span :id="`flip-view-tracks-${index}`">tracks</span><span :id="`flip-view-albums-${index}`">info</span>.
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -151,7 +153,7 @@
         </div>
 
         <div v-show="!!previewUrl" id="audio" class="player-wrapper">
-            <audio-player :file="previewUrl" @closed="closePlayer"></audio-player>
+            <audio-player :file="previewUrl" :artists="previewArtists" :track="previewTrack" @closed="closePlayer"></audio-player>
         </div>
 
     </div>
@@ -170,7 +172,9 @@
                 tracksInStorage: false,
                 artistGalleryOpen: true,
                 albumGalleryOpen: true,
-                previewUrl: null
+                previewUrl: null,
+                previewArtists: [],
+                previewTrack: null
             }
         },
         methods: {
@@ -212,12 +216,25 @@
                 });
 
             },
-            flipCard: function(cardId){
-                let card = document.querySelector(cardId);
+            flipCard: function(index){
+                let card = document.querySelector(`#card-${index}`);
                 card.classList.toggle('flipped');
+
+                let trackText = document.querySelector(`#flip-view-tracks-${index}`);
+                let albumText = document.querySelector(`#flip-view-albums-${index}`);
+
+                if(card.classList.contains('flipped')) {
+                    trackText.style.display = 'none';
+                    albumText.style.display = 'inline-block';
+                } else {
+                    trackText.style.display = 'inline-block';
+                    albumText.style.display = 'none';
+                }
             },
             closePlayer: function() {
                 this.previewUrl = null;
+                this.previewArtists = [];
+                this.previewTrack = null;
             }
         },
         computed: {

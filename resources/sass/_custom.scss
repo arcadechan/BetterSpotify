@@ -1,3 +1,7 @@
+body {
+    background: #282828;
+}
+
 .text-spotify {
     color: $spotify-green;
 }
@@ -161,11 +165,31 @@ nav.navbar {
                                 width: 25%;
                             }
 
+                            tbody {
+                                tr {
+                                    &.playing {
+                                        background-color: #282828;
+                                    }
+
+                                    .track-no-row {
+                                        padding-left: .5em;
+                                    }
+                                }
+                            }
+
                             .track-preview {
                                 width: 2.5em;
                                 text-align: center;
                                 cursor: pointer;
                                 color: $spotify-green;
+
+                                &:hover:not(.playing-icon) {
+                                    color: $text-color;
+                                }
+
+                                .playing-icon {
+                                    color: white;
+                                }
                             }
                         }
 
@@ -189,6 +213,12 @@ nav.navbar {
                     }
                 }
             }
+
+            .flip-card-button {
+                [id^="flip-view-albums-"] {
+                    display: none;
+                }
+            }
         }
 
         img {
@@ -203,7 +233,7 @@ nav.navbar {
                 td {
                     padding: .75em 0;
                     text-align: left;
-                    border-bottom: 1px solid $text-color;
+                    border-bottom: 1px solid #191919;
                 }
             }
 
@@ -221,12 +251,10 @@ nav.navbar {
 }
 
 //Vue Player
-$player-bg: #fff;
-$player-border-color: darken($player-bg, 12%);
-$player-link-color: darken($player-bg, 75%);
-$player-progress-color: $player-border-color;
-$player-seeker-color: $player-link-color;
-$player-text-color: $player-link-color;
+$player-bg: #060606;
+$player-progress-color: darken($spotify-green, 30%);;
+$player-seeker-color: $spotify-green;
+$player-text-color: $spotify-green;
 
 .player-wrapper {
     text-align: center;
@@ -235,16 +263,46 @@ $player-text-color: $player-link-color;
     left: 50%;
     transform: translateX(-50%);
     z-index: 9999;
+    width: 100%;
 }
 
 .player {
-	background-color: #060606;
-	border: 1px solid #060606;
+	background-color: $player-bg;
+	border: 1px solid $player-bg;
 	border-radius: 5px;
 	box-shadow: 0 5px 8px rgba(0,0,0,0.75);
 	color: $text-color;
 	display: inline-block;
-	line-height: 1.5625;
+    line-height: 1.5625;
+    
+    .track-info {
+        background-color: #060606;
+        color: $player-text-color;
+        width: 100%;
+        max-width: 308px;
+        overflow: hidden;
+        white-space: nowrap;
+        box-sizing: border-box;
+
+        @media (min-width: 768px){
+            max-width: 507px;
+        }
+
+        .track-marquee {
+            display: inline-block;
+            margin: 0;
+
+            &.scroll {
+                animation: marquee 15s linear infinite;
+                padding-left: 100%;
+            }
+        }
+    }
+}
+
+@keyframes marquee {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-100%, 0); }
 }
 
 .player-controls {
@@ -274,6 +332,10 @@ $player-text-color: $player-link-color;
             height: 100%;
             display: flex;
             padding: 0 0.5em;
+            
+            input[type="range"] {
+                cursor: pointer;
+            }
         }
     }
     
@@ -289,17 +351,21 @@ $player-text-color: $player-link-color;
             background-color: #0c0c0c;
         }
     }
+
+    .player-button:hover {
+        background-color: #0c0c0c;
+    }
 }
 
 .player-progress {
-	background-color: darken($spotify-green, 30%);
+	background-color: $player-progress-color;
 	cursor: pointer;
 	height: 50%;
 	min-width: 200px;
 	position: relative;
 	
 	.player-seeker {
-		background-color: $spotify-green;
+		background-color: $player-seeker-color;
 		bottom: 0;
 		left: 0;
 		position: absolute;
@@ -309,7 +375,6 @@ $player-text-color: $player-link-color;
 
 .player-time {
 	display: flex;
-	// font-size: 18px;
 	justify-content: space-between;
 
 	.player-time-current {

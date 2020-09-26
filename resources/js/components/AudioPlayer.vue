@@ -1,14 +1,23 @@
 <template>
     <div class="player">
+        <div class="track-info">
+            <p class="track-marquee">
+                <!-- <template v-for="(artist, index) in artists">
+                        {{ artist.name }}<template v-if="index < artists.length - 1">, </template>
+                </template>
+                - {{ track }} -->
+                {{ trackInfo }}
+            </p>
+        </div>
         <div class="player-controls">
-            <div>
+            <div class="player-button">
                 <a v-on:click.prevent="stop" title="Stop" href="#" class="stop">
                     <svg width="18px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                         <path fill="currentColor" d="M16,4.995v9.808C16,15.464,15.464,16,14.804,16H4.997C4.446,16,4,15.554,4,15.003V5.196C4,4.536,4.536,4,5.196,4h9.808C15.554,4,16,4.446,16,4.995z"/>
                     </svg>
                 </a>
             </div>
-            <div>
+            <div class="player-button">
                 <a v-on:click.prevent="playing = !playing" title="Play/Pause" href="#" :class="{ pressed : playing }">
                     <svg width="18px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                         <path v-if="!playing" fill="currentColor" d="M15,10.001c0,0.299-0.305,0.514-0.305,0.514l-8.561,5.303C5.51,16.227,5,15.924,5,15.149V4.852c0-0.777,0.51-1.078,1.135-0.67l8.561,5.305C14.695,9.487,15,9.702,15,10.001z"/>
@@ -33,7 +42,7 @@
                     <input v-model.lazy.number="volume" v-show="showVolume" type="range" min="0" max="100"/>
                 </div>
             </div>
-            <div v-on:click.prevent="closePlayer" class="closePlayer">
+            <div v-on:click.prevent="closePlayer" class="closePlayer player-button">
                 <div title="Mute">
                     <i class="fas fa-times"></i>
                 </div>
@@ -53,11 +62,19 @@
                 playing: false,
                 previousVolume: 35,
                 showVolume: true,
-                volume: 100
+                volume: 30
             }
         },
         props: {
             file: {
+                type: String,
+                default: null
+            },
+            artists: {
+                type: Array,
+                default: []
+            },
+            track: {
                 type: String,
                 default: null
             },
@@ -82,6 +99,32 @@
             },
             muted() {
                 return this.volume / 100 === 0;
+            },
+            trackInfo(){
+                let trackInfo = '';
+                let artists = this.artists;
+                let trackMarquee = document.querySelector('.track-info .track-marquee');
+                
+                if(artists.length){
+                    
+                    for(let i = 0; i < artists.length; i++){
+                        trackInfo += artists[i].name;
+                        if(i < artists.length - 1){
+                            trackInfo += ', ';
+                        }
+                    }
+
+                    trackInfo += ` — ${this.track}`;
+                    
+
+                    if(trackInfo.length > 66){
+                        trackMarquee.classList.add('scroll');
+                    } else {
+                        trackMarquee.classList.remove('scroll');
+                    }
+                }
+
+                return trackInfo;
             }
         },
         watch: {
@@ -140,7 +183,6 @@
                 this.currentSeconds = parseInt(this.audio.currentTime);
             },
             closePlayer(){
-                console.log('closePlayerFired');
                 this.$emit('closed', true);
             }
         },
