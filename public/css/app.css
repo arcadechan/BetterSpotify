@@ -11305,6 +11305,40 @@ nav.navbar #navbar-spotify-icon {
   background-color: #a76d47;
 }
 
+.bg-spotify {
+  background-color: #1DB954;
+}
+
+#progressLog {
+  background-color: #000;
+  padding: 1em;
+  margin-bottom: 1.5em;
+}
+
+#progressLog p {
+  margin-bottom: 1em;
+  line-height: 1.25em;
+}
+
+#progressLog p:last-child {
+  margin-bottom: 0em;
+}
+
+#progressLog p .progressArtistName {
+  font-weight: bold;
+  color: #1DB954;
+}
+
+#progressBar {
+  height: 30px;
+  border-radius: 2em;
+}
+
+#progressBar .progress-bar {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
 #playlistGenerationTypeRadios input[type=radio] {
   transform: scale(2);
 }

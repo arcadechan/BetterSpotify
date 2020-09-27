@@ -7,7 +7,18 @@
             <p v-if="generation == 'generatingPlaylist'">Generating Playlist...</p>
         </div>
 
-        <div v-if="generation == 'gettingArtists' || generation == 'generatingPlaylist'">
+        <div v-if="generation == 'generatingPlaylist' && playlistArtistLog.length">
+            <div id="progressLog">
+                <template v-for="log in playlistArtistLog">
+                    <p :key="log.position">Searching <span class="progressArtistName">{{log.artist}}</span> for new releases.</p>
+                </template>
+            </div>
+            <div id="progressBar" class="progress">
+                <div class="progress-bar bg-spotify" role="progressbar" :style="{ width: `${generationProgress}%` }" :aria-valuenow="generationProgress" aria-valuemin="0" aria-valuemax='100'>{{ generationProgress }}%</div>
+            </div>
+        </div>
+
+        <div v-if="generation == 'gettingArtists'">
             <div class="text-center">
                 <div class="spinner-border text-spotify m-5" role="status" style="width: 3rem; height: 3rem;">
                     <span class="sr-only">Loading...</span>
@@ -56,11 +67,12 @@
 
         <hr>
 
-        <div v-if="generation == 'albumsRetrieved'" class="my-5">
+        <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="my-5">
             <div class="d-block text-center">
                 <h2>Albums</h2>
-                <p v-if="albumsInStorage">Here's a list of all the albums from the latest "Better Release Radar" you generated.</p>
-                <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your new "Better Release Radar" playlist! To generate again click "Generate Better Release Radar".</p>
+                <p v-if="albumsInStorage">Here's a list of all the albums from the latest "Better Release Radar" you generated. You may generate a new playlist at any time, but keep in mind that doing so will wipe clean the one you have with new stuff, so make sure you saved all the stuff you want as there is no guarantee the same tracks will make it on there again!</p>
+                <!-- <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your new "Better Release Radar" playlist! To generate again click "Generate Better Release Radar" (this will overwrite your playlist!).</p> -->
+                <p v-else>To generate a playlist on your account go ahead and press the generate release radar.</p>
             </div>
 
             <button
@@ -177,7 +189,7 @@
                 generation: 'pending',
                 artists: [],
                 albums: [],
-                tracks: [],
+                tracks: {},
                 artistsInStorage: false,
                 albumsInStorage: false,
                 tracksInStorage: false,
@@ -186,7 +198,9 @@
                 previewUrl: null,
                 previewArtists: [],
                 previewTrack: null,
-                playlistGenerationType: 'overwritePlaylist'
+                playlistArtistProgress: {},
+                playlistArtistLog: [],
+                stopThings: false
             }
         },
         methods: {
@@ -208,37 +222,53 @@
                     console.log(error);
                 });
             },
-            generatePlaylist: function() {
+            generatePlaylist: async function() {
+
                 const self = this;
+                const artists = this.artists;
+                let albums = [];
+                let tracks = [];
 
                 this.generation = 'generatingPlaylist';
 
-                const artists = this.artists;
+                const createPlaylist = await axios.post('/api/spotify/create_playlist');
 
-                //CREATE PLAYLIST API CALL
-                    //CLEAR THE PLAYLIST AND GET A NEW ACCESS TOKEN
-                    //RETURN SAID ACCESS TOKEN TO BE PASSED TO NEXT call
+                for(let i = 0; i < artists.length; i++){
 
-                //foreach artist call and find their last 3 albums and singles 
-                    //if data is returned push albums into self.album-and tracks into self tracks
-                    //TRACK PROGRESS to UPDATE PROGRESS BAR
-                
-                //when foreach loop ends set all albums and tracks into localstorage
-                //additionally set self.geneartion to artistsRetreived
+                    let newLog = {};
 
-                // axios.post('/api/spotify/create_playlist', { artists })
-                // .then( response => {
-                //     self.generation = 'albumsRetrieved';
-                //     self.albums = response.data.albums;
-                //     self.tracks = response.data.tracks;
+                    newLog['artist'] = artists[i].name;
+                    newLog['position'] = i + 1;
 
-                //     localStorage.setItem('albums', JSON.stringify(self.albums));
-                //     localStorage.setItem('tracks', JSON.stringify(self.tracks));
-                // }).catch( error => {
-                //     self.generation = 'artistsRetrieved';
-                //     console.log(error);
-                // });
+                    self.playlistArtistProgress = newLog;
 
+                    if(self.playlistArtistLog.length == 10) {
+                        self.playlistArtistLog.shift();
+                    }
+
+                    self.playlistArtistLog.push( newLog );
+                    console.dir(artists[i].name);
+
+                    const inspectArtist = await axios.post('/api/spotify/inspect_artist', { 'artist': artists[i] })
+                    .then( response => {
+                        const artistAlbums = response.data.albums;
+                        const artistTracks = response.data.tracks;
+                        
+                        if(artistAlbums.length && Object.keys(artistTracks).length){
+                            self.albums = [ ...self.albums, ...artistAlbums ];
+                            self.tracks = { ...self.tracks, ...artistTracks };
+                        }
+                    });
+                }
+
+                localStorage.setItem('albums', JSON.stringify(this.albums));
+                localStorage.setItem('tracks', JSON.stringify(this.tracks));
+
+
+                this.playlistArtistProgress = {};
+                this.playlistArtistLog = [];
+
+                this.generation = 'albumsRetrieved';
             },
             flipCard: function(index){
                 let card = document.querySelector(`#card-${index}`);
@@ -272,6 +302,9 @@
                 }
 
                 return count;
+            },
+            generationProgress: function(){
+                return this.generation !== 'generatingPlaylist' ? 0 : Math.floor((this.playlistArtistProgress.position / this.artists.length) * 100);
             }
         },
         mounted() {
@@ -287,13 +320,15 @@
             const oldTracksList = localStorage.getItem('tracks');
 
             if(!!oldAlbumsList && !!oldTracksList){
-                this.albumsInStorage = true;
                 this.albums = JSON.parse(oldAlbumsList);
 
                 this.tracksInStorage = true;
                 this.tracks = JSON.parse(oldTracksList);
 
-                this.generation = 'albumsRetrieved';
+                if(this.albums.length && Object.keys(this.tracks).length){
+                    this.albumsInStorage = true;
+                    this.generation = 'albumsRetrieved';
+                }
             }
         }
     }
