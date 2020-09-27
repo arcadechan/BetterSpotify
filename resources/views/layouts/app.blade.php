@@ -90,7 +90,6 @@
                 <div class="row">
                     <div class="col-lg-auto ml-lg-auto mt-4">
                         <ul class="list-unstyled footer-link">
-                            <!-- Please note.You are not allowed to remove credit link.Please respect that.-->
                             <li><a href="https://sharebootstrap.com">dev by sharebootstrap</a></li>
                             <li>
                                 <div>Hamburger menu icon made by <a href="https://www.flaticon.com/authors/hirschwolf" title="hirschwolf">hirschwolf</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
