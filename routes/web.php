@@ -27,4 +27,5 @@ Route::get('/refresh_access', 'AuthorizationController@refresh_access');
 Route::prefix('api/spotify')->group(function(){
     Route::get('/get_artists', 'SpotifyController@get_artists');
     Route::post('/create_playlist', 'SpotifyController@create_playlist');
+    Route::post('/inspect_artist', 'SpotifyController@inspect_artist');
 });

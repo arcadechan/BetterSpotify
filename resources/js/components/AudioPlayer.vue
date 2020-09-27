@@ -117,7 +117,7 @@
                     trackInfo += ` — ${this.track}`;
                     
 
-                    if(trackInfo.length > 66){
+                    if(trackInfo.length > 66 && window.innerWidth >= 768 || trackInfo.length > 40 && window.innerWidth < 768){
                         trackMarquee.classList.add('scroll');
                     } else {
                         trackMarquee.classList.remove('scroll');

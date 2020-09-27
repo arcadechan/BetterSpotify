@@ -1,28 +1,24 @@
 <template>
     <div>
-        <div class="col-12 justify-content-center">
-            <button 
-                v-if="generation == 'pending' || generation == 'artistsRetrieved' ||  generation == 'albumsRetrieved'"
-                @click="getArtists"
-                class="btn btn-spotify mx-auto my-4 d-block">
-                Get Artists
-            </button>
-
-            <button
-                v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'"
-                @click="generatePlaylist"
-                class="btn btn-spotify mx-auto my-4 d-block">
-                Generate Better Release Radar
-            </button>
-        </div>
-
+        <h2 class="d-block text-center">Artists</h2>    
         <p v-if="generation == 'pending'">The first step is to get all the artists you follow. Click the "Get Artists" button when you're ready!</p>
         <div class="d-block text-center">
             <p v-if="generation == 'gettingArtists'">Getting followed artists...</p>
             <p v-if="generation == 'generatingPlaylist'">Generating Playlist...</p>
         </div>
 
-        <div v-if="generation == 'gettingArtists' || generation == 'generatingPlaylist'">
+        <div v-if="generation == 'generatingPlaylist' && playlistArtistLog.length">
+            <div id="progressLog">
+                <template v-for="log in playlistArtistLog">
+                    <p :key="log.position">Searching <span class="progressArtistName">{{log.artist}}</span> for new releases.</p>
+                </template>
+            </div>
+            <div id="progressBar" class="progress">
+                <div class="progress-bar bg-spotify" role="progressbar" :style="{ width: `${generationProgress}%` }" :aria-valuenow="generationProgress" aria-valuemin="0" aria-valuemax='100'>{{ generationProgress }}%</div>
+            </div>
+        </div>
+
+        <div v-if="generation == 'gettingArtists'">
             <div class="text-center">
                 <div class="spinner-border text-spotify m-5" role="status" style="width: 3rem; height: 3rem;">
                     <span class="sr-only">Loading...</span>
@@ -30,11 +26,23 @@
             </div>
         </div>
 
-        <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'">
-            <p v-if="artistsInStorage">Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn't changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.</p>
-            <p v-else>Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" to create the playlist into your account.</p>
-            <p>You can click on each artist card to navigate to their artist page on Spotify.</p>
-            
+        <div class="col-12 justify-content-center">
+            <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">
+                <p v-if="artistsInStorage">Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn't changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.</p>
+                <p v-else>Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" button below the artist list to create the playlist into your account.</p>
+                <p>You can click on each artist card to navigate to their artist page on Spotify.</p>
+            </div>
+            <button 
+                id="getArtistsBtn"
+                v-if="generation == 'pending' || generation == 'artistsRetrieved' ||  generation == 'albumsRetrieved'"
+                @click="getArtists"
+                class="btn btn-spotify mx-auto my-4 d-block font-"
+                :class="{ 'pending' : generation =='pending' }" >
+                Get Artists
+            </button>
+        </div>
+
+        <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">        
             <button @click="artistGalleryOpen = !artistGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#artist-gallery" aria-expanded="false" aria-controls="artist-gallery">
                 {{ artistGalleryOpen ? 'Hide' : 'Show' }} Artist List
             </button>
@@ -57,9 +65,24 @@
             </div>
         </div>
 
-        <div v-if="generation == 'albumsRetrieved'" class="my-5">
-            <p v-if="albumsInStorage">Here is the last "Better Release Radar" you generated.</p>
-            <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your list! To generate again click "Generate Better Release Radar".</p>
+        <hr>
+
+        <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="my-5">
+            <div class="d-block text-center">
+                <h2>Albums</h2>
+                <p v-if="albumsInStorage">Here's a list of all the albums from the latest "Better Release Radar" you generated. You may generate a new playlist at any time, but keep in mind that doing so will wipe clean the one you have with new stuff, so make sure you saved all the stuff you want as there is no guarantee the same tracks will make it on there again!</p>
+                <!-- <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your new "Better Release Radar" playlist! To generate again click "Generate Better Release Radar" (this will overwrite your playlist!).</p> -->
+                <p v-else>To generate a playlist on your account go ahead and press the generate release radar.</p>
+            </div>
+
+            <button
+                id="createPlaylistBtn"
+                v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'"
+                @click="generatePlaylist"
+                class="btn btn-spotify mx-auto my-4 d-block"
+                :class="{ 'pending' : !albumsInStorage }">
+                Generate Better <br class="mobile-break">Release Radar
+            </button>
 
             <button @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">
                 {{ albumGalleryOpen ? 'Hide' : 'Show' }} Album List
@@ -143,7 +166,7 @@
                                 </div>
                             </div>
                             <button class="btn btn-spotify btn-sm mt-3 flip-card-button" @click="flipCard(index)">
-                                <i class="fas fa-redo-alt"></i>View album <span :id="`flip-view-tracks-${index}`">tracks</span><span :id="`flip-view-albums-${index}`">info</span>.
+                                <i class="fas fa-redo-alt"></i> View album <span :id="`flip-view-tracks-${index}`">tracks</span><span :id="`flip-view-albums-${index}`">info</span>.
                             </button>
                         </div>
                     </div>
@@ -166,7 +189,7 @@
                 generation: 'pending',
                 artists: [],
                 albums: [],
-                tracks: [],
+                tracks: {},
                 artistsInStorage: false,
                 albumsInStorage: false,
                 tracksInStorage: false,
@@ -174,7 +197,10 @@
                 albumGalleryOpen: true,
                 previewUrl: null,
                 previewArtists: [],
-                previewTrack: null
+                previewTrack: null,
+                playlistArtistProgress: {},
+                playlistArtistLog: [],
+                stopThings: false
             }
         },
         methods: {
@@ -196,26 +222,53 @@
                     console.log(error);
                 });
             },
-            generatePlaylist: function() {
+            generatePlaylist: async function() {
+
                 const self = this;
+                const artists = this.artists;
+                let albums = [];
+                let tracks = [];
 
                 this.generation = 'generatingPlaylist';
 
-                const artists = this.artists;
+                const createPlaylist = await axios.post('/api/spotify/create_playlist');
 
-                axios.post('/api/spotify/create_playlist', { artists })
-                .then( response => {
-                    self.generation = 'albumsRetrieved';
-                    self.albums = response.data.albums;
-                    self.tracks = response.data.tracks;
+                for(let i = 0; i < artists.length; i++){
 
-                    localStorage.setItem('albums', JSON.stringify(self.albums));
-                    localStorage.setItem('tracks', JSON.stringify(self.tracks));
-                }).catch( error => {
-                    self.generation = 'artistsRetrieved';
-                    console.log(error);
-                });
+                    let newLog = {};
 
+                    newLog['artist'] = artists[i].name;
+                    newLog['position'] = i + 1;
+
+                    self.playlistArtistProgress = newLog;
+
+                    if(self.playlistArtistLog.length == 10) {
+                        self.playlistArtistLog.shift();
+                    }
+
+                    self.playlistArtistLog.push( newLog );
+                    console.dir(artists[i].name);
+
+                    const inspectArtist = await axios.post('/api/spotify/inspect_artist', { 'artist': artists[i] })
+                    .then( response => {
+                        const artistAlbums = response.data.albums;
+                        const artistTracks = response.data.tracks;
+                        
+                        if(artistAlbums.length && Object.keys(artistTracks).length){
+                            self.albums = [ ...self.albums, ...artistAlbums ];
+                            self.tracks = { ...self.tracks, ...artistTracks };
+                        }
+                    });
+                }
+
+                localStorage.setItem('albums', JSON.stringify(this.albums));
+                localStorage.setItem('tracks', JSON.stringify(this.tracks));
+
+
+                this.playlistArtistProgress = {};
+                this.playlistArtistLog = [];
+
+                this.generation = 'albumsRetrieved';
             },
             flipCard: function(index){
                 let card = document.querySelector(`#card-${index}`);
@@ -249,6 +302,9 @@
                 }
 
                 return count;
+            },
+            generationProgress: function(){
+                return this.generation !== 'generatingPlaylist' ? 0 : Math.floor((this.playlistArtistProgress.position / this.artists.length) * 100);
             }
         },
         mounted() {
@@ -264,13 +320,15 @@
             const oldTracksList = localStorage.getItem('tracks');
 
             if(!!oldAlbumsList && !!oldTracksList){
-                this.albumsInStorage = true;
                 this.albums = JSON.parse(oldAlbumsList);
 
                 this.tracksInStorage = true;
                 this.tracks = JSON.parse(oldTracksList);
 
-                this.generation = 'albumsRetrieved';
+                if(this.albums.length && Object.keys(this.tracks).length){
+                    this.albumsInStorage = true;
+                    this.generation = 'albumsRetrieved';
+                }
             }
         }
     }
