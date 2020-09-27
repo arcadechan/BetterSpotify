@@ -11,32 +11,34 @@
                 <!-- end:col -->
                 <div class="col-lg-9 pl-lg-5 pl-md-5">
                     <h2>
-                        The issue with Release Radar.
+                        The issue with <em>Your Release Radar</em>.
                     </h2>
                     <p class="mt-4">
                         There are various staple features Spotify provides its users, and personalized playlists are one of them.
-                        Some personalized playlists include "Discover Weekly", "Daily Mixes", and of course "Release Radar". 
+                        Some personalized playlists include <span class="title">Discover Weekly</span>, <span class="title">Daily Mixes</span>, and of course <span class="title">Your Release Radar</span>. 
                     <p>
                     <p>
-                        These playlists are generated based on a user's listening behavior and help in the discovery of new music.
+                        These playlists are generated based on a user' listening behavior and help in the discovery of new music.
                         This user experience is ruined, however, when the artists recommended have nothing to do with the user's behavior.
                     </p>
                     <p>
-                        Release Radar's purpose is to provide the latest music from artists a user follows, and additionally some similar artists' singles picked <em>for you.</em>
+                        <span class="title">Your Release Radar's</span> purpose is to provide the latest music from artists a user follows, and additionally some similar artists' singles picked for <em>the user.</em>
                         This playlist is generated weekly for Fridays, although a new generated playlist is ready the night before at 9pm PST.
                     </p>
                     <p>
-                        It makes sense that not every artist a user follows is going to put out new music every week, so sometimes the playlist will recommend music from <em>similar</em> artist. That however is not the issue.
-                        The issue with Release Radar is that it pollutes your playlist with artists who have the same name as some of those you <em>do</em> follow.
+                        It makes sense that not every artist a user follows is going to put out new music every week, so sometimes the playlist will recommend music from <em>similar</em> artists. That however is not the issue.
+                        The issue with <span class="title">Your Release Radar</span> is that it pollutes your playlist with artists who have the same name as some of those you <em>do</em> follow.
                     </p>
+
+                    <h4>An example</h4>
                     <p>
-                        Let's choose a recognizable artist: The Beatles. We can assume if a user followed The Beatles on Spotify then they are following the English rock band from Liverpool. There aren't any other known groups by the exact same name but lets assume there was.
-                        Let's call The Beatles we all know <b>"The Beatles 1"</b> and the other lesser known group <b>"The Beatles 2"</b>. If a user happens to follow <b>"The Beatles 1"</b>, and <b>"The Beatles 2"</b> happens to have a new release,
+                        Let's choose a recognizable artist: The Beatles. We can assume if a user followed The Beatles on Spotify then they are following the English rock band from Liverpool. Lets assume somewhere out there in the world is another group that also happens to be called The Beatles.
+                        Let's call The Beatles we all know from England <b>"The Beatles 1"</b> and the other lesser known group <b>"The Beatles 2"</b>. If a user happens to follow <b>"The Beatles 1"</b>, and <b>"The Beatles 2"</b> happens to have a new release,
                         Release Radar fails to differentiate the two, and displays the new release belonging to <b>"The Beatles 2"</b>, despite a user never following them.
                     </p>
                     <p>
-                        Release Radar is broken, and instead of searching for an artist by a unique identifier like an artist ID (something Spotify has access to already), Release Radar appears to be doing it by artist name.
-                        This site aims to provide a better Release Radar, that <em>does</em> search for artists based on ID, at the expense of losing <em>similar artists</em>.
+                        <span class="title">Your Release Radar</span> is broken, and instead of searching for an artist by a unique identifier like an artist ID (something Spotify already gives to every artist), <span class="title">Your Release Radar</span> appears to be doing it by artist name.
+                        This site aims to provide a better <span class="title">Your Release Radar</span>, that <em>does</em> search for artists based on ID, at the expense of losing <em>similar artists</em> (that's what Discover Weekly and Daily Mixes are for anyways). 
                     </p>
                     <h4>Note</h4>
                     <p>
