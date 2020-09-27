@@ -4,6 +4,7 @@
     <section class="pt-4">
         <div class="container">
         <h1 class="text-center">better release radar</h1>
+        <hr>
             @if(Cookie::get('spotify_access_code') !== null)
                 <playlist-generator></playlist-generator>
             @else

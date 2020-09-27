@@ -11285,6 +11285,16 @@ body {
   background: #282828;
 }
 
+.link {
+  text-decoration: underline;
+}
+
+.title {
+  font-weight: bold;
+  font-style: italic;
+  color: white;
+}
+
 .text-spotify {
   color: #1DB954;
 }

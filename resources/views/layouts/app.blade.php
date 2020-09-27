@@ -34,14 +34,20 @@
         <div class="nav-main">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <img id="navbar-spotify-icon" src="{{ url('/icons/Spotify_Icon_White.png') }}">
-                    <a class="navbar-brand font-weight-bold" href="/">Better Spotify</a>
+                    <a class="d-none d-lg-block text-decoration-none" href="/">
+                        <img id="navbar-spotify-icon" src="{{ url('/icons/Spotify_Icon_White.png') }}">
+                        <span class="navbar-brand font-weight-bold">Better Spotify</span>
+                    </a>
+                    <a class="d-block d-lg-none" href="/">
+                        <img id="navbar-spotify-icon" src="{{ url('/icons/Spotify_Icon_White.png') }}">
+                    </a>
+                    <a class="navbar-brand font-weight-bold d-block d-lg-none" href="/">Better Spotify</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <svg id="hamburger-menu-icon">
                             <use xlink:href="{{ url('/icons/svg-sprites.svg#menu') }}"></use>
                         </svg>
                     </button>
-                    <div class="collapse navbar-collapse mt-3" id="navbarNav">
+                    <div class="collapse navbar-collapse mt-3 mt-md-0" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item">
                                 <a class="nav-link px-2" href="/">Home</a>
