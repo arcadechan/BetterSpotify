@@ -11285,8 +11285,16 @@ body {
   background: #282828;
 }
 
+.footer-link {
+  font-size: 0.5em;
+}
+
 .link {
   text-decoration: underline;
+}
+
+.link:hover {
+  color: #ffffff;
 }
 
 .title {
