@@ -2025,7 +2025,7 @@ __webpack_require__.r(__webpack_exports__);
 
         trackInfo += " \u2014 ".concat(this.track);
 
-        if (trackInfo.length > 66) {
+        if (trackInfo.length > 66 && window.innerWidth >= 768 || trackInfo.length > 40 && window.innerWidth < 768) {
           trackMarquee.classList.add('scroll');
         } else {
           trackMarquee.classList.remove('scroll');
@@ -2291,6 +2291,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2305,7 +2316,8 @@ __webpack_require__.r(__webpack_exports__);
       albumGalleryOpen: true,
       previewUrl: null,
       previewArtists: [],
-      previewTrack: null
+      previewTrack: null,
+      playlistGenerationType: 'overwritePlaylist'
     };
   },
   methods: {
@@ -2325,19 +2337,25 @@ __webpack_require__.r(__webpack_exports__);
     generatePlaylist: function generatePlaylist() {
       var self = this;
       this.generation = 'generatingPlaylist';
-      var artists = this.artists;
-      axios.post('/api/spotify/create_playlist', {
-        artists: artists
-      }).then(function (response) {
-        self.generation = 'albumsRetrieved';
-        self.albums = response.data.albums;
-        self.tracks = response.data.tracks;
-        localStorage.setItem('albums', JSON.stringify(self.albums));
-        localStorage.setItem('tracks', JSON.stringify(self.tracks));
-      })["catch"](function (error) {
-        self.generation = 'artistsRetrieved';
-        console.log(error);
-      });
+      var artists = this.artists; //CREATE PLAYLIST API CALL
+      //CLEAR THE PLAYLIST AND GET A NEW ACCESS TOKEN
+      //RETURN SAID ACCESS TOKEN TO BE PASSED TO NEXT call
+      //foreach artist call and find their last 3 albums and singles 
+      //if data is returned push albums into self.album-and tracks into self tracks
+      //TRACK PROGRESS to UPDATE PROGRESS BAR
+      //when foreach loop ends set all albums and tracks into localstorage
+      //additionally set self.geneartion to artistsRetreived
+      // axios.post('/api/spotify/create_playlist', { artists })
+      // .then( response => {
+      //     self.generation = 'albumsRetrieved';
+      //     self.albums = response.data.albums;
+      //     self.tracks = response.data.tracks;
+      //     localStorage.setItem('albums', JSON.stringify(self.albums));
+      //     localStorage.setItem('tracks', JSON.stringify(self.tracks));
+      // }).catch( error => {
+      //     self.generation = 'artistsRetrieved';
+      //     console.log(error);
+      // });
     },
     flipCard: function flipCard(index) {
       var card = document.querySelector("#card-".concat(index));
@@ -33794,32 +33812,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "col-12 justify-content-center" }, [
-      _vm.generation == "pending" ||
-      _vm.generation == "artistsRetrieved" ||
-      _vm.generation == "albumsRetrieved"
-        ? _c(
-            "button",
-            {
-              staticClass: "btn btn-spotify mx-auto my-4 d-block",
-              on: { click: _vm.getArtists }
-            },
-            [_vm._v("\n            Get Artists\n        ")]
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.generation == "artistsRetrieved" ||
-      _vm.generation == "albumsRetrieved"
-        ? _c(
-            "button",
-            {
-              staticClass: "btn btn-spotify mx-auto my-4 d-block",
-              on: { click: _vm.generatePlaylist }
-            },
-            [_vm._v("\n            Generate Better Release Radar\n        ")]
-          )
-        : _vm._e()
-    ]),
+    _c("h2", { staticClass: "d-block text-center" }, [_vm._v("Artists")]),
     _vm._v(" "),
     _vm.generation == "pending"
       ? _c("p", [
@@ -33843,26 +33836,48 @@ var render = function() {
       ? _c("div", [_vm._m(0)])
       : _vm._e(),
     _vm._v(" "),
+    _c("div", { staticClass: "col-12 justify-content-center" }, [
+      _vm.generation == "artistsRetrieved" ||
+      _vm.generation == "albumsRetrieved"
+        ? _c("div", { staticClass: "text-center" }, [
+            _vm.artistsInStorage
+              ? _c("p", [
+                  _vm._v(
+                    'Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn\'t changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.'
+                  )
+                ])
+              : _c("p", [
+                  _vm._v(
+                    'Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" button below the artist list to create the playlist into your account.'
+                  )
+                ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "You can click on each artist card to navigate to their artist page on Spotify."
+              )
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.generation == "pending" ||
+      _vm.generation == "artistsRetrieved" ||
+      _vm.generation == "albumsRetrieved"
+        ? _c(
+            "button",
+            {
+              staticClass: "btn btn-spotify mx-auto my-4 d-block font-",
+              class: { pending: _vm.generation == "pending" },
+              attrs: { id: "getArtistsBtn" },
+              on: { click: _vm.getArtists }
+            },
+            [_vm._v("\n            Get Artists\n        ")]
+          )
+        : _vm._e()
+    ]),
+    _vm._v(" "),
     _vm.generation == "artistsRetrieved" || _vm.generation == "albumsRetrieved"
-      ? _c("div", [
-          _vm.artistsInStorage
-            ? _c("p", [
-                _vm._v(
-                  'Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn\'t changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.'
-                )
-              ])
-            : _c("p", [
-                _vm._v(
-                  'Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" to create the playlist into your account.'
-                )
-              ]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              "You can click on each artist card to navigate to their artist page on Spotify."
-            )
-          ]),
-          _vm._v(" "),
+      ? _c("div", { staticClass: "text-center" }, [
           _c(
             "button",
             {
@@ -33963,17 +33978,43 @@ var render = function() {
         ])
       : _vm._e(),
     _vm._v(" "),
+    _c("hr"),
+    _vm._v(" "),
     _vm.generation == "albumsRetrieved"
       ? _c("div", { staticClass: "my-5" }, [
-          _vm.albumsInStorage
-            ? _c("p", [
-                _vm._v('Here is the last "Better Release Radar" you generated.')
-              ])
-            : _c("p", [
-                _vm._v(
-                  'Your playlist has been generated! Here are the the latest releases we found and added to your list! To generate again click "Generate Better Release Radar".'
-                )
-              ]),
+          _c("div", { staticClass: "d-block text-center" }, [
+            _c("h2", [_vm._v("Albums")]),
+            _vm._v(" "),
+            _vm.albumsInStorage
+              ? _c("p", [
+                  _vm._v(
+                    'Here\'s a list of all the albums from the latest "Better Release Radar" you generated.'
+                  )
+                ])
+              : _c("p", [
+                  _vm._v(
+                    'Your playlist has been generated! Here are the the latest releases we found and added to your new "Better Release Radar" playlist! To generate again click "Generate Better Release Radar".'
+                  )
+                ])
+          ]),
+          _vm._v(" "),
+          _vm.generation == "artistsRetrieved" ||
+          _vm.generation == "albumsRetrieved"
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-spotify mx-auto my-4 d-block",
+                  class: { pending: !_vm.albumsInStorage },
+                  attrs: { id: "createPlaylistBtn" },
+                  on: { click: _vm.generatePlaylist }
+                },
+                [
+                  _vm._v("\n            Generate Better "),
+                  _c("br", { staticClass: "mobile-break" }),
+                  _vm._v("Release Radar\n        ")
+                ]
+              )
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "button",
@@ -34284,7 +34325,7 @@ var render = function() {
                           },
                           [
                             _c("i", { staticClass: "fas fa-redo-alt" }),
-                            _vm._v("View album "),
+                            _vm._v(" View album "),
                             _c(
                               "span",
                               { attrs: { id: "flip-view-tracks-" + index } },

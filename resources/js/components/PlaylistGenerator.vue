@@ -1,21 +1,6 @@
 <template>
     <div>
-        <div class="col-12 justify-content-center">
-            <button 
-                v-if="generation == 'pending' || generation == 'artistsRetrieved' ||  generation == 'albumsRetrieved'"
-                @click="getArtists"
-                class="btn btn-spotify mx-auto my-4 d-block">
-                Get Artists
-            </button>
-
-            <button
-                v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'"
-                @click="generatePlaylist"
-                class="btn btn-spotify mx-auto my-4 d-block">
-                Generate Better Release Radar
-            </button>
-        </div>
-
+        <h2 class="d-block text-center">Artists</h2>    
         <p v-if="generation == 'pending'">The first step is to get all the artists you follow. Click the "Get Artists" button when you're ready!</p>
         <div class="d-block text-center">
             <p v-if="generation == 'gettingArtists'">Getting followed artists...</p>
@@ -30,11 +15,23 @@
             </div>
         </div>
 
-        <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'">
-            <p v-if="artistsInStorage">Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn't changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.</p>
-            <p v-else>Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" to create the playlist into your account.</p>
-            <p>You can click on each artist card to navigate to their artist page on Spotify.</p>
-            
+        <div class="col-12 justify-content-center">
+            <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">
+                <p v-if="artistsInStorage">Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn't changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.</p>
+                <p v-else>Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" button below the artist list to create the playlist into your account.</p>
+                <p>You can click on each artist card to navigate to their artist page on Spotify.</p>
+            </div>
+            <button 
+                id="getArtistsBtn"
+                v-if="generation == 'pending' || generation == 'artistsRetrieved' ||  generation == 'albumsRetrieved'"
+                @click="getArtists"
+                class="btn btn-spotify mx-auto my-4 d-block font-"
+                :class="{ 'pending' : generation =='pending' }" >
+                Get Artists
+            </button>
+        </div>
+
+        <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">        
             <button @click="artistGalleryOpen = !artistGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#artist-gallery" aria-expanded="false" aria-controls="artist-gallery">
                 {{ artistGalleryOpen ? 'Hide' : 'Show' }} Artist List
             </button>
@@ -57,9 +54,23 @@
             </div>
         </div>
 
+        <hr>
+
         <div v-if="generation == 'albumsRetrieved'" class="my-5">
-            <p v-if="albumsInStorage">Here is the last "Better Release Radar" you generated.</p>
-            <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your list! To generate again click "Generate Better Release Radar".</p>
+            <div class="d-block text-center">
+                <h2>Albums</h2>
+                <p v-if="albumsInStorage">Here's a list of all the albums from the latest "Better Release Radar" you generated.</p>
+                <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your new "Better Release Radar" playlist! To generate again click "Generate Better Release Radar".</p>
+            </div>
+
+            <button
+                id="createPlaylistBtn"
+                v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'"
+                @click="generatePlaylist"
+                class="btn btn-spotify mx-auto my-4 d-block"
+                :class="{ 'pending' : !albumsInStorage }">
+                Generate Better <br class="mobile-break">Release Radar
+            </button>
 
             <button @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">
                 {{ albumGalleryOpen ? 'Hide' : 'Show' }} Album List
@@ -143,7 +154,7 @@
                                 </div>
                             </div>
                             <button class="btn btn-spotify btn-sm mt-3 flip-card-button" @click="flipCard(index)">
-                                <i class="fas fa-redo-alt"></i>View album <span :id="`flip-view-tracks-${index}`">tracks</span><span :id="`flip-view-albums-${index}`">info</span>.
+                                <i class="fas fa-redo-alt"></i> View album <span :id="`flip-view-tracks-${index}`">tracks</span><span :id="`flip-view-albums-${index}`">info</span>.
                             </button>
                         </div>
                     </div>
@@ -174,7 +185,8 @@
                 albumGalleryOpen: true,
                 previewUrl: null,
                 previewArtists: [],
-                previewTrack: null
+                previewTrack: null,
+                playlistGenerationType: 'overwritePlaylist'
             }
         },
         methods: {
@@ -203,18 +215,29 @@
 
                 const artists = this.artists;
 
-                axios.post('/api/spotify/create_playlist', { artists })
-                .then( response => {
-                    self.generation = 'albumsRetrieved';
-                    self.albums = response.data.albums;
-                    self.tracks = response.data.tracks;
+                //CREATE PLAYLIST API CALL
+                    //CLEAR THE PLAYLIST AND GET A NEW ACCESS TOKEN
+                    //RETURN SAID ACCESS TOKEN TO BE PASSED TO NEXT call
 
-                    localStorage.setItem('albums', JSON.stringify(self.albums));
-                    localStorage.setItem('tracks', JSON.stringify(self.tracks));
-                }).catch( error => {
-                    self.generation = 'artistsRetrieved';
-                    console.log(error);
-                });
+                //foreach artist call and find their last 3 albums and singles 
+                    //if data is returned push albums into self.album-and tracks into self tracks
+                    //TRACK PROGRESS to UPDATE PROGRESS BAR
+                
+                //when foreach loop ends set all albums and tracks into localstorage
+                //additionally set self.geneartion to artistsRetreived
+
+                // axios.post('/api/spotify/create_playlist', { artists })
+                // .then( response => {
+                //     self.generation = 'albumsRetrieved';
+                //     self.albums = response.data.albums;
+                //     self.tracks = response.data.tracks;
+
+                //     localStorage.setItem('albums', JSON.stringify(self.albums));
+                //     localStorage.setItem('tracks', JSON.stringify(self.tracks));
+                // }).catch( error => {
+                //     self.generation = 'artistsRetrieved';
+                //     console.log(error);
+                // });
 
             },
             flipCard: function(index){

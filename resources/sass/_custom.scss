@@ -26,6 +26,43 @@ nav.navbar {
     background-color: $brown;
 }
 
+#playlistGenerationTypeRadios {
+    input[type="radio"] {
+        transform: scale(2);
+    }
+}
+
+#getArtistsBtn,
+#createPlaylistBtn {
+    background-color: $spotify-green;
+    font-size: 1.5em !important;
+    
+    &.pending {
+        animation: glow 5s ease-in-out infinite;
+    }
+
+    .mobile-break {
+        display: block;
+
+        @media (min-width: 600px){
+            display: none;
+        }
+    }
+}
+
+@keyframes glow {
+    0% { background-color: $spotify-green;}
+
+    50% { background-color: lighten($spotify-green, 25%); }
+
+    100% { background-color: $spotify-green; }
+}
+
+@keyframes marquee {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-100%, 0); }
+}
+
 #artist-gallery,
 #album-gallery {
     height: calc(100vh - 200px);
@@ -279,7 +316,7 @@ $player-text-color: $spotify-green;
         background-color: #060606;
         color: $player-text-color;
         width: 100%;
-        max-width: 308px;
+        max-width: 345px;
         overflow: hidden;
         white-space: nowrap;
         box-sizing: border-box;
