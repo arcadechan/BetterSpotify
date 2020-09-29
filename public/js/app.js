@@ -2186,6 +2186,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2211,7 +2218,6 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var reCAPTCHA = event.target['g-recaptcha-response'].value;
-      var self = this;
       this.validate(reCAPTCHA);
       this.submitSuccess = false;
       this.isSubmitting = true;
@@ -2221,10 +2227,7 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       if (!this.alerts.includes('reCAPTCHA')) {
-        axios.post('/contact', data, {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST'
-        }).then(function (response) {
+        axios.post('/contact', data).then(function (response) {
           _this.submitSuccess = true;
 
           _this.alerts.push('contactSuccess');
@@ -2232,14 +2235,13 @@ __webpack_require__.r(__webpack_exports__);
           _this.resetForm();
         })["catch"](function (error) {
           console.log(error);
-          self.alerts.push('contactFailed');
+
+          _this.alerts.push('contactFailed');
         })["finally"](function () {
           _this.isSubmitting = false;
           window.grecaptcha.reset();
         });
       }
-
-      this.isSubmitting = false;
     },
     validate: function validate(reCAPTCHA) {
       this.alerts = [];
@@ -34984,7 +34986,20 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _vm._m(0)
+              _c("div", { staticClass: "form-group row" }, [
+                _c("div", { staticClass: "col-12 col-md-4 mx-md-auto" }, [
+                  !_vm.isSubmitting
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-spotify font-weight-bold w-100",
+                          attrs: { id: "contact-form-submit", type: "submit" }
+                        },
+                        [_vm._v("Submit")]
+                      )
+                    : _c("div", [_vm._m(0)])
+                ])
+              ])
             ])
           ]
         )
@@ -34997,17 +35012,16 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group row" }, [
-      _c("div", { staticClass: "col-12 col-md-4 mx-md-auto" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-spotify font-weight-bold w-100",
-            attrs: { id: "contact-form-submit", type: "submit" }
-          },
-          [_vm._v("Submit")]
-        )
-      ])
+    return _c("div", { staticClass: "text-center" }, [
+      _c(
+        "div",
+        {
+          staticClass: "spinner-border text-spotify m-5",
+          staticStyle: { width: "3rem", height: "3rem" },
+          attrs: { role: "status" }
+        },
+        [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+      )
     ])
   }
 ]
