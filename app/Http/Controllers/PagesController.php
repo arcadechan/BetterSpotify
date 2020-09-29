@@ -32,7 +32,9 @@ class PagesController extends Controller
     }
 
     public function contact(){
-        return view('contact');
+        $recaptchaSiteKey = env('CAPTCHA_SITE_KEY', getenv('CAPTCHA_SITE_KEY'));
+
+        return view('contact', ["recaptchaSiteKey" => $recaptchaSiteKey]);
     }
 
 }

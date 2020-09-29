@@ -23,6 +23,9 @@ Route::get('/authorize_access', 'AuthorizationController@authorize_access');
 Route::get('/get_access', 'AuthorizationController@get_access');
 Route::get('/refresh_access', 'AuthorizationController@refresh_access');
 
+//Mail Route
+Route::post('/contact', 'ContactController@contact');
+
 //Spotify APIs
 Route::prefix('api/spotify')->group(function(){
     Route::get('/get_artists', 'SpotifyController@get_artists');

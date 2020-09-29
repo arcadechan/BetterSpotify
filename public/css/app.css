@@ -11286,7 +11286,7 @@ body {
 }
 
 .footer-link {
-  font-size: 0.5em;
+  font-size: 1em;
 }
 
 .link {
@@ -11771,5 +11771,83 @@ nav.navbar #navbar-spotify-icon {
 .player-time .player-time-total {
   opacity: 0.5;
   padding-right: 5px;
+}
+
+#contact-form-submit {
+  font-size: 1.5em;
+}
+
+.form-control {
+  background-color: #000000;
+}
+
+.form-control:focus {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.bmc-btn svg {
+  height: 30px !important;
+  margin-bottom: 1px !important;
+  box-shadow: none !important;
+  border: none !important;
+  vertical-align: middle !important;
+  transform: scale(0.9);
+}
+
+.bmc-btn {
+  color: #fff;
+  background-color: #000000 !important;
+  height: 50px;
+  border-radius: 12px;
+  font-size: 1em;
+  border: none;
+  padding: 0px 24px;
+  line-height: 27px;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center;
+  font-family: "Arial", cursive !important;
+  box-sizing: border-box !important;
+}
+
+.bmc-btn:hover,
+.bmc-btn:active,
+.bmc-btn:focus {
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.bmc-btn-text {
+  margin-left: 8px;
+  display: inline;
+  line-height: 0;
+}
+
+.logo-outline {
+  fill: #fff;
+}
+
+.logo-coffee {
+  fill: #fd0;
+}
+
+.border-danger {
+  border-color: #e3342f !important;
+}
+
+#contact-alerts {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  #contact-alerts {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+.recaptcha-border {
+  border: 1px solid;
 }
 
