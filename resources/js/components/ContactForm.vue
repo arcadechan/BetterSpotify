@@ -33,7 +33,14 @@
 
                     <div class="form-group row">        
                         <div class="col-12 col-md-4 mx-md-auto">
-                            <button id="contact-form-submit" type="submit" class="btn btn-spotify font-weight-bold w-100">Submit</button>
+                            <button v-if="!isSubmitting" id="contact-form-submit" type="submit" class="btn btn-spotify font-weight-bold w-100">Submit</button>
+                            <div v-else>
+                                <div class="text-center">
+                                    <div class="spinner-border text-spotify m-5" role="status" style="width: 3rem; height: 3rem;">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -66,7 +73,6 @@
         methods: {
             submit: function(event){
                 const reCAPTCHA = event.target['g-recaptcha-response'].value;
-                const self = this;
                 
                 this.validate(reCAPTCHA);
 
@@ -79,10 +85,7 @@
                 };
 
                 if(!this.alerts.includes('reCAPTCHA')){
-                    axios.post('/contact', data, {
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': 'POST'
-                    })
+                    axios.post('/contact', data)
                     .then(response => {
                         this.submitSuccess = true;
                         this.alerts.push('contactSuccess')
@@ -90,15 +93,13 @@
                     })
                     .catch(error => {
                         console.log(error);
-                        self.alerts.push('contactFailed');
+                        this.alerts.push('contactFailed');
                     })
                     .finally(() => {
                         this.isSubmitting = false;
                         window.grecaptcha.reset();
                     });
                 }
-
-                this.isSubmitting = false;
             },
             validate: function(reCAPTCHA){
                 this.alerts = [];
