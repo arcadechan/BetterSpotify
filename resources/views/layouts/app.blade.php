@@ -84,10 +84,10 @@
         @yield('content')
         <!-- End View Contents -->
 
-        <hr class="mt-5">
         <!-- Footer -->
         <footer class="position-relative">
             <div class="container">
+                <hr class="mt-5">
                 <div class="row">
                     <div class="col-lg-auto ml-lg-auto mt-4">
                         <ul class="list-unstyled footer-link">

@@ -2187,12 +2187,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2258,6 +2252,29 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {}
 });
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoadingSpinner.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoadingSpinner.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 
@@ -2475,11 +2492,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2516,71 +2528,100 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     generatePlaylist: function () {
       var _generatePlaylist = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var self, artists, albums, tracks, createPlaylist, i, newLog, inspectArtist;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        var self, artists, createPlaylist, _loop, i;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 self = this;
                 artists = this.artists;
-                albums = [];
-                tracks = [];
+                self.albums = [];
+                self.tracks = [];
                 this.generation = 'generatingPlaylist';
-                _context.next = 7;
+                _context2.next = 7;
                 return axios.post('/api/spotify/create_playlist');
 
               case 7:
-                createPlaylist = _context.sent;
-                i = 0;
+                createPlaylist = _context2.sent;
 
-              case 9:
-                if (!(i < artists.length)) {
-                  _context.next = 23;
+                if (!(createPlaylist.status == 200)) {
+                  _context2.next = 22;
                   break;
                 }
 
-                newLog = {};
-                newLog['artist'] = artists[i].name;
-                newLog['position'] = i + 1;
-                self.playlistArtistProgress = newLog;
+                _loop = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _loop(i) {
+                  var analyzeLog, inspectArtist;
+                  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _loop$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          analyzeLog = {
+                            message: "Checking <span class=\"progressArtistName\">".concat(artists[i].name, "</span>&hellip;"),
+                            position: i + 1
+                          };
+                          self.playlistArtistProgress = analyzeLog;
 
-                if (self.playlistArtistLog.length == 10) {
-                  self.playlistArtistLog.shift();
+                          if (self.playlistArtistLog.length == 10) {
+                            self.playlistArtistLog.shift();
+                          }
+
+                          self.playlistArtistLog.push(analyzeLog);
+                          _context.next = 6;
+                          return axios.post('/api/spotify/inspect_artist', {
+                            'artist': artists[i]
+                          }).then(function (response) {
+                            var artistAlbums = response.data.albums;
+                            var artistTracks = response.data.tracks;
+
+                            if (artistAlbums.length && Object.keys(artistTracks).length) {
+                              self.albums = [].concat(_toConsumableArray(self.albums), _toConsumableArray(artistAlbums));
+                              self.tracks = _objectSpread(_objectSpread({}, self.tracks), artistTracks);
+                              analyzeLog['message'] += "<br><span class='text-success'>Release found!</span>";
+                            } else {
+                              analyzeLog['message'] += "<br><span class='text-danger'>No releases found.</span>";
+                            }
+                          });
+
+                        case 6:
+                          inspectArtist = _context.sent;
+
+                        case 7:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _loop);
+                });
+                i = 0;
+
+              case 11:
+                if (!(i < artists.length)) {
+                  _context2.next = 16;
+                  break;
                 }
 
-                self.playlistArtistLog.push(newLog);
-                console.dir(artists[i].name);
-                _context.next = 19;
-                return axios.post('/api/spotify/inspect_artist', {
-                  'artist': artists[i]
-                }).then(function (response) {
-                  var artistAlbums = response.data.albums;
-                  var artistTracks = response.data.tracks;
+                return _context2.delegateYield(_loop(i), "t0", 13);
 
-                  if (artistAlbums.length && Object.keys(artistTracks).length) {
-                    self.albums = [].concat(_toConsumableArray(self.albums), _toConsumableArray(artistAlbums));
-                    self.tracks = _objectSpread(_objectSpread({}, self.tracks), artistTracks);
-                  }
-                });
-
-              case 19:
-                inspectArtist = _context.sent;
-
-              case 20:
+              case 13:
                 i++;
-                _context.next = 9;
+                _context2.next = 11;
                 break;
 
-              case 23:
+              case 16:
                 localStorage.setItem('albums', JSON.stringify(this.albums));
                 localStorage.setItem('tracks', JSON.stringify(this.tracks));
+                this.tracksInStorage = true;
+                this.albumsInStorage = true;
                 this.playlistArtistProgress = {};
                 this.playlistArtistLog = [];
+
+              case 22:
                 this.generation = 'albumsRetrieved';
 
-              case 28:
+              case 23:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
         }, _callee, this);
@@ -34987,18 +35028,24 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("div", { staticClass: "form-group row" }, [
-                _c("div", { staticClass: "col-12 col-md-4 mx-md-auto" }, [
-                  !_vm.isSubmitting
-                    ? _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-spotify font-weight-bold w-100",
-                          attrs: { id: "contact-form-submit", type: "submit" }
-                        },
-                        [_vm._v("Submit")]
-                      )
-                    : _c("div", [_vm._m(0)])
-                ])
+                _c(
+                  "div",
+                  { staticClass: "col-12 col-md-4 mx-md-auto" },
+                  [
+                    !_vm.isSubmitting
+                      ? _c(
+                          "button",
+                          {
+                            staticClass:
+                              "btn btn-spotify font-weight-bold w-100",
+                            attrs: { id: "contact-form-submit", type: "submit" }
+                          },
+                          [_vm._v("Submit")]
+                        )
+                      : _c("loading-spinner")
+                  ],
+                  1
+                )
               ])
             ])
           ]
@@ -35007,21 +35054,47 @@ var render = function() {
     ]
   )
 }
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoadingSpinner.vue?vue&type=template&id=41495c30&":
+/*!*****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoadingSpinner.vue?vue&type=template&id=41495c30& ***!
+  \*****************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center" }, [
-      _c(
-        "div",
-        {
-          staticClass: "spinner-border text-spotify m-5",
-          staticStyle: { width: "3rem", height: "3rem" },
-          attrs: { role: "status" }
-        },
-        [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
-      )
+    return _c("div", [
+      _c("div", { staticClass: "text-center" }, [
+        _c(
+          "div",
+          {
+            staticClass: "spinner-border text-spotify m-5",
+            staticStyle: { width: "3rem", height: "3rem" },
+            attrs: { role: "status" }
+          },
+          [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+        )
+      ])
     ])
   }
 ]
@@ -35046,111 +35119,135 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h2", { staticClass: "d-block text-center" }, [_vm._v("Artists")]),
-    _vm._v(" "),
-    _vm.generation == "pending"
-      ? _c("p", [
-          _vm._v(
-            'The first step is to get all the artists you follow. Click the "Get Artists" button when you\'re ready!'
-          )
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c("div", { staticClass: "d-block text-center" }, [
-      _vm.generation == "gettingArtists"
-        ? _c("p", [_vm._v("Getting followed artists...")])
+  return _c(
+    "div",
+    [
+      _vm.generation !== "generatingPlaylist"
+        ? _c("h2", { staticClass: "d-block text-center" }, [_vm._v("Artists")])
         : _vm._e(),
       _vm._v(" "),
-      _vm.generation == "generatingPlaylist"
-        ? _c("p", [_vm._v("Generating Playlist...")])
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _vm.generation == "generatingPlaylist" && _vm.playlistArtistLog.length
-      ? _c("div", [
-          _c(
-            "div",
-            { attrs: { id: "progressLog" } },
-            [
-              _vm._l(_vm.playlistArtistLog, function(log) {
-                return [
-                  _c("p", { key: log.position }, [
-                    _vm._v("Searching "),
-                    _c("span", { staticClass: "progressArtistName" }, [
-                      _vm._v(_vm._s(log.artist))
-                    ]),
-                    _vm._v(" for new releases.")
-                  ])
-                ]
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "progress", attrs: { id: "progressBar" } }, [
-            _c(
-              "div",
-              {
-                staticClass: "progress-bar bg-spotify",
-                style: { width: _vm.generationProgress + "%" },
-                attrs: {
-                  role: "progressbar",
-                  "aria-valuenow": _vm.generationProgress,
-                  "aria-valuemin": "0",
-                  "aria-valuemax": "100"
-                }
-              },
-              [_vm._v(_vm._s(_vm.generationProgress) + "%")]
+      _vm.generation == "pending"
+        ? _c("p", { staticClass: "d-block text-center" }, [
+            _vm._v(
+              'The first step is to get all the artists you follow. Click the "Get Artists" button when you\'re ready!'
             )
           ])
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.generation == "gettingArtists" ? _c("div", [_vm._m(0)]) : _vm._e(),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-12 justify-content-center" }, [
-      _vm.generation == "artistsRetrieved" ||
-      _vm.generation == "albumsRetrieved"
-        ? _c("div", { staticClass: "text-center" }, [
-            _vm.artistsInStorage
-              ? _c("p", [
-                  _vm._v(
-                    'Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn\'t changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.'
-                  )
-                ])
-              : _c("p", [
-                  _vm._v(
-                    'Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" button below the artist list to create the playlist into your account.'
-                  )
-                ]),
-            _vm._v(" "),
-            _c("p", [
+        : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "d-block text-center" }, [
+        _vm.generation == "gettingArtists"
+          ? _c("p", [_vm._v("Getting followed artists...")])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.generation == "generatingPlaylist"
+          ? _c("p", [
               _vm._v(
-                "You can click on each artist card to navigate to their artist page on Spotify."
+                "Generating Playlist. Checking your artists for new releases..."
               )
             ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _vm.generation == "generatingPlaylist" && _vm.playlistArtistLog.length
+        ? _c("div", [
+            _c(
+              "div",
+              { attrs: { id: "progressLog" } },
+              [
+                _vm._l(_vm.playlistArtistLog, function(log, index) {
+                  return [
+                    _c("p", {
+                      key: index,
+                      domProps: { innerHTML: _vm._s(log.message) }
+                    })
+                  ]
+                })
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "progress", attrs: { id: "progressBar" } },
+              [
+                _c("div", { attrs: { id: "progressPercentage" } }, [
+                  _vm._v(_vm._s(_vm.generationProgress) + "%")
+                ]),
+                _vm._v(" "),
+                _c("div", {
+                  staticClass: "progress-bar bg-spotify",
+                  style: { width: _vm.generationProgress + "%" },
+                  attrs: {
+                    role: "progressbar",
+                    "aria-valuenow": _vm.generationProgress,
+                    "aria-valuemin": "0",
+                    "aria-valuemax": "100"
+                  }
+                })
+              ]
+            )
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm.generation == "pending" ||
-      _vm.generation == "artistsRetrieved" ||
-      _vm.generation == "albumsRetrieved"
-        ? _c(
-            "button",
+      _vm.generation == "gettingArtists" ? _c("loading-spinner") : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12 justify-content-center" }, [
+        _vm.generation == "artistsRetrieved" ||
+        _vm.generation == "albumsRetrieved"
+          ? _c("div", { staticClass: "text-center" }, [
+              _vm.artistsInStorage
+                ? _c("p", [
+                    _vm._v(
+                      'Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn\'t changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.'
+                    )
+                  ])
+                : _c("p", [
+                    _vm._v(
+                      'Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" button below the artist list to create the playlist into your account.'
+                    )
+                  ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "You can click on each artist card to navigate to their artist page on Spotify."
+                )
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.generation == "pending" ||
+        _vm.generation == "artistsRetrieved" ||
+        _vm.generation == "albumsRetrieved"
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-spotify mx-auto my-4 d-block font-",
+                class: { pending: _vm.generation == "pending" },
+                attrs: { id: "getArtistsBtn" },
+                on: { click: _vm.getArtists }
+              },
+              [_vm._v("\n            Get Artists\n        ")]
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
             {
-              staticClass: "btn btn-spotify mx-auto my-4 d-block font-",
-              class: { pending: _vm.generation == "pending" },
-              attrs: { id: "getArtistsBtn" },
-              on: { click: _vm.getArtists }
-            },
-            [_vm._v("\n            Get Artists\n        ")]
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _vm.generation == "artistsRetrieved" || _vm.generation == "albumsRetrieved"
-      ? _c("div", { staticClass: "text-center" }, [
+              name: "show",
+              rawName: "v-show",
+              value:
+                _vm.generation == "artistsRetrieved" ||
+                _vm.generation == "albumsRetrieved",
+              expression:
+                "generation == 'artistsRetrieved' || generation == 'albumsRetrieved'"
+            }
+          ],
+          staticClass: "text-center"
+        },
+        [
           _c(
             "button",
             {
@@ -35248,427 +35345,444 @@ var render = function() {
             }),
             0
           )
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c("hr"),
-    _vm._v(" "),
-    _vm.generation == "artistsRetrieved" || _vm.generation == "albumsRetrieved"
-      ? _c("div", { staticClass: "my-5" }, [
-          _c("div", { staticClass: "d-block text-center" }, [
-            _c("h2", [_vm._v("Albums")]),
-            _vm._v(" "),
-            _vm.albumsInStorage
-              ? _c("p", [
-                  _vm._v(
-                    'Here\'s a list of all the albums from the latest "Better Release Radar" you generated. You may generate a new playlist at any time, but keep in mind that doing so will wipe clean the one you have with new stuff, so make sure you saved all the stuff you want as there is no guarantee the same tracks will make it on there again!'
-                  )
-                ])
-              : _c("p", [
-                  _vm._v(
-                    "To generate a playlist on your account go ahead and press the generate release radar."
-                  )
-                ])
-          ]),
-          _vm._v(" "),
-          _vm.generation == "artistsRetrieved" ||
-          _vm.generation == "albumsRetrieved"
-            ? _c(
-                "button",
-                {
-                  staticClass: "btn btn-spotify mx-auto my-4 d-block",
-                  class: { pending: !_vm.albumsInStorage },
-                  attrs: { id: "createPlaylistBtn" },
-                  on: { click: _vm.generatePlaylist }
-                },
-                [
-                  _vm._v("\n            Generate Better "),
-                  _c("br", { staticClass: "mobile-break" }),
-                  _vm._v("Release Radar\n        ")
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "d-block btn btn-dark mx-auto",
-              attrs: {
-                type: "button",
-                "data-toggle": "collapse",
-                "data-target": "#album-gallery",
-                "aria-expanded": "false",
-                "aria-controls": "album-gallery"
-              },
-              on: {
-                click: function($event) {
-                  _vm.albumGalleryOpen = !_vm.albumGalleryOpen
-                }
-              }
-            },
-            [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.albumGalleryOpen ? "Hide" : "Show") +
-                  " Album List\n        "
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("h6", { staticClass: "d-block text-center my-4" }, [
-            _vm._v("Album Count: " + _vm._s(_vm.albums.length))
-          ]),
-          _vm._v(" "),
-          _vm.trackCount
-            ? _c("h6", { staticClass: "d-block text-center my-4" }, [
-                _vm._v("Track Count: " + _vm._s(_vm.trackCount))
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "col-12 p-0 my-4 show",
-              attrs: { id: "album-gallery" }
-            },
-            _vm._l(_vm.albums, function(album, index) {
-              return _c(
-                "div",
-                {
-                  key: album.id,
-                  staticClass:
-                    "album-container col-12 col-md-6 col-lg-4 col-xl-3 p-0"
-                },
-                [
-                  _c("div", [
-                    _c(
-                      "div",
-                      { staticClass: "album-inner-container text-center" },
-                      [
-                        album.images.length > 0
-                          ? [
-                              !!album.images[1]
-                                ? [
-                                    _c("img", {
-                                      staticClass: "album-image",
-                                      attrs: {
-                                        src: album.images[1]["url"],
-                                        alt: ""
-                                      }
-                                    })
-                                  ]
-                                : [
-                                    _c("img", {
-                                      staticClass: "album-image",
-                                      attrs: {
-                                        src: album.images[0]["url"],
-                                        alt: ""
-                                      }
-                                    })
-                                  ]
-                            ]
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "flip-card mt-2" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "table-container flip-card-inner",
-                              attrs: { id: "card-" + index }
-                            },
-                            [
-                              _c("div", { staticClass: "flip-card-front" }, [
-                                _c("table", { staticClass: "mt-2" }, [
-                                  _c("tbody", [
-                                    _c(
-                                      "tr",
-                                      [
-                                        album.artists.length == 1
-                                          ? [
-                                              _c("td", [_vm._v("Artist:")]),
-                                              _vm._v(" "),
-                                              _c("td", [
-                                                _c(
-                                                  "a",
-                                                  {
-                                                    staticClass:
-                                                      "album-artist-link",
-                                                    attrs: {
-                                                      href:
-                                                        album.artists[0]
-                                                          .external_urls
-                                                          .spotify,
-                                                      target: "_blank"
-                                                    }
-                                                  },
-                                                  [
-                                                    _vm._v(
-                                                      _vm._s(
-                                                        album.artists[0].name
-                                                      )
-                                                    )
-                                                  ]
-                                                )
-                                              ])
-                                            ]
-                                          : [
-                                              _c("td", [_vm._v("Artists:")]),
-                                              _vm._v(" "),
-                                              _c(
-                                                "td",
-                                                [
-                                                  _vm._l(
-                                                    album.artists,
-                                                    function(artist, index) {
-                                                      return [
-                                                        _c(
-                                                          "a",
-                                                          {
-                                                            key: index,
-                                                            staticClass:
-                                                              "album-artist-link",
-                                                            attrs: {
-                                                              href:
-                                                                artist
-                                                                  .external_urls
-                                                                  .spotify,
-                                                              target: "_blank"
-                                                            }
-                                                          },
-                                                          [
-                                                            _vm._v(
-                                                              _vm._s(
-                                                                artist.name
-                                                              )
-                                                            )
-                                                          ]
-                                                        ),
-                                                        index <
-                                                        album.artists.length - 1
-                                                          ? [_vm._v(", ")]
-                                                          : _vm._e()
-                                                      ]
-                                                    }
-                                                  )
-                                                ],
-                                                2
-                                              )
-                                            ]
-                                      ],
-                                      2
-                                    ),
-                                    _vm._v(" "),
-                                    _c("tr", [
-                                      _c("td", [_vm._v("Album:")]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _c(
-                                          "a",
-                                          {
-                                            staticClass: "album-link",
-                                            attrs: {
-                                              href: album.external_urls.spotify
-                                            }
-                                          },
-                                          [_vm._v(_vm._s(album.name))]
-                                        )
-                                      ])
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("tr", [
-                                      _c("td", [_vm._v("Type:")]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "td",
-                                        {
-                                          staticStyle: {
-                                            "text-transform": "capitalize"
-                                          }
-                                        },
-                                        [_vm._v(_vm._s(album.album_type))]
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("tr", [
-                                      _c("td", [_vm._v("Released:")]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(_vm._s(album.release_date))
-                                      ])
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("tr", [
-                                      _c("td", [_vm._v("Tracks:")]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(_vm._s(album.total_tracks))
-                                      ])
-                                    ])
-                                  ])
-                                ])
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "flip-card-back" }, [
-                                _c(
-                                  "div",
-                                  { staticClass: "track-list-container" },
-                                  [
-                                    _c("table", [
-                                      _vm._m(1, true),
-                                      _vm._v(" "),
-                                      _c(
-                                        "tbody",
-                                        _vm._l(_vm.tracks[album.id], function(
-                                          track
-                                        ) {
-                                          return _c(
-                                            "tr",
-                                            {
-                                              key: track.id,
-                                              class: {
-                                                playing:
-                                                  track.name == _vm.previewTrack
-                                              }
-                                            },
-                                            [
-                                              _c(
-                                                "td",
-                                                { staticClass: "track-no-row" },
-                                                [
-                                                  _vm._v(
-                                                    _vm._s(track.track_number)
-                                                  )
-                                                ]
-                                              ),
-                                              _vm._v(" "),
-                                              _c("td", [
-                                                _vm._v(_vm._s(track.name))
-                                              ]),
-                                              _vm._v(" "),
-                                              _c(
-                                                "td",
-                                                {
-                                                  staticClass: "track-preview",
-                                                  on: {
-                                                    click: function($event) {
-                                                      _vm.previewUrl =
-                                                        track.preview_url
-                                                      _vm.previewArtists =
-                                                        track.artists
-                                                      _vm.previewTrack =
-                                                        track.name
-                                                    }
-                                                  }
-                                                },
-                                                [
-                                                  _c("i", {
-                                                    staticClass:
-                                                      "fas fa-play-circle",
-                                                    class: {
-                                                      "playing-icon":
-                                                        track.name ==
-                                                        _vm.previewTrack
-                                                    }
-                                                  })
-                                                ]
-                                              )
-                                            ]
-                                          )
-                                        }),
-                                        0
-                                      )
-                                    ])
-                                  ]
-                                )
-                              ])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "btn btn-spotify btn-sm mt-3 flip-card-button",
-                            on: {
-                              click: function($event) {
-                                return _vm.flipCard(index)
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fas fa-redo-alt" }),
-                            _vm._v(" View album "),
-                            _c(
-                              "span",
-                              { attrs: { id: "flip-view-tracks-" + index } },
-                              [_vm._v("tracks")]
-                            ),
-                            _c(
-                              "span",
-                              { attrs: { id: "flip-view-albums-" + index } },
-                              [_vm._v("info")]
-                            ),
-                            _vm._v(".\n                        ")
-                          ]
-                        )
-                      ],
-                      2
-                    )
-                  ])
-                ]
-              )
-            }),
-            0
-          )
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
+        ]
+      ),
+      _vm._v(" "),
+      _c("hr", {
         directives: [
           {
             name: "show",
             rawName: "v-show",
-            value: !!_vm.previewUrl,
-            expression: "!!previewUrl"
+            value:
+              _vm.generation == "artistsRetrieved" ||
+              _vm.generation == "albumsRetrieved",
+            expression:
+              "generation == 'artistsRetrieved' || generation == 'albumsRetrieved'"
           }
-        ],
-        staticClass: "player-wrapper",
-        attrs: { id: "audio" }
-      },
-      [
-        _c("audio-player", {
-          attrs: {
-            file: _vm.previewUrl,
-            artists: _vm.previewArtists,
-            track: _vm.previewTrack
-          },
-          on: { closed: _vm.closePlayer }
-        })
-      ],
-      1
-    )
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center" }, [
+        ]
+      }),
+      _vm._v(" "),
+      _vm.generation == "artistsRetrieved" ||
+      _vm.generation == "albumsRetrieved"
+        ? _c("div", { staticClass: "my-5" }, [
+            _c("div", { staticClass: "d-block text-center" }, [
+              _c("h2", [_vm._v("Albums")]),
+              _vm._v(" "),
+              _vm.albumsInStorage
+                ? _c("p", [
+                    _vm._v(
+                      'Here\'s a list of all the albums from the latest "Better Release Radar" you generated. You may generate a new playlist at any time, but keep in mind that doing so will wipe clean the one you have with new stuff, so make sure you saved all the stuff you want as there is no guarantee the same tracks will make it on there again!'
+                    )
+                  ])
+                : _c("p", [
+                    _vm._v(
+                      "To generate a playlist on your account go ahead and press the generate release radar."
+                    )
+                  ])
+            ]),
+            _vm._v(" "),
+            _vm.generation == "artistsRetrieved" ||
+            _vm.generation == "albumsRetrieved"
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-spotify mx-auto my-4 d-block",
+                    class: { pending: !_vm.albumsInStorage },
+                    attrs: { id: "createPlaylistBtn" },
+                    on: { click: _vm.generatePlaylist }
+                  },
+                  [
+                    _vm._v("\n            Generate Better "),
+                    _c("br", { staticClass: "mobile-break" }),
+                    _vm._v("Release Radar\n        ")
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.generation == "albumsRetrieved"
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "d-block btn btn-dark mx-auto",
+                    attrs: {
+                      type: "button",
+                      "data-toggle": "collapse",
+                      "data-target": "#album-gallery",
+                      "aria-expanded": "false",
+                      "aria-controls": "album-gallery"
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.albumGalleryOpen = !_vm.albumGalleryOpen
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n            " +
+                        _vm._s(_vm.albumGalleryOpen ? "Hide" : "Show") +
+                        " Album List\n        "
+                    )
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.generation == "albumsRetrieved"
+              ? _c("h6", { staticClass: "d-block text-center my-4" }, [
+                  _vm._v("Album Count: " + _vm._s(_vm.albums.length))
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.trackCount
+              ? _c("h6", { staticClass: "d-block text-center my-4" }, [
+                  _vm._v("Track Count: " + _vm._s(_vm.trackCount))
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.generation == "albumsRetrieved",
+                    expression: "generation == 'albumsRetrieved'"
+                  }
+                ],
+                staticClass: "col-12 p-0 my-4 show",
+                attrs: { id: "album-gallery" }
+              },
+              _vm._l(_vm.albums, function(album, index) {
+                return _c(
+                  "div",
+                  {
+                    key: album.id,
+                    staticClass:
+                      "album-container col-12 col-md-6 col-lg-4 col-xl-3 p-0"
+                  },
+                  [
+                    _c("div", [
+                      _c(
+                        "div",
+                        { staticClass: "album-inner-container text-center" },
+                        [
+                          album.images.length > 0
+                            ? [
+                                !!album.images[1]
+                                  ? [
+                                      _c("img", {
+                                        staticClass: "album-image",
+                                        attrs: {
+                                          src: album.images[1]["url"],
+                                          alt: ""
+                                        }
+                                      })
+                                    ]
+                                  : [
+                                      _c("img", {
+                                        staticClass: "album-image",
+                                        attrs: {
+                                          src: album.images[0]["url"],
+                                          alt: ""
+                                        }
+                                      })
+                                    ]
+                              ]
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "flip-card mt-2" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass: "table-container flip-card-inner",
+                                attrs: { id: "card-" + index }
+                              },
+                              [
+                                _c("div", { staticClass: "flip-card-front" }, [
+                                  _c("table", { staticClass: "mt-2" }, [
+                                    _c("tbody", [
+                                      _c(
+                                        "tr",
+                                        [
+                                          album.artists.length == 1
+                                            ? [
+                                                _c("td", [_vm._v("Artist:")]),
+                                                _vm._v(" "),
+                                                _c("td", [
+                                                  _c(
+                                                    "a",
+                                                    {
+                                                      staticClass:
+                                                        "album-artist-link",
+                                                      attrs: {
+                                                        href:
+                                                          album.artists[0]
+                                                            .external_urls
+                                                            .spotify,
+                                                        target: "_blank"
+                                                      }
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          album.artists[0].name
+                                                        )
+                                                      )
+                                                    ]
+                                                  )
+                                                ])
+                                              ]
+                                            : [
+                                                _c("td", [_vm._v("Artists:")]),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "td",
+                                                  [
+                                                    _vm._l(
+                                                      album.artists,
+                                                      function(artist, index) {
+                                                        return [
+                                                          _c(
+                                                            "a",
+                                                            {
+                                                              key: index,
+                                                              staticClass:
+                                                                "album-artist-link",
+                                                              attrs: {
+                                                                href:
+                                                                  artist
+                                                                    .external_urls
+                                                                    .spotify,
+                                                                target: "_blank"
+                                                              }
+                                                            },
+                                                            [
+                                                              _vm._v(
+                                                                _vm._s(
+                                                                  artist.name
+                                                                )
+                                                              )
+                                                            ]
+                                                          ),
+                                                          index <
+                                                          album.artists.length -
+                                                            1
+                                                            ? [_vm._v(", ")]
+                                                            : _vm._e()
+                                                        ]
+                                                      }
+                                                    )
+                                                  ],
+                                                  2
+                                                )
+                                              ]
+                                        ],
+                                        2
+                                      ),
+                                      _vm._v(" "),
+                                      _c("tr", [
+                                        _c("td", [_vm._v("Album:")]),
+                                        _vm._v(" "),
+                                        _c("td", [
+                                          _c(
+                                            "a",
+                                            {
+                                              staticClass: "album-link",
+                                              attrs: {
+                                                href:
+                                                  album.external_urls.spotify
+                                              }
+                                            },
+                                            [_vm._v(_vm._s(album.name))]
+                                          )
+                                        ])
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("tr", [
+                                        _c("td", [_vm._v("Type:")]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "td",
+                                          {
+                                            staticStyle: {
+                                              "text-transform": "capitalize"
+                                            }
+                                          },
+                                          [_vm._v(_vm._s(album.album_type))]
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("tr", [
+                                        _c("td", [_vm._v("Released:")]),
+                                        _vm._v(" "),
+                                        _c("td", [
+                                          _vm._v(_vm._s(album.release_date))
+                                        ])
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("tr", [
+                                        _c("td", [_vm._v("Tracks:")]),
+                                        _vm._v(" "),
+                                        _c("td", [
+                                          _vm._v(_vm._s(album.total_tracks))
+                                        ])
+                                      ])
+                                    ])
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "flip-card-back" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "track-list-container" },
+                                    [
+                                      _c("table", [
+                                        _vm._m(0, true),
+                                        _vm._v(" "),
+                                        _c(
+                                          "tbody",
+                                          _vm._l(_vm.tracks[album.id], function(
+                                            track
+                                          ) {
+                                            return _c(
+                                              "tr",
+                                              {
+                                                key: track.id,
+                                                class: {
+                                                  playing:
+                                                    track.name ==
+                                                    _vm.previewTrack
+                                                }
+                                              },
+                                              [
+                                                _c(
+                                                  "td",
+                                                  {
+                                                    staticClass: "track-no-row"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(track.track_number)
+                                                    )
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c("td", [
+                                                  _vm._v(_vm._s(track.name))
+                                                ]),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "td",
+                                                  {
+                                                    staticClass:
+                                                      "track-preview",
+                                                    on: {
+                                                      click: function($event) {
+                                                        _vm.previewUrl =
+                                                          track.preview_url
+                                                        _vm.previewArtists =
+                                                          track.artists
+                                                        _vm.previewTrack =
+                                                          track.name
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass:
+                                                        "fas fa-play-circle",
+                                                      class: {
+                                                        "playing-icon":
+                                                          track.name ==
+                                                          _vm.previewTrack
+                                                      }
+                                                    })
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          }),
+                                          0
+                                        )
+                                      ])
+                                    ]
+                                  )
+                                ])
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "btn btn-spotify btn-sm mt-3 flip-card-button",
+                              on: {
+                                click: function($event) {
+                                  return _vm.flipCard(index)
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fas fa-redo-alt" }),
+                              _vm._v(" View album "),
+                              _c(
+                                "span",
+                                { attrs: { id: "flip-view-tracks-" + index } },
+                                [_vm._v("tracks")]
+                              ),
+                              _c(
+                                "span",
+                                { attrs: { id: "flip-view-albums-" + index } },
+                                [_vm._v("info")]
+                              ),
+                              _vm._v(".\n                        ")
+                            ]
+                          )
+                        ],
+                        2
+                      )
+                    ])
+                  ]
+                )
+              }),
+              0
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
       _c(
         "div",
         {
-          staticClass: "spinner-border text-spotify m-5",
-          staticStyle: { width: "3rem", height: "3rem" },
-          attrs: { role: "status" }
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !!_vm.previewUrl,
+              expression: "!!previewUrl"
+            }
+          ],
+          staticClass: "player-wrapper",
+          attrs: { id: "audio" }
         },
-        [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+        [
+          _c("audio-player", {
+            attrs: {
+              file: _vm.previewUrl,
+              artists: _vm.previewArtists,
+              track: _vm.previewTrack
+            },
+            on: { closed: _vm.closePlayer }
+          })
+        ],
+        1
       )
-    ])
-  },
+    ],
+    1
+  )
+}
+var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -52287,6 +52401,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 Vue.component('playlist-generator', __webpack_require__(/*! ./components/PlaylistGenerator.vue */ "./resources/js/components/PlaylistGenerator.vue")["default"]);
 Vue.component('audio-player', __webpack_require__(/*! ./components/AudioPlayer.vue */ "./resources/js/components/AudioPlayer.vue")["default"]);
 Vue.component('contact-form', __webpack_require__(/*! ./components/ContactForm.vue */ "./resources/js/components/ContactForm.vue")["default"]);
+Vue.component('loading-spinner', __webpack_require__(/*! ./components/LoadingSpinner.vue */ "./resources/js/components/LoadingSpinner.vue")["default"]);
 var app = new Vue({
   el: '#app'
 });
@@ -52472,6 +52587,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactForm_vue_vue_type_template_id_76db242e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactForm_vue_vue_type_template_id_76db242e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/LoadingSpinner.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/components/LoadingSpinner.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LoadingSpinner_vue_vue_type_template_id_41495c30___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LoadingSpinner.vue?vue&type=template&id=41495c30& */ "./resources/js/components/LoadingSpinner.vue?vue&type=template&id=41495c30&");
+/* harmony import */ var _LoadingSpinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LoadingSpinner.vue?vue&type=script&lang=js& */ "./resources/js/components/LoadingSpinner.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _LoadingSpinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LoadingSpinner_vue_vue_type_template_id_41495c30___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LoadingSpinner_vue_vue_type_template_id_41495c30___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/LoadingSpinner.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/LoadingSpinner.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/LoadingSpinner.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LoadingSpinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./LoadingSpinner.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoadingSpinner.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LoadingSpinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/LoadingSpinner.vue?vue&type=template&id=41495c30&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/LoadingSpinner.vue?vue&type=template&id=41495c30& ***!
+  \***********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoadingSpinner_vue_vue_type_template_id_41495c30___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./LoadingSpinner.vue?vue&type=template&id=41495c30& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoadingSpinner.vue?vue&type=template&id=41495c30&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoadingSpinner_vue_vue_type_template_id_41495c30___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoadingSpinner_vue_vue_type_template_id_41495c30___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

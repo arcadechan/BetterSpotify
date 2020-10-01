@@ -34,13 +34,7 @@
                     <div class="form-group row">        
                         <div class="col-12 col-md-4 mx-md-auto">
                             <button v-if="!isSubmitting" id="contact-form-submit" type="submit" class="btn btn-spotify font-weight-bold w-100">Submit</button>
-                            <div v-else>
-                                <div class="text-center">
-                                    <div class="spinner-border text-spotify m-5" role="status" style="width: 3rem; height: 3rem;">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <loading-spinner v-else></loading-spinner>
                         </div>
                     </div>
                 </div>

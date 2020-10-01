@@ -1,9 +1,9 @@
-Mesage from: {{ $mail['name'] }}
+Mesage from: {{ $contactMessage['name'] }}
 
 <p>
-    Email: {{ $mail['email'] }}
+    Email: {{ $contactMessage['email'] }}
 </p>
 
 <p>
-    Message: {{ $mail['message'] }}
+    Message: {{ $contactMessage['message'] }}
 </p>
