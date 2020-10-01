@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthorizationController;
 use Illuminate\Support\Facades\Cookie;
-use GuzzleHttp;
-use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class SpotifyController extends Controller
@@ -14,40 +14,26 @@ class SpotifyController extends Controller
     public function get_artists(Request $request){
         $access_token = AuthorizationController::refresh_access('refresh');
 
-        $artists = [];
-
-        // dd(Cookie::get('spotify_access_token'));
-
-        $client = new GuzzleHttp\Client();
-        $request = $client->get('https://api.spotify.com/v1/me/following?type=artist', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $access_token
-            ]
-        ]);
-
-        //junk info to reduce the filesize of json payload set in local storage.
-        $junkArtistInfo = ['followers', 'genres', 'href', 'popularity'];
-
+        $request = Http::withToken($access_token)->get('https://api.spotify.com/v1/me/following?type=artist');
         $responseStatus = $request->getStatusCode();
-        $response = json_decode($request->getBody());
 
+        $artists = [];
+        
         if($responseStatus == 200){
+            $response = json_decode($request->getBody());
             $artists = array_merge($artists, $response->artists->items);
+
+            $junkArtistInfo = ['followers', 'genres', 'href', 'popularity']; //junk info to reduce the filesize of json payload set in local storage.
 
             $totalArtistsFollowed = $response->artists->total;
             $nextUrl = $response->artists->next;
             $iterationsLeft = floor(($totalArtistsFollowed - 20) / 20);
 
             for($i = 0; $i < $iterationsLeft; $i++){
-                $client = new GuzzleHttp\Client();
-                $request = $client->get($nextUrl, [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $access_token
-                    ]
-                ]);
-
+                $request = Http::withToken($access_token)->get($nextUrl);
                 $response = json_decode($request->getBody());
                 $artists = array_merge($artists, $response->artists->items);
+
                 $nextUrl = $response->artists->next;
             }
 
@@ -69,61 +55,35 @@ class SpotifyController extends Controller
         ini_set('max_execution_time', 180);
 
         $user_id = Cookie::get('spotify_user_id');
-        $spotify_playlist_id = Cookie::get('spotify_playlist_id');       
+        $spotify_playlist_id = Cookie::get('spotify_playlist_id');
 
         $access_token = AuthorizationController::refresh_access('refresh');
 
         if($spotify_playlist_id == NULL){
 
             //Create Playlist
-            $client = new GuzzleHttp\Client();
-            
-            $request = $client->post('https://api.spotify.com/v1/users/'.$user_id.'/playlists', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $access_token
-                ],
-                'json' => [
-                    'name' => 'Better Release Radar',
-                    'description' => 'Finally, no more wrong aritsts.'
-                ]
+            $request = Http::withToken($access_token)->post('https://api.spotify.com/v1/users/'.$user_id.'/playlists', [
+                'name' => 'Better Release Radar',
+                'description' => 'Finally, no more wrong artists.'
             ]);
 
-            $request = json_decode($request->getBody());
-            $spotify_playlist_id = Cookie::forever('spotify_playlist_id', $request->id);
+            $response = json_decode($request->getBody());
+            $spotify_playlist_id = Cookie::forever('spotify_playlist_id', $response->id);
 
             //Set playlist image
-            $client = new GuzzleHttp\Client();
-            $request = $client->put('https://api.spotify.com/v1/playlists/'.$request->id.'/images',[
-                'headers' => [
-                    'Content-Type' => 'image/jpeg',
-                    'Authorization' => 'Bearer ' . $access_token
-                ],
-                'body' => base64_encode(Storage::disk('public')->get('/img/better-release-radar.jpg'))
-            ]);
+            $request = Http::withToken($access_token)->withBody(
+                base64_encode(Storage::disk('public')->get('/img/better-release-radar.jpg')), 'image/jpeg'
+            )->put('https://api.spotify.com/v1/playlists/'.$response->id.'/images');
 
+            $response = json_decode($request->getBody());
         } else {
 
-            //Follow the playlist in case a user has deleted it from their account
-            $client = new GuzzleHttp\Client();
-            $request = $client->put('https://api.spotify.com/v1/playlists/'.$spotify_playlist_id.'/followers',[
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $access_token
-                ],
-                'json' => []
-            ]);
+            //Follow the playlist in case a user has deleted it from their account. This reduces cluttering the playlist recovery list.
+            $request = Http::withToken($access_token)->put('https://api.spotify.com/v1/playlists/'.$spotify_playlist_id.'/followers', []);
 
-            //delete contents in playlist
-            $client = new GuzzleHttp\Client();
-            $request = $client->put('https://api.spotify.com/v1/playlists/'.$spotify_playlist_id.'/tracks', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $access_token
-                ],
-                'json' => [
-                    'uris' => []
-                ]
+            //Delete contents in playlist before adding new songs.
+            $request = Http::withToken($access_token)->put('https://api.spotify.com/v1/playlists/'.$spotify_playlist_id.'/tracks', [
+                'uris' => []
             ]);
         }
 
@@ -135,6 +95,7 @@ class SpotifyController extends Controller
         $playlist_id = Cookie::get('spotify_playlist_id'); 
         $user_country = Cookie::get('spotify_user_country'); //refactor?
 
+        
         $access_token = AuthorizationController::refresh_access('refresh');
 
         $oneMonthBack = date('Y-m-d', strtotime('-1 months')); //today minus one month
@@ -148,25 +109,14 @@ class SpotifyController extends Controller
 
         $artist_id = $artist['id'];
 
-        $client = new GuzzleHttp\Client();
-        $singlesRequest = $client->get('https://api.spotify.com/v1/artists/'.$artist_id.'/albums', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $access_token
-            ],
-            'query' => [
-                'include_groups' => 'single',
-                'limit' => 3
-            ]
+        $singlesRequest = Http::withToken($access_token)->get('https://api.spotify.com/v1/artists/'.$artist_id.'/albums', [
+            'include_groups' => 'single',
+            'limit' => 3
         ]);
 
-        $albumsRequest = $client->get('https://api.spotify.com/v1/artists/'.$artist_id.'/albums', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $access_token
-            ],
-            'query' => [
-                'include_groups' => 'album',
-                'limit' => 3
-            ]
+        $albumsRequest = Http::withToken($access_token)->get('https://api.spotify.com/v1/artists/'.$artist_id.'/albums', [
+            'include_groups' => 'album',
+            'limit' => 3
         ]);
 
         if($singlesRequest->getStatusCode() == 200 && $albumsRequest->getStatusCode() == 200){
@@ -186,15 +136,8 @@ class SpotifyController extends Controller
 
                         $albums[] = $album;
 
-                        //get an albums tracks and add to playlist
-                        $client = new GuzzleHttp\Client();
-                        $request = $client->get('https://api.spotify.com/v1/albums/'.$album->id.'/tracks', [
-                            'headers' => [
-                                'Authorization' => 'Bearer ' .$access_token
-                            ],
-                            'query' => [
-                                'limit' => 50
-                            ]
+                        $request = Http::withToken($access_token)->get('https://api.spotify.com/v1/albums/'.$album->id.'/tracks', [
+                            'limit' => 50
                         ]);
 
                         $response = json_decode($request->getBody());
@@ -221,16 +164,11 @@ class SpotifyController extends Controller
                             $track_uris[] = $track->uri; 
                         }
 
-                        $client = new GuzzleHttp\Client();
-                        $request = $client->post('https://api.spotify.com/v1/playlists/'.$playlist_id.'/tracks',[
-                                'headers' => [
-                                    'Content-Type' => 'application/json',
-                                    'Authorization' => 'Bearer ' . $access_token
-                                ],
-                                'json' => [
-                                    'uris' => $track_uris
-                                ]
+                        $request = Http::withToken($access_token)->post('https://api.spotify.com/v1/playlists/'.$playlist_id.'/tracks', [
+                            'uris' => $track_uris
                         ]);
+
+                        $response = json_decode($request->getBody());
                     }
                 }
             }

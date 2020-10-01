@@ -2516,24 +2516,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     generatePlaylist: function () {
       var _generatePlaylist = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var self, artists, albums, tracks, createPlaylist, i, newLog, inspectArtist;
+        var self, artists, createPlaylist, i, newLog, inspectArtist;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 self = this;
                 artists = this.artists;
-                albums = [];
-                tracks = [];
+                self.albums = [];
+                self.tracks = [];
                 this.generation = 'generatingPlaylist';
                 _context.next = 7;
                 return axios.post('/api/spotify/create_playlist');
 
               case 7:
                 createPlaylist = _context.sent;
+
+                if (!(createPlaylist.status == 200)) {
+                  _context.next = 27;
+                  break;
+                }
+
                 i = 0;
 
-              case 9:
+              case 10:
                 if (!(i < artists.length)) {
                   _context.next = 23;
                   break;
@@ -2549,7 +2555,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 self.playlistArtistLog.push(newLog);
-                console.dir(artists[i].name);
                 _context.next = 19;
                 return axios.post('/api/spotify/inspect_artist', {
                   'artist': artists[i]
@@ -2568,7 +2573,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 20:
                 i++;
-                _context.next = 9;
+                _context.next = 10;
                 break;
 
               case 23:
@@ -2576,6 +2581,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 localStorage.setItem('tracks', JSON.stringify(this.tracks));
                 this.playlistArtistProgress = {};
                 this.playlistArtistLog = [];
+
+              case 27:
                 this.generation = 'albumsRetrieved';
 
               case 28:

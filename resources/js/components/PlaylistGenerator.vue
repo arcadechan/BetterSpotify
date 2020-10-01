@@ -226,47 +226,47 @@
 
                 const self = this;
                 const artists = this.artists;
-                let albums = [];
-                let tracks = [];
+                self.albums = [];
+                self.tracks = [];
 
                 this.generation = 'generatingPlaylist';
 
                 const createPlaylist = await axios.post('/api/spotify/create_playlist');
 
-                for(let i = 0; i < artists.length; i++){
+                if(createPlaylist.status == 200){
+                    for(let i = 0; i < artists.length; i++){
 
-                    let newLog = {};
+                        let newLog = {};
 
-                    newLog['artist'] = artists[i].name;
-                    newLog['position'] = i + 1;
+                        newLog['artist'] = artists[i].name;
+                        newLog['position'] = i + 1;
 
-                    self.playlistArtistProgress = newLog;
+                        self.playlistArtistProgress = newLog;
 
-                    if(self.playlistArtistLog.length == 10) {
-                        self.playlistArtistLog.shift();
+                        if(self.playlistArtistLog.length == 10) {
+                            self.playlistArtistLog.shift();
+                        }
+
+                        self.playlistArtistLog.push( newLog );
+
+                        const inspectArtist = await axios.post('/api/spotify/inspect_artist', { 'artist': artists[i] })
+                        .then( response => {
+                            const artistAlbums = response.data.albums;
+                            const artistTracks = response.data.tracks;
+                            
+                            if(artistAlbums.length && Object.keys(artistTracks).length){
+                                self.albums = [ ...self.albums, ...artistAlbums ];
+                                self.tracks = { ...self.tracks, ...artistTracks };
+                            }
+                        });
                     }
 
-                    self.playlistArtistLog.push( newLog );
-                    console.dir(artists[i].name);
+                    localStorage.setItem('albums', JSON.stringify(this.albums));
+                    localStorage.setItem('tracks', JSON.stringify(this.tracks));
 
-                    const inspectArtist = await axios.post('/api/spotify/inspect_artist', { 'artist': artists[i] })
-                    .then( response => {
-                        const artistAlbums = response.data.albums;
-                        const artistTracks = response.data.tracks;
-                        
-                        if(artistAlbums.length && Object.keys(artistTracks).length){
-                            self.albums = [ ...self.albums, ...artistAlbums ];
-                            self.tracks = { ...self.tracks, ...artistTracks };
-                        }
-                    });
+                    this.playlistArtistProgress = {};
+                    this.playlistArtistLog = [];
                 }
-
-                localStorage.setItem('albums', JSON.stringify(this.albums));
-                localStorage.setItem('tracks', JSON.stringify(this.tracks));
-
-
-                this.playlistArtistProgress = {};
-                this.playlistArtistLog = [];
 
                 this.generation = 'albumsRetrieved';
             },
