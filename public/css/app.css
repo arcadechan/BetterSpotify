@@ -11328,7 +11328,7 @@ nav.navbar #navbar-spotify-icon {
 }
 
 #progressLog {
-  background-color: #000;
+  background-color: #000000;
   padding: 1em;
   margin-bottom: 1.5em;
 }
@@ -11355,6 +11355,19 @@ nav.navbar #navbar-spotify-icon {
 #progressBar .progress-bar {
   font-weight: bold;
   font-size: 1.5em;
+}
+
+#progressBar #progressPercentage {
+  position: absolute;
+  left: 50%;
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 30px;
+  transform: trnslateX(-50%);
+}
+
+#progressBar.progress {
+  background-color: #000000;
 }
 
 #playlistGenerationTypeRadios input[type=radio] {

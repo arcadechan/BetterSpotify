@@ -1,20 +1,21 @@
 <template>
     <div>
-        <h2 class="d-block text-center">Artists</h2>    
-        <p v-if="generation == 'pending'">The first step is to get all the artists you follow. Click the "Get Artists" button when you're ready!</p>
+        <h2 v-if="generation !== 'generatingPlaylist'" class="d-block text-center">Artists</h2>
+        <p v-if="generation == 'pending'" class="d-block text-center">The first step is to get all the artists you follow. Click the "Get Artists" button when you're ready!</p>
         <div class="d-block text-center">
             <p v-if="generation == 'gettingArtists'">Getting followed artists...</p>
-            <p v-if="generation == 'generatingPlaylist'">Generating Playlist...</p>
+            <p v-if="generation == 'generatingPlaylist'">Generating Playlist. Checking your artists for new releases...</p>
         </div>
 
         <div v-if="generation == 'generatingPlaylist' && playlistArtistLog.length">
             <div id="progressLog">
-                <template v-for="log in playlistArtistLog">
-                    <p :key="log.position">Searching <span class="progressArtistName">{{log.artist}}</span> for new releases.</p>
+                <template v-for="(log, index) in playlistArtistLog">
+                    <p v-html="log.message" :key="index"></p>
                 </template>
             </div>
             <div id="progressBar" class="progress">
-                <div class="progress-bar bg-spotify" role="progressbar" :style="{ width: `${generationProgress}%` }" :aria-valuenow="generationProgress" aria-valuemin="0" aria-valuemax='100'>{{ generationProgress }}%</div>
+                <div id="progressPercentage">{{ generationProgress }}%</div>
+                <div class="progress-bar bg-spotify" role="progressbar" :style="{ width: `${generationProgress}%` }" :aria-valuenow="generationProgress" aria-valuemin="0" aria-valuemax='100'></div>
             </div>
         </div>
 
@@ -36,7 +37,7 @@
             </button>
         </div>
 
-        <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">        
+        <div v-show="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">        
             <button @click="artistGalleryOpen = !artistGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#artist-gallery" aria-expanded="false" aria-controls="artist-gallery">
                 {{ artistGalleryOpen ? 'Hide' : 'Show' }} Artist List
             </button>
@@ -59,7 +60,7 @@
             </div>
         </div>
 
-        <hr>
+        <hr v-show="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'">
 
         <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="my-5">
             <div class="d-block text-center">
@@ -78,14 +79,14 @@
                 Generate Better <br class="mobile-break">Release Radar
             </button>
 
-            <button @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">
+            <button v-if="generation == 'albumsRetrieved'" @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">
                 {{ albumGalleryOpen ? 'Hide' : 'Show' }} Album List
             </button>
 
-            <h6 class="d-block text-center my-4">Album Count: {{ albums.length }}</span></h6>
+            <h6 v-if="generation == 'albumsRetrieved'" class="d-block text-center my-4">Album Count: {{ albums.length }}</span></h6>
             <h6 v-if="trackCount" class="d-block text-center my-4">Track Count: {{ trackCount }}</h6>
 
-            <div id="album-gallery" class="col-12 p-0 my-4 show">
+            <div v-show="generation == 'albumsRetrieved'" id="album-gallery" class="col-12 p-0 my-4 show">
                 <div v-for="(album, index) in albums" :key="album.id" class="album-container col-12 col-md-6 col-lg-4 col-xl-3 p-0">
                     <div>
                         <div class="album-inner-container text-center">
@@ -230,18 +231,18 @@
                 if(createPlaylist.status == 200){
                     for(let i = 0; i < artists.length; i++){
 
-                        let newLog = {};
+                        let analyzeLog = {
+                            message: `Checking <span class="progressArtistName">${artists[i].name}</span>&hellip;`,
+                            position: i + 1
+                        };
 
-                        newLog['artist'] = artists[i].name;
-                        newLog['position'] = i + 1;
-
-                        self.playlistArtistProgress = newLog;
+                        self.playlistArtistProgress = analyzeLog;
 
                         if(self.playlistArtistLog.length == 10) {
                             self.playlistArtistLog.shift();
                         }
 
-                        self.playlistArtistLog.push( newLog );
+                        self.playlistArtistLog.push( analyzeLog );
 
                         const inspectArtist = await axios.post('/api/spotify/inspect_artist', { 'artist': artists[i] })
                         .then( response => {
@@ -251,12 +252,19 @@
                             if(artistAlbums.length && Object.keys(artistTracks).length){
                                 self.albums = [ ...self.albums, ...artistAlbums ];
                                 self.tracks = { ...self.tracks, ...artistTracks };
+
+                                analyzeLog['message'] += `<br><span class='text-success'>Release found!</span>`;
+                            } else {
+                                analyzeLog['message'] += `<br><span class='text-danger'>No releases found.</span>`;
                             }
                         });
                     }
 
                     localStorage.setItem('albums', JSON.stringify(this.albums));
                     localStorage.setItem('tracks', JSON.stringify(this.tracks));
+
+                    this.tracksInStorage = true;
+                    this.albumsInStorage = true;
 
                     this.playlistArtistProgress = {};
                     this.playlistArtistLog = [];

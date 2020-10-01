@@ -50,7 +50,7 @@ nav.navbar {
 }
 
 #progressLog {
-    background-color: #000;
+    background-color: #000000;
     padding: 1em;
     margin-bottom: 1.5em;
 
@@ -76,6 +76,19 @@ nav.navbar {
     .progress-bar {
         font-weight: bold;
         font-size: 1.5em;
+    }
+
+    #progressPercentage {
+        position: absolute;
+        left: 50%;
+        font-size: 1.5em;
+        font-weight: bold;
+        line-height: 30px;
+        transform: trnslateX(-50%);
+    }
+
+    &.progress {
+        background-color: #000000;
     }
 }
 

@@ -2491,6 +2491,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2527,78 +2528,100 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     generatePlaylist: function () {
       var _generatePlaylist = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var self, artists, createPlaylist, i, newLog, inspectArtist;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        var self, artists, createPlaylist, _loop, i;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 self = this;
                 artists = this.artists;
                 self.albums = [];
                 self.tracks = [];
                 this.generation = 'generatingPlaylist';
-                _context.next = 7;
+                _context2.next = 7;
                 return axios.post('/api/spotify/create_playlist');
 
               case 7:
-                createPlaylist = _context.sent;
+                createPlaylist = _context2.sent;
 
                 if (!(createPlaylist.status == 200)) {
-                  _context.next = 27;
+                  _context2.next = 22;
                   break;
                 }
 
+                _loop = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _loop(i) {
+                  var analyzeLog, inspectArtist;
+                  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _loop$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          analyzeLog = {
+                            message: "Checking <span class=\"progressArtistName\">".concat(artists[i].name, "</span>&hellip;"),
+                            position: i + 1
+                          };
+                          self.playlistArtistProgress = analyzeLog;
+
+                          if (self.playlistArtistLog.length == 10) {
+                            self.playlistArtistLog.shift();
+                          }
+
+                          self.playlistArtistLog.push(analyzeLog);
+                          _context.next = 6;
+                          return axios.post('/api/spotify/inspect_artist', {
+                            'artist': artists[i]
+                          }).then(function (response) {
+                            var artistAlbums = response.data.albums;
+                            var artistTracks = response.data.tracks;
+
+                            if (artistAlbums.length && Object.keys(artistTracks).length) {
+                              self.albums = [].concat(_toConsumableArray(self.albums), _toConsumableArray(artistAlbums));
+                              self.tracks = _objectSpread(_objectSpread({}, self.tracks), artistTracks);
+                              analyzeLog['message'] += "<br><span class='text-success'>Release found!</span>";
+                            } else {
+                              analyzeLog['message'] += "<br><span class='text-danger'>No releases found.</span>";
+                            }
+                          });
+
+                        case 6:
+                          inspectArtist = _context.sent;
+
+                        case 7:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _loop);
+                });
                 i = 0;
 
-              case 10:
+              case 11:
                 if (!(i < artists.length)) {
-                  _context.next = 23;
+                  _context2.next = 16;
                   break;
                 }
 
-                newLog = {};
-                newLog['artist'] = artists[i].name;
-                newLog['position'] = i + 1;
-                self.playlistArtistProgress = newLog;
+                return _context2.delegateYield(_loop(i), "t0", 13);
 
-                if (self.playlistArtistLog.length == 10) {
-                  self.playlistArtistLog.shift();
-                }
-
-                self.playlistArtistLog.push(newLog);
-                _context.next = 19;
-                return axios.post('/api/spotify/inspect_artist', {
-                  'artist': artists[i]
-                }).then(function (response) {
-                  var artistAlbums = response.data.albums;
-                  var artistTracks = response.data.tracks;
-
-                  if (artistAlbums.length && Object.keys(artistTracks).length) {
-                    self.albums = [].concat(_toConsumableArray(self.albums), _toConsumableArray(artistAlbums));
-                    self.tracks = _objectSpread(_objectSpread({}, self.tracks), artistTracks);
-                  }
-                });
-
-              case 19:
-                inspectArtist = _context.sent;
-
-              case 20:
+              case 13:
                 i++;
-                _context.next = 10;
+                _context2.next = 11;
                 break;
 
-              case 23:
+              case 16:
                 localStorage.setItem('albums', JSON.stringify(this.albums));
                 localStorage.setItem('tracks', JSON.stringify(this.tracks));
+                this.tracksInStorage = true;
+                this.albumsInStorage = true;
                 this.playlistArtistProgress = {};
                 this.playlistArtistLog = [];
 
-              case 27:
+              case 22:
                 this.generation = 'albumsRetrieved';
 
-              case 28:
+              case 23:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
         }, _callee, this);
@@ -35099,10 +35122,12 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("h2", { staticClass: "d-block text-center" }, [_vm._v("Artists")]),
+      _vm.generation !== "generatingPlaylist"
+        ? _c("h2", { staticClass: "d-block text-center" }, [_vm._v("Artists")])
+        : _vm._e(),
       _vm._v(" "),
       _vm.generation == "pending"
-        ? _c("p", [
+        ? _c("p", { staticClass: "d-block text-center" }, [
             _vm._v(
               'The first step is to get all the artists you follow. Click the "Get Artists" button when you\'re ready!'
             )
@@ -35115,7 +35140,11 @@ var render = function() {
           : _vm._e(),
         _vm._v(" "),
         _vm.generation == "generatingPlaylist"
-          ? _c("p", [_vm._v("Generating Playlist...")])
+          ? _c("p", [
+              _vm._v(
+                "Generating Playlist. Checking your artists for new releases..."
+              )
+            ])
           : _vm._e()
       ]),
       _vm._v(" "),
@@ -35125,15 +35154,12 @@ var render = function() {
               "div",
               { attrs: { id: "progressLog" } },
               [
-                _vm._l(_vm.playlistArtistLog, function(log) {
+                _vm._l(_vm.playlistArtistLog, function(log, index) {
                   return [
-                    _c("p", { key: log.position }, [
-                      _vm._v("Searching "),
-                      _c("span", { staticClass: "progressArtistName" }, [
-                        _vm._v(_vm._s(log.artist))
-                      ]),
-                      _vm._v(" for new releases.")
-                    ])
+                    _c("p", {
+                      key: index,
+                      domProps: { innerHTML: _vm._s(log.message) }
+                    })
                   ]
                 })
               ],
@@ -35144,20 +35170,20 @@ var render = function() {
               "div",
               { staticClass: "progress", attrs: { id: "progressBar" } },
               [
-                _c(
-                  "div",
-                  {
-                    staticClass: "progress-bar bg-spotify",
-                    style: { width: _vm.generationProgress + "%" },
-                    attrs: {
-                      role: "progressbar",
-                      "aria-valuenow": _vm.generationProgress,
-                      "aria-valuemin": "0",
-                      "aria-valuemax": "100"
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.generationProgress) + "%")]
-                )
+                _c("div", { attrs: { id: "progressPercentage" } }, [
+                  _vm._v(_vm._s(_vm.generationProgress) + "%")
+                ]),
+                _vm._v(" "),
+                _c("div", {
+                  staticClass: "progress-bar bg-spotify",
+                  style: { width: _vm.generationProgress + "%" },
+                  attrs: {
+                    role: "progressbar",
+                    "aria-valuenow": _vm.generationProgress,
+                    "aria-valuemin": "0",
+                    "aria-valuemax": "100"
+                  }
+                })
               ]
             )
           ])
@@ -35205,121 +35231,136 @@ var render = function() {
           : _vm._e()
       ]),
       _vm._v(" "),
-      _vm.generation == "artistsRetrieved" ||
-      _vm.generation == "albumsRetrieved"
-        ? _c("div", { staticClass: "text-center" }, [
-            _c(
-              "button",
-              {
-                staticClass: "d-block btn btn-dark mx-auto",
-                attrs: {
-                  type: "button",
-                  "data-toggle": "collapse",
-                  "data-target": "#artist-gallery",
-                  "aria-expanded": "false",
-                  "aria-controls": "artist-gallery"
-                },
-                on: {
-                  click: function($event) {
-                    _vm.artistGalleryOpen = !_vm.artistGalleryOpen
-                  }
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value:
+                _vm.generation == "artistsRetrieved" ||
+                _vm.generation == "albumsRetrieved",
+              expression:
+                "generation == 'artistsRetrieved' || generation == 'albumsRetrieved'"
+            }
+          ],
+          staticClass: "text-center"
+        },
+        [
+          _c(
+            "button",
+            {
+              staticClass: "d-block btn btn-dark mx-auto",
+              attrs: {
+                type: "button",
+                "data-toggle": "collapse",
+                "data-target": "#artist-gallery",
+                "aria-expanded": "false",
+                "aria-controls": "artist-gallery"
+              },
+              on: {
+                click: function($event) {
+                  _vm.artistGalleryOpen = !_vm.artistGalleryOpen
                 }
-              },
-              [
-                _vm._v(
-                  "\n            " +
-                    _vm._s(_vm.artistGalleryOpen ? "Hide" : "Show") +
-                    " Artist List\n        "
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c("h6", { staticClass: "d-block text-center my-4" }, [
-              _vm._v("Artist Count: " + _vm._s(_vm.artists.length))
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "col-12 p-0 mx-auto my-4 show",
-                attrs: { id: "artist-gallery" }
-              },
-              _vm._l(_vm.artists, function(artist, index) {
-                return _c(
-                  "div",
-                  {
-                    key: artist.id,
-                    staticClass: "artist-container col-12 col-md-6 col-xl-4 p-0"
-                  },
-                  [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: artist.external_urls.spotify,
-                          target: "_blank"
-                        }
-                      },
-                      [
-                        _c("div", { staticClass: "artist-no" }, [
-                          _vm._v(_vm._s(index + 1))
-                        ]),
-                        _vm._v(" "),
-                        artist.images.length > 0
-                          ? _c(
-                              "div",
-                              { staticClass: "artist-image-container" },
+              }
+            },
+            [
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.artistGalleryOpen ? "Hide" : "Show") +
+                  " Artist List\n        "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("h6", { staticClass: "d-block text-center my-4" }, [
+            _vm._v("Artist Count: " + _vm._s(_vm.artists.length))
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "col-12 p-0 mx-auto my-4 show",
+              attrs: { id: "artist-gallery" }
+            },
+            _vm._l(_vm.artists, function(artist, index) {
+              return _c(
+                "div",
+                {
+                  key: artist.id,
+                  staticClass: "artist-container col-12 col-md-6 col-xl-4 p-0"
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      attrs: {
+                        href: artist.external_urls.spotify,
+                        target: "_blank"
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "artist-no" }, [
+                        _vm._v(_vm._s(index + 1))
+                      ]),
+                      _vm._v(" "),
+                      artist.images.length > 0
+                        ? _c("div", { staticClass: "artist-image-container" }, [
+                            _c("img", {
+                              staticClass: "artist-image",
+                              attrs: { src: artist.images[2]["url"], alt: "" }
+                            })
+                          ])
+                        : _c("div", { staticClass: "artist-image-container" }, [
+                            _c(
+                              "svg",
+                              {
+                                staticClass: "artist-image no-artist-image",
+                                attrs: {
+                                  role: "img",
+                                  viewBox: "-25 -22 100 100"
+                                }
+                              },
                               [
-                                _c("img", {
-                                  staticClass: "artist-image",
+                                _c("path", {
                                   attrs: {
-                                    src: artist.images[2]["url"],
-                                    alt: ""
+                                    d:
+                                      "M35.711 34.619l-4.283-2.461a1.654 1.654 0 0 1-.808-1.156 1.65 1.65 0 0 1 .373-1.36l3.486-4.088a14.3 14.3 0 0 0 3.432-9.293V14.93c0-3.938-1.648-7.74-4.522-10.435C30.475 1.764 26.658.398 22.661.661c-7.486.484-13.35 6.952-13.35 14.725v.875c0 3.408 1.219 6.708 3.431 9.292l3.487 4.089a1.656 1.656 0 0 1-.436 2.516l-8.548 4.914A14.337 14.337 0 0 0 0 49.513V53.5h2v-3.987c0-4.417 2.388-8.518 6.237-10.705l8.552-4.916a3.648 3.648 0 0 0 1.783-2.549 3.643 3.643 0 0 0-.822-2.999l-3.488-4.091a12.297 12.297 0 0 1-2.951-7.993v-.875c0-6.721 5.042-12.312 11.479-12.729 3.449-.22 6.725.949 9.231 3.298a12.182 12.182 0 0 1 3.89 8.976v1.331c0 2.931-1.048 5.77-2.952 7.994l-3.487 4.089a3.653 3.653 0 0 0-.822 3 3.653 3.653 0 0 0 1.782 2.548l3.036 1.745a11.959 11.959 0 0 1 2.243-1.018zM45 25.629v15.289a7.476 7.476 0 0 0-5.501-2.418c-4.135 0-7.5 3.365-7.5 7.5s3.364 7.5 7.5 7.5 7.5-3.365 7.5-7.5V29.093l5.861 3.384 1-1.732L45 25.629zM39.499 51.5a5.506 5.506 0 0 1-5.5-5.5c0-3.033 2.467-5.5 5.5-5.5s5.5 2.467 5.5 5.5-2.467 5.5-5.5 5.5z",
+                                    fill: "currentColor",
+                                    "fill-rule": "evenodd"
                                   }
                                 })
                               ]
                             )
-                          : _c(
-                              "div",
-                              { staticClass: "artist-image-container" },
-                              [
-                                _c(
-                                  "svg",
-                                  {
-                                    staticClass: "artist-image no-artist-image",
-                                    attrs: {
-                                      role: "img",
-                                      viewBox: "-25 -22 100 100"
-                                    }
-                                  },
-                                  [
-                                    _c("path", {
-                                      attrs: {
-                                        d:
-                                          "M35.711 34.619l-4.283-2.461a1.654 1.654 0 0 1-.808-1.156 1.65 1.65 0 0 1 .373-1.36l3.486-4.088a14.3 14.3 0 0 0 3.432-9.293V14.93c0-3.938-1.648-7.74-4.522-10.435C30.475 1.764 26.658.398 22.661.661c-7.486.484-13.35 6.952-13.35 14.725v.875c0 3.408 1.219 6.708 3.431 9.292l3.487 4.089a1.656 1.656 0 0 1-.436 2.516l-8.548 4.914A14.337 14.337 0 0 0 0 49.513V53.5h2v-3.987c0-4.417 2.388-8.518 6.237-10.705l8.552-4.916a3.648 3.648 0 0 0 1.783-2.549 3.643 3.643 0 0 0-.822-2.999l-3.488-4.091a12.297 12.297 0 0 1-2.951-7.993v-.875c0-6.721 5.042-12.312 11.479-12.729 3.449-.22 6.725.949 9.231 3.298a12.182 12.182 0 0 1 3.89 8.976v1.331c0 2.931-1.048 5.77-2.952 7.994l-3.487 4.089a3.653 3.653 0 0 0-.822 3 3.653 3.653 0 0 0 1.782 2.548l3.036 1.745a11.959 11.959 0 0 1 2.243-1.018zM45 25.629v15.289a7.476 7.476 0 0 0-5.501-2.418c-4.135 0-7.5 3.365-7.5 7.5s3.364 7.5 7.5 7.5 7.5-3.365 7.5-7.5V29.093l5.861 3.384 1-1.732L45 25.629zM39.499 51.5a5.506 5.506 0 0 1-5.5-5.5c0-3.033 2.467-5.5 5.5-5.5s5.5 2.467 5.5 5.5-2.467 5.5-5.5 5.5z",
-                                        fill: "currentColor",
-                                        "fill-rule": "evenodd"
-                                      }
-                                    })
-                                  ]
-                                )
-                              ]
-                            ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "artist-name" }, [
-                          _vm._v(_vm._s(artist.name))
-                        ])
-                      ]
-                    )
-                  ]
-                )
-              }),
-              0
-            )
-          ])
-        : _vm._e(),
+                          ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "artist-name" }, [
+                        _vm._v(_vm._s(artist.name))
+                      ])
+                    ]
+                  )
+                ]
+              )
+            }),
+            0
+          )
+        ]
+      ),
       _vm._v(" "),
-      _c("hr"),
+      _c("hr", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value:
+              _vm.generation == "artistsRetrieved" ||
+              _vm.generation == "albumsRetrieved",
+            expression:
+              "generation == 'artistsRetrieved' || generation == 'albumsRetrieved'"
+          }
+        ]
+      }),
       _vm._v(" "),
       _vm.generation == "artistsRetrieved" ||
       _vm.generation == "albumsRetrieved"
@@ -35358,35 +35399,39 @@ var render = function() {
                 )
               : _vm._e(),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "d-block btn btn-dark mx-auto",
-                attrs: {
-                  type: "button",
-                  "data-toggle": "collapse",
-                  "data-target": "#album-gallery",
-                  "aria-expanded": "false",
-                  "aria-controls": "album-gallery"
-                },
-                on: {
-                  click: function($event) {
-                    _vm.albumGalleryOpen = !_vm.albumGalleryOpen
-                  }
-                }
-              },
-              [
-                _vm._v(
-                  "\n            " +
-                    _vm._s(_vm.albumGalleryOpen ? "Hide" : "Show") +
-                    " Album List\n        "
+            _vm.generation == "albumsRetrieved"
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "d-block btn btn-dark mx-auto",
+                    attrs: {
+                      type: "button",
+                      "data-toggle": "collapse",
+                      "data-target": "#album-gallery",
+                      "aria-expanded": "false",
+                      "aria-controls": "album-gallery"
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.albumGalleryOpen = !_vm.albumGalleryOpen
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n            " +
+                        _vm._s(_vm.albumGalleryOpen ? "Hide" : "Show") +
+                        " Album List\n        "
+                    )
+                  ]
                 )
-              ]
-            ),
+              : _vm._e(),
             _vm._v(" "),
-            _c("h6", { staticClass: "d-block text-center my-4" }, [
-              _vm._v("Album Count: " + _vm._s(_vm.albums.length))
-            ]),
+            _vm.generation == "albumsRetrieved"
+              ? _c("h6", { staticClass: "d-block text-center my-4" }, [
+                  _vm._v("Album Count: " + _vm._s(_vm.albums.length))
+                ])
+              : _vm._e(),
             _vm._v(" "),
             _vm.trackCount
               ? _c("h6", { staticClass: "d-block text-center my-4" }, [
@@ -35397,6 +35442,14 @@ var render = function() {
             _c(
               "div",
               {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.generation == "albumsRetrieved",
+                    expression: "generation == 'albumsRetrieved'"
+                  }
+                ],
                 staticClass: "col-12 p-0 my-4 show",
                 attrs: { id: "album-gallery" }
               },
