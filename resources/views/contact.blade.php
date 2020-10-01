@@ -5,6 +5,7 @@
         <div class="container">
             <div class="text-center">
                 <h1>contact</h1>
+                <hr>
                 <p>If you have any questions or feedback, please drop me a line!</p>
                 <small>Fields marked with an asterisk (*) are required.</small>
             </div>

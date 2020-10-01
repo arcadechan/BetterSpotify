@@ -3,7 +3,8 @@
 @section('content')
     <section class="pt-4">
         <div class="container">
-            <h1 class="text-center pb-5">about</h1>
+            <h1 class="text-center">about</h1>
+            <hr>
             <div class="row d-flex align-items-center">
                 <div class="d-none d-lg-block col-lg-3 vh-100">
                     <img class="mt-3 w-100" src="{{ url('/img/release-radar.jpg') }}" alt="" class="img-fluid">
@@ -76,7 +77,6 @@
                 </div>
                 <!-- end:col -->
             </div>
-            <hr class="mt-5">
         </div>
     </section>
 @endsection

@@ -11864,3 +11864,7 @@ nav.navbar #navbar-spotify-icon {
   border: 1px solid;
 }
 
+footer {
+  padding-top: 0px !important;
+}
+
