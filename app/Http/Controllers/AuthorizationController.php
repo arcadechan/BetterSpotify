@@ -29,7 +29,7 @@ class AuthorizationController extends Controller
             $spotify_access_code = Cookie::forever('spotify_access_code', $code);
             $data = null;
 
-            $response = self::get_access_token($code, 'authorization_code');
+            $response = self::get_access_token('authorization_code', $code);
 
             if($response->getStatusCode() == 200){
                 $data = json_decode($response->getContent());
@@ -51,7 +51,7 @@ class AuthorizationController extends Controller
     }
 
     public static function refresh_access(){
-        $response = self::get_access_token(null, 'refresh_token');
+        $response = self::get_access_token('refresh_token');
         
         if($response->getStatusCode() == 200){
             $data = json_decode($response->getContent());
@@ -61,7 +61,7 @@ class AuthorizationController extends Controller
         return false;
     }
 
-    private static function get_access_token($spotify_access_code, $grant_type){
+    private static function get_access_token($grant_type, $spotify_access_code = null){
         
         $client_id = env('SPOTIFY_APP_CLIENT_ID', getenv('SPOTIFY_APP_CLIENT_ID'));
         $client_secret = env('SPOTIFY_APP_CLIENT_SECRET', getenv('SPOTIFY_APP_CLIENT_SECRET'));
