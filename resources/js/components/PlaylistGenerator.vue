@@ -18,13 +18,7 @@
             </div>
         </div>
 
-        <div v-if="generation == 'gettingArtists'">
-            <div class="text-center">
-                <div class="spinner-border text-spotify m-5" role="status" style="width: 3rem; height: 3rem;">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
-        </div>
+        <loading-spinner v-if="generation == 'gettingArtists'"></loading-spinner>
 
         <div class="col-12 justify-content-center">
             <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">
