@@ -62,7 +62,7 @@
                         </ul>
 
                         <ul class="navbar-nav ml-auto">
-                            <li>
+                            <li class="nav-item">
                                 <a class="nav-link px-2" href="/credits">Credits</a>
                             </li>
                             <li class="nav-item">
