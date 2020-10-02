@@ -11327,6 +11327,11 @@ nav.navbar #navbar-spotify-icon {
   background-color: #1DB954;
 }
 
+.intro {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
 #progressLog {
   background-color: #000000;
   padding: 1em;
