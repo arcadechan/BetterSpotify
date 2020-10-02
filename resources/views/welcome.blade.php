@@ -21,8 +21,5 @@
         </div>
     </div>
 </section>
-<!--end:Intro -->
-
-
 
 @endsection

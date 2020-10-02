@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'PagesController@index');
 Route::get('/better_release_radar', 'PagesController@better_release_radar');
 Route::get('/about', 'PagesController@about');
+Route::get('/credits', 'PagesController@credits');
 Route::get('/contact', 'PagesController@contact');
 
 //Spotify Authorization Routes

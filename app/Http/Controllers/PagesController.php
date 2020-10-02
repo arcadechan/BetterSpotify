@@ -31,6 +31,10 @@ class PagesController extends Controller
         return view('about');
     }
 
+    public function credits(){
+        return view('credits');
+    }
+
     public function contact(){
         $recaptchaSiteKey = env('CAPTCHA_SITE_KEY', getenv('CAPTCHA_SITE_KEY'));
 
