@@ -72,7 +72,7 @@ class AuthorizationController extends Controller
 
         if($spotify_access_code !== null){
             $form_params['code'] = $spotify_access_code;
-            $form_params['redirect_uri'] = env('APP_URL', getenv('APP_URL')) . '/authorize_access';
+            $form_params['redirect_uri'] = env('APP_URL', getenv('APP_URL')) . env('AUTHORIZE_ACCESS_ENDPOINT');
         }
 
         if($grant_type == 'refresh_token'){

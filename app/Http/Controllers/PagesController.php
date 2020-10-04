@@ -16,7 +16,7 @@ class PagesController extends Controller
         if(Cookie::get('spotify_access_code') !== null) return view('detoxed_release_radar');
 
         $client_id = env('SPOTIFY_APP_CLIENT_ID', getenv('SPOTIFY_APP_CLIENT_ID'));
-        $redirect_uri = env('APP_URL', getenv('APP_URL')) . '/authorize_access';
+        $redirect_uri = env('APP_URL', getenv('APP_URL')) . env('AUTHORIZE_ACCESS_ENDPOINT');
         $scopes = "user-read-private ugc-image-upload user-follow-read playlist-modify-public playlist-modify-private";
 
         return view('detoxed_release_radar', compact([
