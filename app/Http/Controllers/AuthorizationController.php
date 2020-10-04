@@ -43,7 +43,7 @@ class AuthorizationController extends Controller
             $user_country = Cookie::forever('spotify_user_country', $response->country);
         }
 
-        return redirect()->action('PagesController@better_release_radar')
+        return redirect()->action('PagesController@detoxed_release_radar')
             ->withCookie($spotify_access_code)
             ->withCookie($refresh_token)
             ->withCookie($user_id)

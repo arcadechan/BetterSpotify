@@ -23,8 +23,8 @@
 
         <div class="col-12 justify-content-center">
             <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">
-                <p v-if="artistsInStorage">Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn't changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.</p>
-                <p v-else>Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" button below the artist list to create the playlist into your account.</p>
+                <p v-if="artistsInStorage">Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn't changed, you can go ahead and just hit the "Generate Detoxed Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.</p>
+                <p v-else>Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Detoxed Release Radar" button below the artist list to create the playlist into your account.</p>
                 <p>You can click on each artist card to navigate to their artist page on Spotify.</p>
             </div>
             <button 
@@ -38,7 +38,7 @@
         </div>
 
         <div v-show="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">        
-            <button @click="artistGalleryOpen = !artistGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#artist-gallery" aria-expanded="false" aria-controls="artist-gallery">
+            <button @click="artistGalleryOpen = !artistGalleryOpen" class="d-block btn btn-light mx-auto" type="button" data-toggle="collapse" data-target="#artist-gallery" aria-expanded="false" aria-controls="artist-gallery">
                 {{ artistGalleryOpen ? 'Hide' : 'Show' }} Artist List
             </button>
 
@@ -65,9 +65,8 @@
         <div v-if="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="my-5">
             <div class="d-block text-center">
                 <h2>Albums</h2>
-                <p v-if="albumsInStorage">Here's a list of all the albums from the latest "Better Release Radar" you generated. You may generate a new playlist at any time, but keep in mind that doing so will wipe clean the one you have with new stuff, so make sure you saved all the stuff you want as there is no guarantee the same tracks will make it on there again!</p>
-                <!-- <p v-else>Your playlist has been generated! Here are the the latest releases we found and added to your new "Better Release Radar" playlist! To generate again click "Generate Better Release Radar" (this will overwrite your playlist!).</p> -->
-                <p v-else>To generate a playlist on your account go ahead and press the generate release radar.</p>
+                <p v-if="albumsInStorage">Here's a list of all the albums from the latest "Detoxed Release Radar" you generated. You may generate a new playlist at any time, but keep in mind that doing so will wipe clean the one you have with new stuff, so make sure you saved all the stuff you want as there is no guarantee the same tracks will make it on there again!</p>
+                <p v-else>To generate a playlist on your account go ahead and press "Generate Detoxed Release Radar".</p>
             </div>
 
             <button
@@ -76,10 +75,10 @@
                 @click="generatePlaylist"
                 class="btn btn-spotify mx-auto my-4 d-block"
                 :class="{ 'pending' : !albumsInStorage }">
-                Generate Better <br class="mobile-break">Release Radar
+                Generate Detoxed <br class="mobile-break">Release Radar
             </button>
 
-            <button v-if="generation == 'albumsRetrieved'" @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">
+            <button v-if="generation == 'albumsRetrieved'" @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-light mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">
                 {{ albumGalleryOpen ? 'Hide' : 'Show' }} Album List
             </button>
 

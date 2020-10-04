@@ -19,7 +19,7 @@
                         Some personalized playlists include <span class="title">Discover Weekly</span>, <span class="title">Daily Mixes</span>, and of course <span class="title">Your Release Radar</span>. 
                     <p>
                     <p>
-                        These playlists are generated based on a user' listening behavior and help in the discovery of new music.
+                        These playlists are generated based on a user's listening behavior and help in the discovery of new music.
                         This user experience is ruined, however, when the artists recommended have nothing to do with the user's behavior.
                     </p>
                     <p>
@@ -65,11 +65,11 @@
                                 </li>
                                 <li>
                                     <h6>playlist-modify-private</h6>
-                                    <p>Used to create and manage your "Better Release Radar" playlist on your account, whether it's set to public or private.</p>
+                                    <p>Used to create and manage your "Detoxed Release Radar" playlist on your account, whether it's set to public or private.</p>
                                 </li>
                                 <li>
                                     <h6>ugc-image-upload</h6>
-                                    <p>Needed to upload your "Better Release Radar's" playlist cover image (You're free to change this image at any time).</p>
+                                    <p>Needed to upload your "Detoxed Release Radar's" playlist cover image (You're free to change this image at any time).</p>
                                 </li>
                             </ul>
                         </div>
