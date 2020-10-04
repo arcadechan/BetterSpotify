@@ -41,11 +41,11 @@ body {
  * Basic styles for links
  */
 a {
-  color: $danger;
-  text-decoration: none;
+  color: $link-color;
+  text-decoration: underline;
 
   &:hover {
-      color: $link-hover-color;
+    color: $link-hover-color;
     text-decoration: underline;
     transition: all .2s;
   }

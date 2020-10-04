@@ -93,7 +93,7 @@ body {
   font-size: 1rem;
   font-weight: normal;
   line-height: 1.5;
-  color: #FFFEDF;
+  color: #ffffff;
   text-align: left;
   background-color: #2B2C31;
 }
@@ -193,13 +193,13 @@ sup {
 }
 
 a {
-  color: #DFBA69;
+  color: #1DB954;
   text-decoration: none;
   background-color: transparent;
 }
 
 a:hover {
-  color: #cf9c2c;
+  color: #2bde6a;
   text-decoration: underline;
 }
 
@@ -475,7 +475,7 @@ hr {
   margin-top: 1rem;
   margin-bottom: 1rem;
   border: 0;
-  border-top: 1px solid rgba(255, 254, 223, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 small,
@@ -2648,7 +2648,7 @@ textarea.form-control.is-invalid {
 .btn {
   display: inline-block;
   font-weight: 400;
-  color: #FFFEDF;
+  color: #ffffff;
   text-align: center;
   vertical-align: middle;
   -webkit-user-select: none;
@@ -2671,7 +2671,7 @@ textarea.form-control.is-invalid {
 }
 
 .btn:hover {
-  color: #FFFEDF;
+  color: #ffffff;
   text-decoration: none;
 }
 
@@ -3313,12 +3313,12 @@ fieldset:disabled a.btn {
 
 .btn-link {
   font-weight: normal;
-  color: #DFBA69;
+  color: #1DB954;
   text-decoration: none;
 }
 
 .btn-link:hover {
-  color: #cf9c2c;
+  color: #2bde6a;
   text-decoration: underline;
 }
 
@@ -10804,7 +10804,7 @@ a.text-dark:focus {
 }
 
 .text-body {
-  color: #FFFEDF !important;
+  color: #ffffff !important;
 }
 
 .text-muted {
@@ -10956,7 +10956,7 @@ html {
 
 body {
   font-family: "Nunito Sans", sans-serif;
-  color: #FFFEDF;
+  color: #ffffff;
   font-weight: 400;
   background: #131415;
 }
@@ -10964,7 +10964,7 @@ body {
 .form-control {
   background-color: #1c1e1f;
   border-color: #1d2021;
-  color: #FFFEDF;
+  color: #ffffff;
 }
 
 /**
@@ -10985,12 +10985,12 @@ body {
  */
 
 a {
-  color: #dc3545;
-  text-decoration: none;
+  color: #1DB954;
+  text-decoration: underline;
 }
 
 a:hover {
-  color: #cf9c2c;
+  color: #2bde6a;
   text-decoration: underline;
   transition: all 0.2s;
 }
@@ -11063,7 +11063,7 @@ h5,
 h6 {
   font-family: "Nunito Sans", "Helvetica Neue Light", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-weight: 700;
-  color: #FFFEDF;
+  color: #ffffff;
 }
 
 .lead {
@@ -11091,15 +11091,15 @@ h6 {
 
 .navbar-light .navbar-nav .nav-link {
   font-weight: 600;
-  color: #FFFEDF !important;
+  color: #ffffff !important;
 }
 
 .navbar-light .navbar-brand {
-  color: #DFBA69;
+  color: #1DB954;
 }
 
 .navbar-light .navbar-brand:hover {
-  color: #cf9c2c;
+  color: #2bde6a;
 }
 
 @media screen and (min-width: 992px) {
@@ -11114,20 +11114,20 @@ h6 {
 footer {
   padding-top: 120px;
   padding-bottom: 100px;
-  color: #FFFEDF;
+  color: #ffffff;
 }
 
 footer a {
-  color: #cf9c2c;
+  color: #2bde6a;
 }
 
 .footer-link li a {
   text-decoration: underline;
-  color: #FFFEDF;
+  color: #ffffff;
 }
 
 .footer-link li a:hover {
-  color: #cf9c2c;
+  color: #2bde6a;
 }
 
 .btn.btn-spotify {
@@ -11179,12 +11179,12 @@ footer a {
   padding-bottom: 10px;
   cursor: pointer;
   position: relative;
-  color: #FFFEDF;
+  color: #ffffff;
 }
 
 #filters li a:hover,
 #filters li a.active {
-  color: #cf9c2c;
+  color: #2bde6a;
 }
 
 /* Portfolio items */
@@ -11289,12 +11289,13 @@ body {
   font-size: 1em;
 }
 
-.link {
-  text-decoration: underline;
+.footer-link li a {
+  color: #1DB954;
 }
 
-.link:hover {
-  color: #ffffff;
+a.btn,
+nav.navbar a {
+  text-decoration: none;
 }
 
 .title {
@@ -11307,8 +11308,8 @@ body {
   color: #1DB954;
 }
 
-nav.navbar #navbar-spotify-icon {
-  width: 40px;
+nav.navbar #navbar-detoxify-icon {
+  width: 120px;
   margin-right: 1em;
 }
 
@@ -11320,7 +11321,7 @@ nav.navbar #navbar-spotify-icon {
 }
 
 .nav-item:hover {
-  background-color: #a76d47;
+  background-color: #151414;
 }
 
 .bg-spotify {
@@ -11511,7 +11512,7 @@ nav.navbar #navbar-spotify-icon {
   margin: 0.25em;
   padding: 0.5em;
   background-color: #000000;
-  color: #FFFEDF;
+  color: #ffffff;
 }
 
 #artist-gallery a div {
@@ -11520,7 +11521,7 @@ nav.navbar #navbar-spotify-icon {
 
 #artist-gallery a:hover {
   background-color: #222222;
-  color: #FFFEDF;
+  color: #ffffff;
 }
 
 #album-gallery .album-container {
@@ -11561,7 +11562,7 @@ nav.navbar #navbar-spotify-icon {
 
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front .album-artist-link:hover,
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front .album-link:hover {
-  color: #FFFEDF;
+  color: #ffffff;
 }
 
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-front table tbody tr td {
@@ -11607,7 +11608,7 @@ nav.navbar #navbar-spotify-icon {
 }
 
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back .track-list-container .track-preview:hover:not(.playing-icon) {
-  color: #FFFEDF;
+  color: #ffffff;
 }
 
 #album-gallery .album-container .album-inner-container .flip-card .flip-card-inner .flip-card-back .track-list-container .track-preview .playing-icon {
@@ -11670,7 +11671,7 @@ nav.navbar #navbar-spotify-icon {
   border: 1px solid #060606;
   border-radius: 5px;
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.75);
-  color: #FFFEDF;
+  color: #ffffff;
   display: inline-block;
   line-height: 1.5625;
 }

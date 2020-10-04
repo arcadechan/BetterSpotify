@@ -2491,7 +2491,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -35198,12 +35197,12 @@ var render = function() {
               _vm.artistsInStorage
                 ? _c("p", [
                     _vm._v(
-                      'Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn\'t changed, you can go ahead and just hit the "Generate Better Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.'
+                      'Here is a list of your followed artists we saved from the last time you fetched them. If the artists you follow hasn\'t changed, you can go ahead and just hit the "Generate Detoxed Release Radar" button. Otherwise you can hit the "Get Artists" button to get your followed artists again.'
                     )
                   ])
                 : _c("p", [
                     _vm._v(
-                      'Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Better Release Radar" button below the artist list to create the playlist into your account.'
+                      'Artists retrieved! Double check your list and if the list of artists looks ok, press the "Generate Detoxed Release Radar" button below the artist list to create the playlist into your account.'
                     )
                   ]),
               _vm._v(" "),
@@ -35371,7 +35370,7 @@ var render = function() {
               _vm.albumsInStorage
                 ? _c("p", [
                     _vm._v(
-                      'Here\'s a list of all the albums from the latest "Better Release Radar" you generated. You may generate a new playlist at any time, but keep in mind that doing so will wipe clean the one you have with new stuff, so make sure you saved all the stuff you want as there is no guarantee the same tracks will make it on there again!'
+                      'Here\'s a list of all the albums from the latest "Detoxed Release Radar" you generated. You may generate a new playlist at any time, but keep in mind that doing so will wipe clean the one you have with new stuff, so make sure you saved all the stuff you want as there is no guarantee the same tracks will make it on there again!'
                     )
                   ])
                 : _c("p", [
@@ -35392,7 +35391,7 @@ var render = function() {
                     on: { click: _vm.generatePlaylist }
                   },
                   [
-                    _vm._v("\n            Generate Better "),
+                    _vm._v("\n            Generate Detoxed "),
                     _c("br", { staticClass: "mobile-break" }),
                     _vm._v("Release Radar\n        ")
                   ]

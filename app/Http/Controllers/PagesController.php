@@ -11,15 +11,15 @@ class PagesController extends Controller
         return view('welcome');
     }
 
-    public function better_release_radar(Request $request){
+    public function detoxed_release_radar(Request $request){
         
-        if(Cookie::get('spotify_access_code') !== null) return view('better_release_radar');
+        if(Cookie::get('spotify_access_code') !== null) return view('detoxed_release_radar');
 
         $client_id = env('SPOTIFY_APP_CLIENT_ID', getenv('SPOTIFY_APP_CLIENT_ID'));
         $redirect_uri = env('APP_URL', getenv('APP_URL')) . '/authorize_access';
         $scopes = "user-read-private ugc-image-upload user-follow-read playlist-modify-public playlist-modify-private";
 
-        return view('better_release_radar', compact([
+        return view('detoxed_release_radar', compact([
             'client_id',
             'redirect_uri',
             'scopes'

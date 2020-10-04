@@ -36,7 +36,7 @@ class ContactMessage extends Mailable
     public function build()
     {
         return $this->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
-                    ->subject('Better Spotify Contact Form')
+                    ->subject('Detoxify Contact Form')
                     ->view('email.email');
     }
 }

@@ -3,7 +3,7 @@
 
 <head>
     <!-- Title -->
-    <title>Better Spotify</title>
+    <title>detoxify</title>
 
     <!-- Required Meta Tags Always Come First -->
     <meta charset="utf-8">
@@ -14,7 +14,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url('/icons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('/icons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url('/icons/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url('/icons/site.webmanifest') }}">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800,900&display=swap" rel="stylesheet">
@@ -34,14 +37,9 @@
         <div class="nav-main">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="d-none d-lg-block text-decoration-none" href="/">
-                        <img id="navbar-spotify-icon" src="{{ url('/icons/Spotify_Icon_White.png') }}">
-                        <span class="navbar-brand font-weight-bold">Better Spotify</span>
+                    <a class="ext-decoration-none" href="/">
+                        <img id="navbar-detoxify-icon" src="{{ url('/icons/detoxify.png') }}">
                     </a>
-                    <a class="d-block d-lg-none" href="/">
-                        <img id="navbar-spotify-icon" src="{{ url('/icons/Spotify_Icon_White.png') }}">
-                    </a>
-                    <a class="navbar-brand font-weight-bold d-block d-lg-none" href="/">Better Spotify</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <svg id="hamburger-menu-icon">
                             <use xlink:href="{{ url('/icons/svg-sprites.svg#menu') }}"></use>
@@ -53,7 +51,7 @@
                                 <a class="nav-link px-2" href="/">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link px-2" href="/better_release_radar">Better Release Radar</a>
+                                <a class="nav-link px-2" href="/detoxed_release_radar">Detoxed Release Radar</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link px-2" href="/about">About</a>
@@ -92,9 +90,8 @@
                 <div class="row">
                     <div class="col-lg-auto ml-lg-auto mt-4">
                         <ul class="list-unstyled footer-link">
-                            <li>
-                            <a href="https://www.buymeacoffee.com/arcadechan" target="_blank">Buy me a coffee</a>
-                                </div>
+                            <li class="text-center text-lg-right">
+                                <small><a href="https://www.buymeacoffee.com/arcadechan" target="_blank">Buy me a coffee</a></small>
                             </li>
                         </ul>
                     </div>

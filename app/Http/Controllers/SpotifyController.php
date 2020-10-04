@@ -63,7 +63,7 @@ class SpotifyController extends Controller
 
             //Create Playlist
             $request = Http::withToken($access_token)->post('https://api.spotify.com/v1/users/'.$user_id.'/playlists', [
-                'name' => 'Better Release Radar',
+                'name' => 'Detoxed Release Radar',
                 'description' => 'Finally, no more wrong artists.'
             ]);
 
@@ -72,7 +72,7 @@ class SpotifyController extends Controller
 
             //Set playlist image
             $request = Http::withToken($access_token)->withBody(
-                base64_encode(Storage::disk('public')->get('/img/better-release-radar.jpg')), 'image/jpeg'
+                base64_encode(Storage::disk('public')->get('/img/detoxed-release-radar.jpg')), 'image/jpeg'
             )->put('https://api.spotify.com/v1/playlists/'.$response->id.'/images');
 
             $response = json_decode($request->getBody());

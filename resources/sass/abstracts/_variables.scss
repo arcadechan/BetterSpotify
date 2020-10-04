@@ -66,6 +66,7 @@ $grays: (100: $gray-100, 200: $gray-200, 300: $gray-300, 400: $gray-400, 500: $g
 $theme-colors: (primary: $blue, secondary: $gray-600, success: $green, info: $cyan, warning: $yellow, danger: $red, light: $gray-100, dark: $gray-800);
 $colors: (blue: $blue, indigo: $indigo, purple: $purple, pink: $pink, red: $red, orange: $orange, yellow: $yellow, green: $green, teal: $teal, cyan: $cyan, white: $white, gray: $gray-600,gray-dark: $gray-800);
 $theme-color-interval: 8%;
+$spotify-green: #1DB954;
 
 
 // Spacing
@@ -88,16 +89,16 @@ $enable-print-styles: true;
 
 
 // Links
-$link-color: #DFBA69;
-$link-decoration: none;
-$link-hover-color: darken($link-color, 15%);
+$link-color: $spotify-green;
+$link-hover-color: lighten($link-color, 10%);
 $link-hover-decoration: underline;
 
 
 
 // Body
 $body-bg: #2B2C31;
-$text-color: #FFFEDF;
+// $text-color: #FFFEDF;
+$text-color: #ffffff;
 $body-color: $text-color;
 $hover-color: #5A2E2E;
 
@@ -176,8 +177,3 @@ $kbd-box-shadow: inset 0 -0.1rem 0 rgba($black, 0.25);
 $nested-kbd-font-weight: $font-weight-bold;
 $list-inline-padding: 5px;
 $mark-bg: #fcf8e3;
-
-$spotify-green: #1DB954;
-$brown: #a76d47;
-
-

@@ -28,6 +28,7 @@
                         </ul>
                     </li>
                     <li>Hamburger menu icon made by <a href="https://www.flaticon.com/authors/hirschwolf" title="hirschwolf">hirschwolf</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></li>
+                    <li>Potion icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></li>
                 </ul>
             </div>
         </div>
