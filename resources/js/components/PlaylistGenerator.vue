@@ -38,7 +38,7 @@
         </div>
 
         <div v-show="generation == 'artistsRetrieved' || generation == 'albumsRetrieved'" class="text-center">        
-            <button @click="artistGalleryOpen = !artistGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#artist-gallery" aria-expanded="false" aria-controls="artist-gallery">
+            <button @click="artistGalleryOpen = !artistGalleryOpen" class="d-block btn btn-light mx-auto" type="button" data-toggle="collapse" data-target="#artist-gallery" aria-expanded="false" aria-controls="artist-gallery">
                 {{ artistGalleryOpen ? 'Hide' : 'Show' }} Artist List
             </button>
 
@@ -66,7 +66,7 @@
             <div class="d-block text-center">
                 <h2>Albums</h2>
                 <p v-if="albumsInStorage">Here's a list of all the albums from the latest "Detoxed Release Radar" you generated. You may generate a new playlist at any time, but keep in mind that doing so will wipe clean the one you have with new stuff, so make sure you saved all the stuff you want as there is no guarantee the same tracks will make it on there again!</p>
-                <p v-else>To generate a playlist on your account go ahead and press the generate release radar.</p>
+                <p v-else>To generate a playlist on your account go ahead and press "Generate Detoxed Release Radar".</p>
             </div>
 
             <button
@@ -78,7 +78,7 @@
                 Generate Detoxed <br class="mobile-break">Release Radar
             </button>
 
-            <button v-if="generation == 'albumsRetrieved'" @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-dark mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">
+            <button v-if="generation == 'albumsRetrieved'" @click="albumGalleryOpen = !albumGalleryOpen" class="d-block btn btn-light mx-auto" type="button" data-toggle="collapse" data-target="#album-gallery" aria-expanded="false" aria-controls="album-gallery">
                 {{ albumGalleryOpen ? 'Hide' : 'Show' }} Album List
             </button>
 

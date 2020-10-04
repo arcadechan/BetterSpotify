@@ -19,7 +19,7 @@
                         Some personalized playlists include <span class="title">Discover Weekly</span>, <span class="title">Daily Mixes</span>, and of course <span class="title">Your Release Radar</span>. 
                     <p>
                     <p>
-                        These playlists are generated based on a user' listening behavior and help in the discovery of new music.
+                        These playlists are generated based on a user's listening behavior and help in the discovery of new music.
                         This user experience is ruined, however, when the artists recommended have nothing to do with the user's behavior.
                     </p>
                     <p>

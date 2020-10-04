@@ -35250,7 +35250,7 @@ var render = function() {
           _c(
             "button",
             {
-              staticClass: "d-block btn btn-dark mx-auto",
+              staticClass: "d-block btn btn-light mx-auto",
               attrs: {
                 type: "button",
                 "data-toggle": "collapse",
@@ -35375,7 +35375,7 @@ var render = function() {
                   ])
                 : _c("p", [
                     _vm._v(
-                      "To generate a playlist on your account go ahead and press the generate release radar."
+                      'To generate a playlist on your account go ahead and press "Generate Detoxed Release Radar".'
                     )
                   ])
             ]),
@@ -35402,7 +35402,7 @@ var render = function() {
               ? _c(
                   "button",
                   {
-                    staticClass: "d-block btn btn-dark mx-auto",
+                    staticClass: "d-block btn btn-light mx-auto",
                     attrs: {
                       type: "button",
                       "data-toggle": "collapse",
