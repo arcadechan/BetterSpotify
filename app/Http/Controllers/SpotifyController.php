@@ -6,13 +6,20 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthorizationController;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class SpotifyController extends Controller
 {
     public function get_artists(Request $request){
-        $access_token = AuthorizationController::refresh_access('refresh');
+        $access_token = Cookie::get('spotify_access_token');
+
+        if($access_token === NULL){
+            $refresh = AuthorizationController::refresh_access();
+            $access_token = $refresh->access_token;
+            $expires_in = $refresh->expires_in;
+
+            Cookie::queue(Cookie::make('spotify_access_token', $access_token, $expires_in));
+        }
 
         $request = Http::withToken($access_token)->get('https://api.spotify.com/v1/me/following?type=artist');
         $responseStatus = $request->getStatusCode();
@@ -45,26 +52,27 @@ class SpotifyController extends Controller
             }
         }
 
-        $access_token_cookie = Cookie::forever('spotify_access_token', $access_token);
-        
-        return response()->json($artists, $responseStatus)->withCookie($access_token_cookie);
+        return response()->json($artists, $responseStatus);
     }
 
     public function create_playlist(Request $request){
-
-        ini_set('max_execution_time', 180);
-
         $user_id = Cookie::get('spotify_user_id');
         $spotify_playlist_id = Cookie::get('spotify_playlist_id');
+        $access_token = Cookie::get('spotify_access_token');
 
-        $access_token = AuthorizationController::refresh_access('refresh');
+        if($access_token === NULL){
+            $refresh = AuthorizationController::refresh_access();
+            $access_token = $refresh->access_token;
+            $expires_in = $refresh->expires_in;
+
+            Cookie::queue(Cookie::make('spotify_access_token', $access_token, $expires_in));
+        }
 
         if($spotify_playlist_id == NULL){
 
             //Create Playlist
             $request = Http::withToken($access_token)->post('https://api.spotify.com/v1/users/'.$user_id.'/playlists', [
-                'name' => 'Detoxed Release Radar',
-                'description' => 'Finally, no more wrong artists.'
+                'name' => 'Detoxed Release Radar'
             ]);
 
             $response = json_decode($request->getBody());
@@ -94,9 +102,15 @@ class SpotifyController extends Controller
         $artist = $request->artist ?? null; //refactor
         $playlist_id = Cookie::get('spotify_playlist_id'); 
         $user_country = Cookie::get('spotify_user_country'); //refactor?
+        $access_token = Cookie::get('spotify_access_token');
 
-        
-        $access_token = AuthorizationController::refresh_access('refresh');
+        if($access_token === NULL){
+            $refresh = AuthorizationController::refresh_access();
+            $access_token = $refresh->access_token;
+            $expires_in = $refresh->expires_in;
+
+            Cookie::queue(Cookie::make('spotify_access_token', $access_token, $expires_in));
+        }
 
         $oneMonthBack = date('Y-m-d', strtotime('-1 months')); //today minus one month
         $albums = [];
