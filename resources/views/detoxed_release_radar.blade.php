@@ -41,7 +41,7 @@
                             <input type="hidden" name="response_type" value="code">
                             <input type="hidden" name="redirect_uri" value="{{ $redirect_uri ?? ''}}">
                             <input type="hidden" name="scope" value="{{ $scopes ?? ''}}">
-                            <input type="hidden" name="state" value="34fFs29kd09">
+                            <input type="hidden" name="state" value="{{ $state ?? '' }}">
                             <button class="btn btn-spotify m-1">Login With Spotify</button>
                         </form>
                     </div>
