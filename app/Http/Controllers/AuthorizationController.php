@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AuthorizationController extends Controller
 {
@@ -55,7 +56,13 @@ class AuthorizationController extends Controller
         
         if($response->getStatusCode() == 200){
             $data = json_decode($response->getContent());
-            return $data->access_token;
+
+            $data = (object)[
+                'access_token' => $data->access_token,
+                'expires_in' => ( $data->expires_in / 60) //Convert from seconds to minutes
+            ];
+            
+            return $data;
         }
         
         return false;
