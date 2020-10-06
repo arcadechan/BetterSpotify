@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'detoxed release radar')
+
 @section('content')
     <section class="pt-4">
         <div class="container">
