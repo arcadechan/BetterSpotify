@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'home')
+
 @section('content')
 
 <section class="intro">

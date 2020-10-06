@@ -3,7 +3,7 @@
 
 <head>
     <!-- Title -->
-    <title>detoxify</title>
+    <title>detoxify - @yield('title')</title>
 
     <!-- Required Meta Tags Always Come First -->
     <meta charset="utf-8">
