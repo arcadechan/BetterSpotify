@@ -32,16 +32,14 @@ class SpotifyController extends Controller
 
             $junkArtistInfo = ['followers', 'genres', 'href', 'popularity']; //junk info to reduce the filesize of json payload set in local storage.
 
-            $totalArtistsFollowed = $response->artists->total;
             $nextUrl = $response->artists->next;
-            $iterationsLeft = floor(($totalArtistsFollowed - 20) / 20);
 
-            for($i = 0; $i < $iterationsLeft; $i++){
+            while($nextUrl) {
                 $request = Http::withToken($access_token)->get($nextUrl);
                 $response = json_decode($request->getBody());
                 $artists = array_merge($artists, $response->artists->items);
 
-                $nextUrl = $response->artists->next;
+                $nextUrl = isset($response->artists->next) ? $response->artists->next : false;    
             }
 
             //clean up artists by removing unnecessary fields
