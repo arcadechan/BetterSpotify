@@ -55,6 +55,17 @@ nav.navbar {
     padding-bottom: 100px;
 }
 
+.footer-link li a {
+    &.icon-link {
+        margin: 0 .5em;
+        font-size: 3em;
+
+        @media (min-width: 768px){
+            font-size: 1.75em;
+        }
+    }
+}
+
 #progressLog {
     background-color: #000000;
     padding: 1em;

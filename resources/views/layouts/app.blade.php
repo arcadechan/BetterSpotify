@@ -89,9 +89,21 @@
                 <hr class="mt-5">
                 <div class="row">
                     <div class="col-lg-auto ml-lg-auto mt-4">
-                        <ul class="list-unstyled footer-link">
-                            <li class="text-center text-lg-right">
-                                <small><a href="https://www.buymeacoffee.com/arcadechan" target="_blank">Buy me a coffee</a></small>
+                        <ul class="list-unstyled footer-link d-flex justify-content-center">
+                            <li class="text-center">
+                                <a href="https://github.com/arcadechan" target="_blank" class="icon-link" title="My Github">
+                                    <i class="fab fa-github text-white"></i> 
+                                </a>
+                            </li>
+                            <li class="text-center">
+                                <a href="https://open.spotify.com/user/arcadechan?si=9t12J3T_QiiVbKn0z9p-Ag" target="_blank" class="icon-link" title="My Spotify">
+                                    <i class="fab fa-spotify text-white"></i>
+                                </a>
+                            </li>
+                            <li class="text-center">
+                                <a href="https://www.buymeacoffee.com/arcadechan" target="_blank" class="icon-link" title="Buy me a coffee">
+                                    <i class="fas fa-mug-hot text-white"></i>
+                                </a>
                             </li>
                         </ul>
                     </div>
