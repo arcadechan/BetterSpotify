@@ -96,7 +96,7 @@
                                 </a>
                             </li>
                             <li class="text-center">
-                                <a href="https://open.spotify.com/user/arcadechan?si=9t12J3T_QiiVbKn0z9p-Ag" target="_blank" class="icon-link" title="My Spotify">
+                                <a href="https://open.spotify.com/user/arcadechan" target="_blank" class="icon-link" title="My Spotify">
                                     <i class="fab fa-spotify text-white"></i>
                                 </a>
                             </li>
