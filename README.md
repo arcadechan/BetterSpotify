@@ -10,9 +10,9 @@ To eliminate the need for a DB to track users, information is tracked through co
 
 ##### .ENV variables
 
-**SPOTIFY_APP_CLIENT_ID** = The Client ID provided by Spotify in your developer dashboard.
-**SPOTIFY_APP_CLIENT_SECRET**= The Client Secret provided by Spotify in your developer dashboard.
-**SPOTIFY_ACCESS_STATE**= A variable serving as an additional level of security passed as a GET param in your app authorization request.
-**AUTHORIZE_ACCESS_ENDPOINT**= The callback path set in your developer dashboard. Set as a .ENV variable to help setting port if developing locally.
-**CAPTCHA_SITE_KEY**= The SITE KEY provided in your Google reCAPTCHA dashboard.
+**SPOTIFY_APP_CLIENT_ID** = The Client ID provided by Spotify in your developer dashboard.\
+**SPOTIFY_APP_CLIENT_SECRET**= The Client Secret provided by Spotify in your developer dashboard.\
+**SPOTIFY_ACCESS_STATE**= A variable serving as an additional level of security passed as a GET param in your app\ authorization request.\
+**AUTHORIZE_ACCESS_ENDPOINT**= The callback path set in your developer dashboard. Set as a .ENV variable to help setting port if developing locally.\
+**CAPTCHA_SITE_KEY**= The SITE KEY provided in your Google reCAPTCHA dashboard.\
 **CAPTCHA_SECRET_KEY**= The SECRET KEY provided in your Google reCAPTCHA dashboard.
